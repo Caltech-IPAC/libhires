@@ -1,0 +1,94 @@
+<html>
+<head>
+<title>Output Files</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+<div style="font-family:Arial, Helvetica, sans-serif">
+<div align="center">
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td width="100%">
+      <div align="center">
+        <font face="Helvetica, Arial, sans-serif">
+        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td colspan="3">&nbsp;</td>
+          </tr>
+          <tr>
+            <td width="130" valign="center">
+              <a href="http://www.ipac.caltech.edu">
+     <img src="images/ipacsmall.gif" width="130" height="70" alt="IPAC Logo" border="0">
+             </a>
+            </td>
+
+            <td width="520" valign="center" align="center">
+	      <h1>HIRES Output Files</h1>
+            </td>
+
+            <td width="130" valign="center">
+              <a href="/index.html">
+              <img src="images/IRSA_Logo_200.png" alt="IRSA Logo" border="0" width="130"></a>
+            </td>
+          </tr>
+        </table>
+
+        <p>
+        <img src="images/bar.gif" height="3" width="680">
+        </p>
+      </div>
+    </td>
+  </tr>
+</table>
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr> <td>
+
+<br />
+
+<p>The main images are the surface brightness images.
+In addition, there are several diagnostic image types produced.
+ These ancillary images are essential to the interpretation of the HIRES results.
+See the <a href="images.html">Image Types</a> for more information and
+detailed descriptions of the various types of HIRES images.</p>
+<p>There are a total of 80 files produced. They are the following:</p>
+<table border="2" cellpadding="7">
+<tr><th>Filename</th><th>Contents</th></tr>
+<tr><td><font face="courier"><b>bem_</b><i>[name]_[b#]_</i><b>20.fits</b></font> </td>
+    <td> simulator input "spike" plus background model for beam sample images </td></tr>
+<tr><td><font face="courier"><b>cfv_</b><i>[name]_[b#]_[iter]</i><b>.fits</b></font> </td>
+    <td> correction factor variance </td></tr>
+<tr><td><font face="courier"><b>cvg_</b><i>[name]_[b#]</i><b>.fits</b></font> </td>
+    <td> coverage </td></tr>
+<tr><td><font face="courier"><b>det_</b><i>[name]_[b#]</i><b>.fits</b></font> </td>
+    <td> detector track images </td></tr>
+<tr><td><font face="courier"><b>img_</b><i>[name]_[b#]_[iter]</i><b>.fits</b></font> </td>
+    <td> surface brightness <b>(main images)</b> </td></tr>
+<tr><td><font face="courier"><b>img_</b><i>[name]</i><b>_bem</b><i>_[b#]_[iter]</i><b>.fits</b></font> </td>
+    <td> HIRES'd beam sample images </td></tr>
+<tr><td><font face="courier"><b>phn_</b><i>[name]_[b#]_[iter]</i><b>.fits</b></font> </td>
+    <td> photometric noise </td></tr>
+<tr><td><font face="courier"><b>spk_</b><i>[name]_[b#]</i></font> </td>
+    <td> spike information </td></tr>
+</table>
+
+</ul>
+
+<p>Where:</p>
+<ul>
+<li> <i>[name]</i> --- is the object name you specified</li>
+<br /><br />
+<li> <i>[b#]</i> --- is the band number
+                  (1, 2, 3, and 4 for 12, 25, 60, and 100 &#181;m respectively)</li>
+<br /><br />
+<li> <i>[iter]</i> --- is the iteration number</li>
+</ul>
+
+</font>
+
+</table>
+
+</body>
+</html>
+
+

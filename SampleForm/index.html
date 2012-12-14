@@ -1,0 +1,251 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>HIRES - IRAS</title>
+<link rel="stylesheet" type="text/css" href="style.css" />
+
+<script type="text/javascript">
+function show(name) {
+    document.getElementById (name).style.display="block";
+}
+function hide(name) {
+    document.getElementById (name).style.display="none";
+}
+function setupForm()
+{
+   var baselineRemoveRadio = document.getElementById('baselineRemoveRadio');
+   var baselineLeaveRadio = document.getElementById('baselineLeaveRadio');
+
+   var size1 = document.getElementById('size1');
+   var size2 = document.getElementById('size2');
+
+   if (baselineRemoveRadio.checked)
+   { show('baselineRemove'); hide('baselineLeave'); }
+   else if (baselineLeaveRadio.checked) 
+   { hide('baselineRemove'); show('baselineLeave'); }
+
+   if (size1.checked)
+   { show('size1'); hide('size2'); }
+   else if (size2.checked) 
+   { hide('size1'); show('size2'); }
+}
+</script>
+
+<form method="post" action="/cgi-bin/bgServices/nph-bgExec" enctype="multipart/form-data">
+
+<input type="hidden" name="bgApp" value="/FinderChart/nph-finder">
+
+<input name="romeserver" type="hidden" value="ROMEDEV">
+<input name="srchsize" type="hidden" value="12.0">
+<input name="outsize" type="hidden" value="200">
+<input name="colortbl" type="hidden" value="1">
+<input name="nthread" type="hidden" value="10">
+<input name="markercolor" type="hidden" value="red">
+<input name="markersize" type="hidden" value="10">
+<input name="mode" type="hidden" value="cgi">
+
+<div class="webpage">
+   <h1>HIRES - IRAS</h1>
+   <center>
+      <h4>Generate High Resolution IRAS Images</h4>
+   </center>
+</div>
+
+<div class="form_area">
+
+  <div class="param_area">
+    <table class="tbl1a"> <tbody>
+      <tr><td class="td0a">
+          <b>Target ID:</b>
+          <input type="text" name="object" size="8" maxlength="8">
+      </td> </tr>
+      <tr><td class="td0a">
+        <font color="#114477"><b>Used to label output files.</b></font>
+      </td></tr>
+      <tr><td class="td0a">
+        <font color="#114477"><b>(up to 8 characters, no blanks)</b></font>
+      </td> </tr>
+    </table>
+  </div>
+
+  <div class="param_area">
+    <table class="tbl1a"> <tbody>
+      <tr><td class="td0a">
+          <b>Object / Coordinates:</b>
+          <input type="text" name="coord" size="40" maxlength="120">
+      </td> </tr>
+      <tr><td class="td0a">
+        <a href="suitable.html" target="_blank">
+          <font size="-1" color="#114477">What Are Suitable HIRES Targets?</font></a>
+      </td></tr>
+      <tr><td class="td0a">
+          <font color="#114477"><b> Examples: </b></font>
+          <font size="-1"> 
+           &nbsp;NGC5584 <br />
+           &nbsp;14h22m23.77s&nbsp;-00d23m15.58s&nbsp;Equ&nbsp;J2000 <br>
+           &nbsp;345.11412&nbsp;+54.85590&nbsp;ga| <br>
+           </font>
+      </td></tr>
+      <tr><td class="td0a">
+          <font color="#114477"><b>Default:</b></font>
+           &nbsp;Equatorial&nbsp;J2000&nbsp;
+           <a href="http://irsa.ipac.caltech.edu/applications/FinderChart/docs/coordinate.html" target="help">
+           <img src="images/question.gif" border="0" align="bottom" alt="Instructions">
+           <font size="-1" color="#114477"><b>coordinate examples</b></font> </a>
+      </td></tr>
+    </tbody></table>
+  </div>
+
+
+  <div class="param_area">
+    <table class="tbl1a" cellpadding=4><tbody>
+      <tr>
+        <td colspan=4 align="left" valign="top">
+          <b>IRAS Fluxes:</b>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <input style="background-color:#e33; color:#fff; border:3px inset #000; height=14px"
+             type="lookup" value="-- Lookup Fluxes --">
+        </td>
+      </tr>
+      <tr>
+        <td class="td1a">10</td>
+        <td class="td1a">10</td>
+        <td class="td1a">10</td>
+        <td class="td1a">10</td>
+      </tr>
+      <tr align="center">
+        <td class="td0a">Band 1</td>
+        <td class="td0a">Band 2</td>
+        <td class="td0a">Band 3</td>
+        <td class="td0a">Band 4</td>
+     </tr>
+    </tbody></table>
+  </div>
+    
+
+
+  <div class="param_area">
+    <table class="tbl1a"><tbody>
+      <tr align="center">
+        <td class="td0a">
+          <font color="#114477"><b>Image Size<br>(degrees)</b></font>
+        </td>
+        <td class="td1a">
+          <font color="#114477"><b> 1x1 </b></font> 
+          <input type="radio" id="size1" name="im_size" value="size1" checked="checked" onclick="setupForm()">
+          &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+          <font color="#114477"><b> 2x2 </b></font> 
+          <input type="radio" id="size2" name="im_size" value="size1" onclick="setupForm()">
+        </td>
+      </tr>
+    </tbody></table>
+  </div>
+
+  <div class="param_area">
+    <table class="tbl1a"><tbody>
+      <tr align="center">
+        <td class="td0a">
+          <font color="#114477"><b>Baseline</b></font>
+        </td>
+        <td class="td1a">
+          <font color="#114477"><b> remove </b></font> 
+          <input type="radio" id="baselineRemove" name="baseline"
+            value="remove" checked="checked" onclick="setupForm()">
+          &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+          <font color="#114477"><b> leave </b></font> 
+          <input type="radio" id="baselineLeave" name="baseline"
+             value="leave" onclick="setupForm()">
+        </td>
+      </tr>
+    </tbody></table>
+  </div>
+
+  <table class="tbl_50a">
+    <tr>
+      <td align="center">
+        <input style="background-color:#114477; color:#ffffff; border:2px inset #202020;" type="submit" value="Submit">
+      </td>
+      <td align="center">
+        <input style="background-color: #fffacd;color: #000000; border:2px inset #202020;" type="reset" value="Reset">
+      </td>
+    </tr>
+  </table>
+
+  <div class="param_area">
+    <table class="tbl1a" cellpadding=5><tbody>
+      <tr>
+        <td colspan=4 align="left" valign="top">
+          <b>*OPTIONAL*&nbsp;&nbsp; User Spike(s) Coordinates and Fluxes:</b>
+        </td>
+      </tr>
+      <tr align="center">
+        <td class="td0a">Object/Coordinates</td>
+        <td class="td0a">Band 1</td>
+        <td class="td0a">Band 2</td>
+        <td class="td0a">Band 3</td>
+        <td class="td0a">Band 4</td>
+      </tr>
+      <tr>
+        <td class="td1a">-</td>
+        <td class="td1a">-</td>
+        <td class="td1a">-</td>
+        <td class="td1a">-</td>
+        <td class="td1a">-</td>
+      </tr>
+     <tr>
+        <td class="td1a">-</td>
+        <td class="td1a">-</td>
+        <td class="td1a">-</td>
+        <td class="td1a">-</td>
+        <td class="td1a">-</td>
+      </tr>
+      <tr>
+        <td class="td1a">-</td>
+        <td class="td1a">-</td>
+        <td class="td1a">-</td>
+        <td class="td1a">-</td>
+        <td class="td1a">-</td>
+      </tr>
+      <tr>
+        <td class="td1a">-</td>
+        <td class="td1a">-</td>
+        <td class="td1a">-</td>
+        <td class="td1a">-</td>
+        <td class="td1a">-</td>
+      </tr>
+    </tbody></table>
+  </div>
+
+  <br />
+
+</div>
+
+</form>
+
+<p align="justify">
+<b>HIRES</b> is a tool that allows users to produce high resolution images from data 
+in the IRAS archive.
+HIRES uses the Maximum Correlation Method (MCM, H.H. Aumann, J.W. Fowler and M. Melnyk, (1990), AJ, 99, 1674) to produce images with better than the nominal resolution of the Infrared Astronomical Satellite (IRAS) data.</p>
+
+<p align="justify">
+HIRES is a powerful tool for studying morphology and for separating confused sources. It can produce resolution of better than an arcminute, roughly a five-fold increase over the unenhanced resolution. However, the actual resolution achieved for a given source varies in a complicated fashion.</p>
+
+<p align="justify">
+HIRES is suitable for studying morphology, or doing aperture photometry. HIRES fluxes are accurate to about 20%. Most of the uncertainty is due to background estimation uncertainties.</p>
+
+<br><br>
+<h3>Further Information</h3>
+List of <a href="outputs.html" target="_blank">HIRES Output Files</a>
+<br /><br />
+Description of <a href="images.html" target="_blank">HIRES Image Types</a>
+<br /><br />
+Important information about <a href="interpret.html" target="_blank">Interpreting HIRE Images</a>
+<br /><br />
+<a href="artifacts.html" target="_blank">Artifacts in HIRES Images</a>
+<br /><br />
+Description of <a href="iras_data.html" target="_blank">IRAS Data Characteristics</a>
+
+
+</body>
+</html>
+

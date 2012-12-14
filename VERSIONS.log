@@ -1,0 +1,87 @@
+
+-------------------------
+v1_10:
+-------------------------
+ - Added MIN_SAMPLE_FLUX parameter to force sample flux values to be
+   at least the specified value. (defaults to leaving all fluxes as is.)
+
+-------------------------
+v1_09:
+-------------------------
+ - Updated calculation of angle to be correct even at end ponts of scans.
+
+-------------------------
+v1_08:
+-------------------------
+ - Restructured code, converting the Sample and Footprint data into Numpy arrays.
+   (to speed up processing)
+ - Removed "noise" from Sample and "weight" from Footprint
+  (to speed up processing --- was not being used)
+ - Removed "pad and trim" logic (for footprints partially outside image area)
+   (to simplify code --- user may specify larger image size if desired)
+ - made a vectorized version of the Gnomonic function
+ - changed Gnomonic to use -x, +y to correspond to signs of the CDELTS
+ *** The interface from IN data file readers has been modified.
+
+-------------------------
+v1_07:
+-------------------------
+ - Reversed order of array indexes to j,i (was i,j).
+   This means that the -y,-x in call to Sample should be reversed too in reader of IN files
+ - Added a DRF_ID keyword to FITS headers.
+ - (Temporarily added a kludge to internally simulate a 2D Gaussian from a 1D one,
+    but no longer there since the DRF generator was upgraded to do 2D gaussians.)
+
+-------------------------
+v1_06:
+-------------------------
+ - added FLUX_MIN minimum flux in input data samples (reset flux value if less)
+   -- default is -1.0e200  (leaves flux as is)
+     (this option is to avoid crossing zero in flux image)
+ - added log method (for output messages and log file)
+   -- added lots of checks for WARNINGs and ERRORs
+ - organized parameter printout and added comments to make more understandable
+
+-------------------------
+v1_05:
+-------------------------
+ - added logic to use Sample.angle
+ - added logic to weight samples (1/noise_squared)
+
+-------------------------
+v1_04:
+-------------------------
+ - added (optional) output of cfv files ("correction factor variance")
+    (like YORIC "cfv" files)
+ - updated logic to use padded images during computations, trimmed before output
+    (better quality near edges of image)
+    and option to output "padded" image that can be used as "STARTING_IMAGE"
+
+-------------------------
+v1_03:
+-------------------------
+ - the normal starting (ITER=0) image is now 'flat' (all pixels = 1.0)
+ - optional generation of BEAM ouptut files (BEAM_SPIKE_N  BEAM_SPIKE_HEIGHT)
+      (like yoric 'bem' files)
+ - new parameter to select which output file types are generated (OUTFILE_TYPES)
+     choose any/all of: flux cov beam (default is flux only)
+
+-------------------------
+v1_02:
+-------------------------
+ (delivered to IRSA)
+ BASIC CAPABILITY:
+  - creates high resoltion flux files
+  - uses DRF files for computing "footprints"
+  - creates cov file (coverage image)
+  - adds full set of FITS keywords to images
+ OPTIONS:
+  - number of iterations to do (ITER_MAX)
+  - which iterations to output files (ITER_LIST)
+  - specify outuput image size (NPIX)
+  - specify outuput image scale (ARCSEC_PER_PIX)
+  - give a STARTING_IMAGE
+  - specify footprint sub-pixel accuracy (FOOTPRINTS_PER_PIX)
+  - specify added FITS keywords such as CTYPE, CRVAL
+  - compute tangent plane ("gnomonic" -TAN) projection x,y coordinates
+  - amplify amount of correction per iteration (BOOST_CORRECTION)
