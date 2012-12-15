@@ -1,7 +1,7 @@
 # This  is Planck-specific code for HIRES
 # Converts flux to RJ
 
-import hires_DEV as hires
+import hires
 # This points to development version of hires
 
 import pyfits
