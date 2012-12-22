@@ -1,24 +1,26 @@
 #include "Params.hxx"
-// #include "Logfile.hxx"
+#include <log4cxx/logger.h>
+#include <log4cxx/fileappender.h>
+#include <log4cxx/consoleappender.h>
+#include <log4cxx/patternlayout.h>
 
 int main(int argc, char* argv[])
 {
   Params params(argc,argv);
 
-  std::cout << params;
+  log4cxx::LoggerPtr logger(log4cxx::Logger::getRootLogger());
+  log4cxx::PatternLayoutPtr layout(new log4cxx::PatternLayout("\%m"));
+  log4cxx::FileAppenderPtr file_appender(new log4cxx::FileAppender(layout,params.log_filename,false));
+  log4cxx::ConsoleAppenderPtr console_appender(new log4cxx::ConsoleAppender(layout));
+  logger->addAppender(file_appender);
+  logger->addAppender(console_appender);
 
-  // Logfile log(params.log_filename);
+  LOG4CXX_INFO(logger,"HIRES invoked as: ");
+  for(int i=0;i<argc;++i)
+    LOG4CXX_INFO(logger,argv[i] << " ");
+  LOG4CXX_INFO(logger,"\n");
 
-  // log.info << "HIRES invoked as: ";
-  // for(int i=0;i<argc;++i)
-  //   log.info << argv[i] << " ";
-  // log.info << "\n";
-
-  // log.info << params << "\n";
-  // const string program(HIRES), version("v1_12");
-  // log.step << "Start PROCESSING ("
-  //          << program << " "
-  //          << version << ")\n";
+  LOG4CXX_INFO(logger, params);
 
   // auto all_detectors=read_all_DRF_files(params.DRF_prefix,log);
   // auto all_samples=read_all_IN_files(params.INFILE_prefix,log);
