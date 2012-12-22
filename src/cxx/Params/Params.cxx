@@ -207,5 +207,5 @@ Params::Params(int argc, char* argv[]):
 
   iter_list.push_back(iter_max); /* make sure to output files for final iteration */
   std::sort(iter_list.begin(),iter_list.end());
-  std::unique(iter_list.begin(),iter_list.end());
+  iter_list.resize(std::unique(iter_list.begin(),iter_list.end())-iter_list.begin());
 }
