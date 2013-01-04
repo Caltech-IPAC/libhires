@@ -144,7 +144,7 @@ def generate_response_array(detector_id, iFrac, jFrac, angle):
     duArray , dvArray =  generate_response_array_coords(radius_pix, angle, duFrac, dvFrac)
     response_array = fill_in_response_array(duArray, dvArray, response_func)
 
-    log(LOG_debug, "full array created: %s %.2f %.2f %.2f", detector_id, iFrac,jFrac, angle)
+    # log(LOG_debug, "full array created: %s %.2f %.2f %.2f", detector_id, iFrac,jFrac, angle)
 
     return response_array
 
