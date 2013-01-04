@@ -6,9 +6,9 @@ std::map<std::string,Detector>
 read_all_DRF_planck(const std::string &DRF_prefix);
 
 std::map<std::string,Detector>
-read_all_DRF_files(const Params::Data_Type &d, const std::string &DRF_prefix)
+read_all_DRF_files(const Params::Data_Type &dt, const std::string &DRF_prefix)
 {
-  switch(d)
+  switch(dt)
     {
     case Params::Data_Type::planck:
       return read_all_DRF_planck(DRF_prefix);
@@ -17,7 +17,7 @@ read_all_DRF_files(const Params::Data_Type &d, const std::string &DRF_prefix)
     //   return read_all_DRF_spire(DRF_prefix,logger);
     //   break;
     default:
-      LOG4CXX_FATAL(logger,"No valid DRF reader known for " << Params::type_string(d) << "\n");
+      LOG4CXX_FATAL(logger,"No valid DRF reader known for " << Params::type_string(dt) << "\n");
       break;
     }
   return std::map<std::string,Detector>();
