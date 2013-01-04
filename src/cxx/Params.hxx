@@ -22,6 +22,16 @@ public:
   Params(int argc, char* argv[]);  
 
   enum class Data_Type {planck, spire} data_type;
+
+  static std::string type_string(const Data_Type &dt)
+  {
+    if(dt==Data_Type::planck)
+      return "planck";
+    else if(dt==Data_Type::spire)
+      return "spire";
+    abort();
+    return "";
+  }
 };
 
 std::ostream& operator<<(std::ostream& out, const Params &p);

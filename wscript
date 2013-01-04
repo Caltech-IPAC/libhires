@@ -39,6 +39,17 @@ def options(ctx):
                    help='Names of the log4cxx libraries without prefix or suffix\n'
                    '(e.g. "log4cxx"')
 
+    boost=ctx.add_option_group('boost Options')
+    boost.add_option('--boost-dir',
+                   help='Base directory where boost is installed')
+    boost.add_option('--boost-incdir',
+                   help='Directory where boost include files are installed')
+    boost.add_option('--boost-libdir',
+                   help='Directory where boost library files are installed')
+    boost.add_option('--boost-libs',
+                   help='Names of the boost libraries without prefix or suffix\n'
+                   '(e.g. "boost_filesystem boost_system"')
+
 def configure(ctx):
     ctx.load('compiler_cxx')
     ctx.env.append_value('CXXFLAGS', '-Wall')
@@ -103,16 +114,51 @@ def configure(ctx):
         ctx.env.append_value('CXXFLAGS', '-march=native')
         ctx.env.append_value('CXXFLAGS', '-DNDEBUG')
 
+
+    # Find Boost
+    if ctx.options.boost_dir:
+        if not ctx.options.boost_incdir:
+            ctx.options.boost_incdir=ctx.options.boost_dir + "/include"
+        if not ctx.options.boost_libdir:
+            ctx.options.boost_libdir=ctx.options.boost_dir + "/lib"
+    frag="#include <boost/filesystem.hpp>\n" + 'int main()\n' \
+        + "{boost::filesystem::path();}\n"
+    if ctx.options.boost_incdir:
+        boost_inc=ctx.options.boost_incdir
+    else:
+        boost_inc='/usr/include'
+    if ctx.options.boost_libs:
+        boost_libs=[ctx.options.boost_libs]
+    else:
+        boost_libs=["boost_filesystem","boost_system"]
+
+    ctx.check_cxx(msg="Checking for Boost",
+                  fragment=frag,
+                  includes=[boost_inc], uselib_store='boost',
+                  libpath=[ctx.options.boost_libdir],
+                  rpath=[ctx.options.boost_libdir],
+                  lib=boost_libs)
+
+    if ctx.options.debug:
+        ctx.env.append_value('CXXFLAGS', '-g')
+    else:
+        ctx.env.append_value('CXXFLAGS', '-O2')
+        ctx.env.append_value('CXXFLAGS', '-mtune=native')
+        ctx.env.append_value('CXXFLAGS', '-march=native')
+        ctx.env.append_value('CXXFLAGS', '-DNDEBUG')
+
 def build(ctx):
     # tree index generator
     ctx.program(
         source=[
             'src/cxx/main.cxx',
+            'src/cxx/read_all_DRF_files/read_all_DRF_files.cxx',
+            'src/cxx/read_all_DRF_files/read_all_DRF_planck/read_all_DRF_planck.cxx',
             'src/cxx/Params/Params.cxx',
             'src/cxx/Params/ostream_operator.cxx'],
         target='hires',
         name='hires',
         install_path=os.path.join(ctx.env.PREFIX, 'bin'),
-        use=['ccfits','log4cxx']
+        use=['ccfits','log4cxx','boost']
     )
 

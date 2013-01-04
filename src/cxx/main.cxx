@@ -1,17 +1,25 @@
-#include "Params.hxx"
 #include <log4cxx/logger.h>
 #include <log4cxx/fileappender.h>
 #include <log4cxx/consoleappender.h>
 #include <log4cxx/patternlayout.h>
 
+#include "Params.hxx"
+#include "Detector.hxx"
+
+log4cxx::LoggerPtr logger(log4cxx::Logger::getRootLogger());
+
+std::map<int,Detector>
+read_all_DRF_files(const Params::Data_Type &d, const std::string &DRF_prefix);
+
 int main(int argc, char* argv[])
 {
   Params params(argc,argv);
 
-  log4cxx::LoggerPtr logger(log4cxx::Logger::getRootLogger());
   log4cxx::PatternLayoutPtr layout(new log4cxx::PatternLayout("\%m"));
-  log4cxx::FileAppenderPtr file_appender(new log4cxx::FileAppender(layout,params.log_filename,false));
-  log4cxx::ConsoleAppenderPtr console_appender(new log4cxx::ConsoleAppender(layout));
+  log4cxx::FileAppenderPtr
+    file_appender(new log4cxx::FileAppender(layout,params.log_filename,false));
+  log4cxx::ConsoleAppenderPtr
+    console_appender(new log4cxx::ConsoleAppender(layout));
   logger->addAppender(file_appender);
   logger->addAppender(console_appender);
 
@@ -22,7 +30,8 @@ int main(int argc, char* argv[])
 
   LOG4CXX_INFO(logger, params);
 
-  // auto all_detectors=read_all_DRF_files(params.DRF_prefix,log);
+  auto all_detectors=read_all_DRF_files(params.data_type,params.drf_prefix);
+                                        
   // auto all_samples=read_all_IN_files(params.INFILE_prefix,log);
   // auto all_footprints=create_all_footprints(all_samples,all_detectors);
   // auto wgt_image=calc_wgt_image(all_footprints);

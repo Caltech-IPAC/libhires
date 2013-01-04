@@ -56,4 +56,5 @@ hires.read_one_IN_file = read_Planck_toast_file
 #====================================================================
 # Call hires
 if __name__ == "__main__":
+    print "Hello"
     hires.main()
