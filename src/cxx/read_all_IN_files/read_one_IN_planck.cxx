@@ -37,7 +37,9 @@ void read_one_IN_planck(const boost::filesystem::path &filename,
   for(size_t i=0;i<phi_vector.size();++i)
     {
       std::valarray<double> &glon(phi_vector[i]), &theta(theta_vector[i]),
-        &signal(signal_vector[i]), glat, offset_signal, x, y;
+        &signal(signal_vector[i]);
+      const size_t n(glon.size());
+      std::valarray<double> glat(n), offset_signal(n), x(n), y(n);
 
       offset_signal=(signal - offset)/scale;
       glat=boost::math::constants::pi<double>()/2 - theta;

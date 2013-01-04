@@ -3,6 +3,7 @@
 #include <sstream>
 #include <map>
 #include <algorithm>
+#include <boost/math/constants/constants.hpp>
 
 Params::Params(int argc, char* argv[]): 
   starting_image("flat"),
@@ -78,8 +79,8 @@ Params::Params(int argc, char* argv[]):
             }
           else if(key=="ARCSEC_PER_PIX")
             {
-              ss >> deg_per_pix;
-              deg_per_pix/=3600;
+              ss >> radians_per_pix;
+              radians_per_pix*=boost::math::constants::pi<double>()/(3600*180);
             }
           else if(key=="CRVAL1")
             ss >> crval1;

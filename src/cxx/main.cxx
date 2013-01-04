@@ -10,6 +10,7 @@
 #include "Detector.hxx"
 #include "Sample.hxx"
 #include "Gnomonic.hxx"
+#include "Footprint.hxx"
 
 log4cxx::LoggerPtr logger(log4cxx::Logger::getRootLogger());
 
@@ -40,12 +41,13 @@ int main(int argc, char* argv[])
 
   LOG4CXX_INFO(logger, params);
 
-  std::map<int,Detector> all_detectors(read_all_DRF_files(params.data_type,
-                                                          params.drf_prefix));
-  std::vector<Sample> all_samples(read_all_IN_files(params.data_type,
-                                                    params.infile_prefix,
-                                                    projection));
-  // auto all_footprints=create_all_footprints(all_samples,all_detectors);
+  std::map<int,Detector> detectors(read_all_DRF_files(params.data_type,
+                                                      params.drf_prefix));
+  std::vector<Sample> samples(read_all_IN_files(params.data_type,
+                                                params.infile_prefix,
+                                                projection));
+  Footprint footprints(params.radians_per_pix,params.NPIXi,params.NPIXj,
+                       detectors,samples);
   // auto wgt_image=calc_wgt_image(all_footprints);
   // if(param.outfile_types.find("cov")!=param.outfile_types.end())
   //   write_FITS_image(wgt_image, "cov");

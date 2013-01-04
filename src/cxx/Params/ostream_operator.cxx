@@ -1,5 +1,6 @@
 #include "../Params.hxx"
 #include <boost/format.hpp>
+#include <boost/math/constants/constants.hpp>
 
 std::ostream& operator<<(std::ostream& out, const Params &p)
 {
@@ -13,7 +14,8 @@ std::ostream& operator<<(std::ostream& out, const Params &p)
 
       << "\n\nOutput image geometry:"
       << "\n  NPIX " << p.NPIXi << " " << p.NPIXj
-      << boost::format("\n  DEG_PER_PIX %.6f") % p.deg_per_pix
+      << boost::format("\n  DEG_PER_PIX %.6f")
+    % (p.radians_per_pix*180/boost::math::constants::pi<double>())
       << boost::format("\n  CRVAL1 %.5f") % p.crval1
       << boost::format("\n  CRVAL2 %.5f") % p.crval2
       << "\n  CTYPE1 " << p.ctype1

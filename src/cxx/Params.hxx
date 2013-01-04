@@ -13,7 +13,7 @@ public:
     boost_type, starting_image, beam_starting_image, flux_units, log_filename;
   std::vector<std::string> outfile_types;
   int NPIXi, NPIXj, iter_max, boost_max_iter, footprints_per_pix, beam_spike_n;
-  double deg_per_pix, crval1, crval2, min_sample_flux, angle_tolerance,
+  double radians_per_pix, crval1, crval2, min_sample_flux, angle_tolerance,
     beam_spike_height;
   std::vector<int> iter_list;
   std::vector<std::tuple<std::string,std::string,std::string>> fits_keywords;
