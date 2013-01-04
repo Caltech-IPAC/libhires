@@ -106,15 +106,6 @@ def configure(ctx):
                   rpath=[ctx.options.log4cxx_libdir],
                   lib=[log4cxx_libs])
 
-    if ctx.options.debug:
-        ctx.env.append_value('CXXFLAGS', '-g')
-    else:
-        ctx.env.append_value('CXXFLAGS', '-O2')
-        ctx.env.append_value('CXXFLAGS', '-mtune=native')
-        ctx.env.append_value('CXXFLAGS', '-march=native')
-        ctx.env.append_value('CXXFLAGS', '-DNDEBUG')
-
-
     # Find Boost
     if ctx.options.boost_dir:
         if not ctx.options.boost_incdir:
@@ -147,6 +138,8 @@ def configure(ctx):
         ctx.env.append_value('CXXFLAGS', '-march=native')
         ctx.env.append_value('CXXFLAGS', '-DNDEBUG')
 
+    ctx.env.append_value('CXXFLAGS', '-std=c++11')
+
 def build(ctx):
     # tree index generator
     ctx.program(
@@ -154,6 +147,8 @@ def build(ctx):
             'src/cxx/main.cxx',
             'src/cxx/read_all_DRF_files/read_all_DRF_files.cxx',
             'src/cxx/read_all_DRF_files/read_all_DRF_planck/read_all_DRF_planck.cxx',
+            'src/cxx/read_all_IN_files/read_all_IN_files.cxx',
+            'src/cxx/read_all_IN_files/read_one_IN_planck.cxx',
             'src/cxx/Params/Params.cxx',
             'src/cxx/Params/ostream_operator.cxx'],
         target='hires',

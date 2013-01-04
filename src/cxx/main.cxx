@@ -1,3 +1,6 @@
+#include <vector>
+#include <map>
+
 #include <log4cxx/logger.h>
 #include <log4cxx/fileappender.h>
 #include <log4cxx/consoleappender.h>
@@ -5,15 +8,22 @@
 
 #include "Params.hxx"
 #include "Detector.hxx"
+#include "Sample.hxx"
+#include "Gnomonic.hxx"
 
 log4cxx::LoggerPtr logger(log4cxx::Logger::getRootLogger());
 
-std::map<int,Detector>
-read_all_DRF_files(const Params::Data_Type &d, const std::string &DRF_prefix);
+std::map<int,Detector> read_all_DRF_files(const Params::Data_Type &dt,
+                                          const std::string &DRF_prefix);
+
+std::vector<Sample> read_all_IN_files(const Params::Data_Type &dt,
+                                      const std::string &prefix,
+                                      const Gnomonic &projection);
 
 int main(int argc, char* argv[])
 {
   Params params(argc,argv);
+  Gnomonic projection(params.crval1,params.crval2);
 
   log4cxx::PatternLayoutPtr layout(new log4cxx::PatternLayout("\%m"));
   log4cxx::FileAppenderPtr
@@ -30,9 +40,11 @@ int main(int argc, char* argv[])
 
   LOG4CXX_INFO(logger, params);
 
-  auto all_detectors=read_all_DRF_files(params.data_type,params.drf_prefix);
-                                        
-  // auto all_samples=read_all_IN_files(params.INFILE_prefix,log);
+  std::map<int,Detector> all_detectors(read_all_DRF_files(params.data_type,
+                                                          params.drf_prefix));
+  std::vector<Sample> all_samples(read_all_IN_files(params.data_type,
+                                                    params.infile_prefix,
+                                                    projection));
   // auto all_footprints=create_all_footprints(all_samples,all_detectors);
   // auto wgt_image=calc_wgt_image(all_footprints);
   // if(param.outfile_types.find("cov")!=param.outfile_types.end())
