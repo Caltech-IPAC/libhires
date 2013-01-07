@@ -47,7 +47,7 @@ int main(int argc, char* argv[])
                                                 params.infile_prefix,
                                                 projection));
   Footprint footprints(params.radians_per_pix,params.NPIXi,params.NPIXj,
-                       detectors,samples);
+                       params.min_sample_flux,detectors,samples);
   // auto wgt_image=calc_wgt_image(all_footprints);
   // if(param.outfile_types.find("cov")!=param.outfile_types.end())
   //   write_FITS_image(wgt_image, "cov");
