@@ -4,7 +4,7 @@ std::vector<int> Footprint::compute_bounds(const Eigen::MatrixXd &response,
                                            const int &i_center, const int &j_center,
                                            const int &NPIXi, const int &NPIXj)
 {
-  int i_size(response.rows()), j_size(response.cols());
+  int j_size(response.rows()), i_size(response.cols());
   int radius_pixels(j_size/2);
   int j0_resp=0;
   int j1_resp = j_size;

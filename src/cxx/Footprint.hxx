@@ -42,6 +42,22 @@ public:
   std::vector<int> compute_bounds(const Eigen::MatrixXd &response,
                                   const int &i_center, const int &j_center,
                                   const int &NPIXi, const int &NPIXj);
+
+  Eigen::MatrixXd calc_wgt_image(const int &NPIXi, const int &NPIXj)
+  {
+    Eigen::MatrixXd result(Eigen::MatrixXd::Zero(NPIXi,NPIXj));
+    for(size_t r=0;r<responses.size();++r)
+      {
+        for(int j=j0_im[r];j<j1_im[r];++j)
+          for(int i=i0_im[r];i<i1_im[r];++i)
+            {
+              result(i,j)+=responses[r](i+i0_ft[r]-i0_im[r],
+                                        j+j0_ft[r]-j0_im[r]);
+            }
+      }
+    LOG4CXX_INFO(logger,"Weight array computed\n");
+    return result;
+  }
 };
 
 #endif

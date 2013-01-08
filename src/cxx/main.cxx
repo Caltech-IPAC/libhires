@@ -50,6 +50,8 @@ int main(int argc, char* argv[])
                        params.min_sample_flux,params.angle_tolerance,
                        params.footprints_per_pix,
                        detectors,samples);
+  Eigen::MatrixXd wgt_image(footprints.calc_wgt_image(params.NPIXi,params.NPIXj));
+
   // auto wgt_image=calc_wgt_image(all_footprints);
   // if(param.outfile_types.find("cov")!=param.outfile_types.end())
   //   write_FITS_image(wgt_image, "cov");
