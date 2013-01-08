@@ -93,7 +93,10 @@ Params::Params(int argc, char* argv[]):
           else if(key=="OUTFILE_TYPES")
             outfile_types=std::vector<std::string>(words.begin()+1,words.end());
           else if(key=="ANGLE_TOLERANCE")
-            ss >> angle_tolerance;
+            {
+              ss >> angle_tolerance;
+              angle_tolerance*=boost::math::constants::pi<double>()/180;
+            }
           else if(key=="FOOTPRINTS_PER_PIX")
             ss >> footprints_per_pix;
           else if(key=="DRF_PREFIX")

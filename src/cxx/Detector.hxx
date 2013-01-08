@@ -14,7 +14,7 @@ public:
   int id;
   double radius_radians, radians_per_pix;
   int nx, ny;
-  std::valarray<double> drf_array;
+  std::valarray<double> detector_response;
 
   Detector() {}
   Detector(const boost::filesystem::path &p)
@@ -47,7 +47,7 @@ public:
     int radius_pix = nx / 2;
     double radius_radians = radius_pix * radians_per_pix;
 
-    phdu.read(drf_array);
+    phdu.read(detector_response);
     LOG4CXX_INFO(logger, "detector: " << id 
                  << "; file=" << p.filename()
                  << "; radius= " << radius_pix
@@ -56,7 +56,7 @@ public:
                  << " arcmin\n");
   }
 
-  double response(const double &du, const double &dv)
+  double response(const double &du, const double &dv) const
   {
     double result(0);
     int i((du+radius_radians)/radians_per_pix + 0.5),
@@ -64,7 +64,7 @@ public:
     if(!(i<0 || i>=nx || j<0 || j>ny))
       {
         /* Column or row major? */
-        result=drf_array[i+nx*j];
+        result=detector_response[i+nx*j];
       }
     return result;
   }
@@ -80,7 +80,7 @@ namespace std
     swap(a.radians_per_pix,b.radians_per_pix);
     swap(a.nx,b.nx);
     swap(a.ny,b.ny);
-    swap(a.drf_array,b.drf_array);
+    swap(a.detector_response,b.detector_response);
   }
 }
 

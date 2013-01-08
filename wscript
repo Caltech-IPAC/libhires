@@ -151,6 +151,8 @@ def build(ctx):
             'src/cxx/read_all_IN_files/read_one_IN_planck.cxx',
             'src/cxx/Footprint/Footprint.cxx',
             'src/cxx/Footprint/count_good_samples.cxx',
+            'src/cxx/Footprint/get_response.cxx',
+            'src/cxx/Footprint/generate_response.cxx',
             'src/cxx/Params/Params.cxx',
             'src/cxx/Params/ostream_operator.cxx'],
         target='hires',

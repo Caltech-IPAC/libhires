@@ -4,7 +4,8 @@
 #include "../Footprint.hxx"
 
 Footprint::Footprint(const double &radians_per_pix, const int &NPIXi, const int &NPIXj,
-                     const double &min_sample_flux,
+                     const double &min_sample_flux, const double &angle_tolerance,
+                     const double &footprints_per_pix,
                      const std::map<int,Detector> &detectors,
                      std::vector<Sample> &samples)
 {
@@ -77,8 +78,12 @@ Footprint::Footprint(const double &radians_per_pix, const int &NPIXi, const int 
 
           int i_int(xi), j_int(yi);
           double i_frac(xi-i_int), j_frac(yi-j_int);
-          // resp_array=response_array(det_id,i_frac,j_frac,samples[i].angle[j]);
-          // bounds=footprint_bounds(resp_array,i_int,j_int);
+          std::vector<double> response(get_response(samples[i].id,i_frac,j_frac,
+                                                    samples[i].angle[j],
+                                                    angle_tolerance,
+                                                    footprints_per_pix,
+                                                    detectors));
+          // bounds=footprint_bounds(response,i_int,j_int);
 
           if(samples[i].flux[j]<min_sample_flux)
             {
@@ -86,7 +91,7 @@ Footprint::Footprint(const double &radians_per_pix, const int &NPIXi, const int 
               ++n_fluxes_reset;
             }
           flux.push_back(samples[i].flux[j]);
-          // resp.push_back(resp_array);
+          // resp.push_back(response);
           // j0_im.push_back(bounds[0]);
           // j1_im.push_back(bounds[1]);
           // i0_im.push_back(bounds[2]);
@@ -100,6 +105,6 @@ Footprint::Footprint(const double &radians_per_pix, const int &NPIXi, const int 
     }
   LOG4CXX_INFO(logger,"Footprint creation complete\n");
   LOG4CXX_INFO(logger,foot_N << " footprints created\n");
-  // LOG4CXX(logger,"(" << response_arrays.size() << " response arrays created)\n");
+  LOG4CXX_INFO(logger,"(" << responses.size() << " response arrays created)\n");
   LOG4CXX_INFO(logger,n_fluxes_reset << " sample fluxes reset to minimum\n");
 }
