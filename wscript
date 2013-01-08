@@ -140,6 +140,8 @@ def configure(ctx):
 
     ctx.env.append_value('CXXFLAGS', '-std=c++11')
 
+    ctx.env.append_value('CPPFLAGS', '-I/usr/include/eigen3')
+
 def build(ctx):
     # tree index generator
     ctx.program(

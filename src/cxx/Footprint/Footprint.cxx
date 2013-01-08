@@ -78,11 +78,11 @@ Footprint::Footprint(const double &radians_per_pix, const int &NPIXi, const int 
 
           int i_int(xi), j_int(yi);
           double i_frac(xi-i_int), j_frac(yi-j_int);
-          std::vector<double> response(get_response(samples[i].id,i_frac,j_frac,
-                                                    samples[i].angle[j],
-                                                    angle_tolerance,
-                                                    footprints_per_pix,
-                                                    detectors));
+          Eigen::MatrixXd response(get_response(samples[i].id,i_frac,j_frac,
+                                                samples[i].angle[j],
+                                                angle_tolerance,
+                                                footprints_per_pix,
+                                                detectors));
           // bounds=footprint_bounds(response,i_int,j_int);
 
           if(samples[i].flux[j]<min_sample_flux)
