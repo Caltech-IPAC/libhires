@@ -22,7 +22,7 @@ Footprint::Footprint(const double &radians_per_pix, const int &NPIXi, const int 
   double i_offset(NPIXi/2.0), j_offset(NPIXj/2.0);
 
   int n_fluxes_reset(0);
-  int foot_N(0);
+  int num_footprints(0);
 
   for(size_t i=0;i<samples.size();++i)
     {
@@ -78,12 +78,13 @@ Footprint::Footprint(const double &radians_per_pix, const int &NPIXi, const int 
 
           int i_int(xi), j_int(yi);
           double i_frac(xi-i_int), j_frac(yi-j_int);
-          Eigen::MatrixXd response(get_response(samples[i].id,i_frac,j_frac,
-                                                samples[i].angle[j],
-                                                angle_tolerance,
-                                                footprints_per_pix,
-                                                detectors));
-          // bounds=footprint_bounds(response,i_int,j_int);
+          responses.push_back(get_response(samples[i].id,i_frac,j_frac,
+                                           samples[i].angle[j],
+                                           angle_tolerance,
+                                           footprints_per_pix,
+                                           detectors));
+          std::vector<int> bounds(compute_bounds(*responses.rbegin(),
+                                                 i_int,j_int,NPIXi,NPIXj));
 
           if(samples[i].flux[j]<min_sample_flux)
             {
@@ -91,20 +92,19 @@ Footprint::Footprint(const double &radians_per_pix, const int &NPIXi, const int 
               ++n_fluxes_reset;
             }
           flux.push_back(samples[i].flux[j]);
-          // resp.push_back(response);
-          // j0_im.push_back(bounds[0]);
-          // j1_im.push_back(bounds[1]);
-          // i0_im.push_back(bounds[2]);
-          // i1_im.push_back(bounds[3]);
-          // j0_ft.push_back(bounds[0]);
-          // j1_ft.push_back(bounds[1]);
-          // i0_ft.push_back(bounds[2]);
-          // i1_ft.push_back(bounds[3]);
-          ++foot_N;
+          j0_im.push_back(bounds[0]);
+          j1_im.push_back(bounds[1]);
+          i0_im.push_back(bounds[2]);
+          i1_im.push_back(bounds[3]);
+          j0_ft.push_back(bounds[4]);
+          j1_ft.push_back(bounds[5]);
+          i0_ft.push_back(bounds[6]);
+          i1_ft.push_back(bounds[7]);
+          ++num_footprints;
         }
     }
   LOG4CXX_INFO(logger,"Footprint creation complete\n");
-  LOG4CXX_INFO(logger,foot_N << " footprints created\n");
+  LOG4CXX_INFO(logger,num_footprints << " footprints created\n");
   LOG4CXX_INFO(logger,"(" << responses.size() << " response arrays created)\n");
   LOG4CXX_INFO(logger,n_fluxes_reset << " sample fluxes reset to minimum\n");
 }
