@@ -44,6 +44,8 @@ void read_one_IN_planck(const boost::filesystem::path &filename,
       offset_signal=(signal - offset)/scale;
       glat=boost::math::constants::pi<double>()/2 - theta;
       std::tie(x,y)=projection.lonlat2xy(glon,glat);
-      samples.emplace_back(-x,y,offset_signal,detector_id);
+      // FIXME: Why is this hard coded to 1?
+      // samples.emplace_back(-x,y,offset_signal,detector_id);
+      samples.emplace_back(-x,y,offset_signal,1);
     }
 }
