@@ -11,6 +11,7 @@
 #include "Sample.hxx"
 #include "Gnomonic.hxx"
 #include "Footprint.hxx"
+#include "write_fits.hxx"
 
 log4cxx::LoggerPtr logger(log4cxx::Logger::getRootLogger());
 
@@ -52,9 +53,10 @@ int main(int argc, char* argv[])
                        detectors,samples);
   Eigen::MatrixXd wgt_image(footprints.calc_wgt_image(params.NPIXi,params.NPIXj));
 
-  // auto wgt_image=calc_wgt_image(all_footprints);
-  // if(param.outfile_types.find("cov")!=param.outfile_types.end())
-  //   write_FITS_image(wgt_image, "cov");
+  std::cout << "image " << wgt_image(0,0) << "\n";
+  if(std::find(params.outfile_types.begin(),params.outfile_types.end(),"cov")
+     !=params.outfile_types.end())
+    write_fits(wgt_image, "cov",params);
 
   // if(outfile_types.find("flux")!=outfile_types.end())
   //   {
