@@ -44,6 +44,7 @@ int main(int argc, char* argv[])
 
   std::map<int,Detector> detectors(read_all_DRF_files(params.data_type,
                                                       params.drf_prefix));
+
   std::vector<Sample> samples(read_all_IN_files(params.data_type,
                                                 params.infile_prefix,
                                                 projection));
@@ -53,7 +54,6 @@ int main(int argc, char* argv[])
                        detectors,samples);
   Eigen::MatrixXd wgt_image(footprints.calc_wgt_image(params.NPIXi,params.NPIXj));
 
-  std::cout << "image " << wgt_image(0,0) << "\n";
   if(std::find(params.outfile_types.begin(),params.outfile_types.end(),"cov")
      !=params.outfile_types.end())
     write_fits(wgt_image, "cov",params);
