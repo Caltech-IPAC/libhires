@@ -43,9 +43,9 @@ public:
     if(cdelt2 <= 0)
       LOG4CXX_WARN(logger, "In " << p.string() << " CDELT2 must be positive\n");
 
-    double radians_per_pix=cdelt2*boost::math::constants::pi<double>()/180;
+    radians_per_pix=cdelt2*boost::math::constants::pi<double>()/180;
     int radius_pix = nx / 2;
-    double radius_radians = radius_pix * radians_per_pix;
+    radius_radians = radius_pix * radians_per_pix;
 
     phdu.read(detector_response);
     LOG4CXX_INFO(logger, "detector: " << id 
@@ -61,7 +61,7 @@ public:
     double result(0);
     int i((du+radius_radians)/radians_per_pix + 0.5),
       j((dv+radius_radians)/radians_per_pix + 0.5);
-    if(!(i<0 || i>=nx || j<0 || j>ny))
+    if(!(i<0 || i>=nx || j<0 || j>=ny))
       {
         /* Column or row major? */
         result=detector_response[i+nx*j];

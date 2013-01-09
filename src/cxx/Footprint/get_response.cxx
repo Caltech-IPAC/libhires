@@ -4,11 +4,12 @@
 
 /* Return appropriate footprint array, generating it if needed */
 
-Eigen::MatrixXd
+const Eigen::MatrixXd *
 Footprint::get_response(const int &detector_id, const double &i_frac,
                         const double &j_frac, const double &angle,
                         const double &angle_tolerance,
                         const double &footprints_per_pix,
+                        const double &radians_per_pix,
                         const std::map<int,Detector> &detectors)
 {
   double rounded_angle=std::round(angle/angle_tolerance);
@@ -16,6 +17,7 @@ Footprint::get_response(const int &detector_id, const double &i_frac,
   double recomposed_angle(rounded_angle*angle_tolerance);
   int i_id(i_frac*footprints_per_pix), j_id(j_frac*footprints_per_pix);
   auto key=std::make_tuple(detector_id,angle_id,i_id,j_id);
+
   auto iter(responses_complete.find(key));
   if(iter==responses_complete.end())
     {
@@ -26,7 +28,7 @@ Footprint::get_response(const int &detector_id, const double &i_frac,
       iter=responses_complete.insert
         (std::make_pair(key,generate_response
                         (detector_id,i_mod,j_mod,recomposed_angle,
-                         detectors))).first;
+                         radians_per_pix,detectors))).first;
     }
-  return iter->second;
+  return &(iter->second);
 }

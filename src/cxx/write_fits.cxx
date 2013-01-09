@@ -78,7 +78,7 @@ void write_fits(const Eigen::MatrixXd &image, const std::string &file_type,
   std::valarray<float> temp(image.cols()*image.rows());
   for(int i=0;i<image.cols();++i)
     for(int j=0;j<image.rows();++j)
-      temp[i+image.cols()*j]=image(i,j);
+      temp[i+image.cols()*j]=image(j,i);
   phdu.write(1,temp.size(),temp);
   LOG4CXX_INFO(logger,"Output file written: " << fits_file.string() << "\n");
 }

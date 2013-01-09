@@ -78,12 +78,14 @@ Footprint::Footprint(const double &radians_per_pix, const int &NPIXi, const int 
 
           int i_int(xi), j_int(yi);
           double i_frac(xi-i_int), j_frac(yi-j_int);
+
           responses.push_back(get_response(samples[i].id,i_frac,j_frac,
                                            samples[i].angle[j],
                                            angle_tolerance,
                                            footprints_per_pix,
+                                           radians_per_pix,
                                            detectors));
-          std::vector<int> bounds(compute_bounds(*responses.rbegin(),
+          std::vector<int> bounds(compute_bounds(*(*responses.rbegin()),
                                                  i_int,j_int,NPIXi,NPIXj));
 
           if(samples[i].flux[j]<min_sample_flux)
@@ -105,6 +107,6 @@ Footprint::Footprint(const double &radians_per_pix, const int &NPIXi, const int 
     }
   LOG4CXX_INFO(logger,"Footprint creation complete\n");
   LOG4CXX_INFO(logger,num_footprints << " footprints created\n");
-  LOG4CXX_INFO(logger,"(" << responses.size() << " response arrays created)\n");
+  LOG4CXX_INFO(logger,"(" << responses_complete.size() << " full response arrays created)\n");
   LOG4CXX_INFO(logger,n_fluxes_reset << " sample fluxes reset to minimum\n");
 }
