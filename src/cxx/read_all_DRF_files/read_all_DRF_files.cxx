@@ -2,10 +2,10 @@
 #include "../Detector.hxx"
 #include "../logger.hxx"
 
-std::map<std::string,Detector>
+std::map<int,Detector>
 read_all_DRF_planck(const std::string &DRF_prefix);
 
-std::map<std::string,Detector>
+std::map<int,Detector>
 read_all_DRF_files(const Params::Data_Type &dt, const std::string &DRF_prefix)
 {
   switch(dt)
@@ -20,5 +20,5 @@ read_all_DRF_files(const Params::Data_Type &dt, const std::string &DRF_prefix)
       LOG4CXX_FATAL(logger,"No valid DRF reader known for " << Params::type_string(dt) << "\n");
       break;
     }
-  return std::map<std::string,Detector>();
+  return std::map<int,Detector>();
 }
