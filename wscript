@@ -147,6 +147,7 @@ def build(ctx):
     ctx.program(
         source=[
             'src/cxx/main.cxx',
+            'src/cxx/make_start_image.cxx',
             'src/cxx/read_all_DRF_files/read_all_DRF_files.cxx',
             'src/cxx/read_all_DRF_files/read_all_DRF_planck.cxx',
             'src/cxx/read_all_IN_files/read_all_IN_files.cxx',

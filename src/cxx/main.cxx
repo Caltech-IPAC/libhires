@@ -22,6 +22,9 @@ std::vector<Sample> read_all_IN_files(const Params::Data_Type &dt,
                                       const std::string &prefix,
                                       const Gnomonic &projection);
 
+Eigen::MatrixXd make_start_image(const std::string &filename,
+                                 const Params &p, int &iter_start);
+
 int main(int argc, char* argv[])
 {
   Params params(argc,argv);
@@ -52,36 +55,44 @@ int main(int argc, char* argv[])
                        params.min_sample_flux,params.angle_tolerance,
                        params.footprints_per_pix,
                        detectors,samples);
-  Eigen::MatrixXd wgt_image(footprints.calc_wgt_image(params.NPIXi,params.NPIXj));
+  Eigen::MatrixXd wgt_image(footprints.calc_wgt_image(params.NPIXi,
+                                                      params.NPIXj));
 
   if(std::find(params.outfile_types.begin(),params.outfile_types.end(),"cov")
      !=params.outfile_types.end())
     write_fits(wgt_image, "cov",params);
 
-  // if(outfile_types.find("flux")!=outfile_types.end())
-  //   {
-  //     int iter_start;
-  //     auto flux_image=make_start_image(params.starting_image, iter_start);
-  //     for(int iter= iter_start+1; iter<=params.iter_max; ++iter)
-  //       {
-  //         bool do_cfv_image=(params.outfile_types.find("cfv")!=
-  //                            params.outfile_types.end())
-  //           && params.iter_list.find(iter)!=params.iter_list.end();
-  //         Corr_Wgt_Image c(all_footprints,flux_image,iter,do_cfv_image);
-  //         flux_image*=c.correction_image;
-  //         log.extra <<"Mean flux in image "
-  //                   << flux_image.mean()
-  //                   << "\n";
-  //         if(iter_list.find(iter)!=iter_list.end())
-  //           write_FITS_image(flux_image,"flux",iter);
-  //         if(do_cfv_image)
-  //           {
-  //             auto corr_sq_image = (c.sq_wgt / c.wgt) -
-  //               (c.correction_image * c.correction_image);
-  //             write_FITS_image(corr_sq_image, "cfv", iter);
-  //           }
-  //       }
-  //   }
+  if(find(params.outfile_types.begin(),params.outfile_types.end(),"flux")
+     !=params.outfile_types.end())
+    {
+      int iter_start;
+      Eigen::MatrixXd flux_image=make_start_image(params.starting_image,
+                                                  params, iter_start);
+      for(int iter= iter_start+1; iter<=params.iter_max; ++iter)
+        {
+          bool do_cfv_image=
+            find(params.outfile_types.begin(),params.outfile_types.end(),"cfv")
+            !=params.outfile_types.end()
+            && find(params.iter_list.begin(),params.iter_list.end(),iter)
+            !=params.iter_list.end();
+          // Eigen::MatrixXd correction,correction_squared;
+          // compute_correction(footprints,flux_image,iter,do_cfv_image,
+          //                    correction,correction_squared);
+          // Corr_Wgt_Image c(all_footprints,flux_image,iter,do_cfv_image);
+          // flux_image*=c.correction_image;
+          // log.extra <<"Mean flux in image "
+          //           << flux_image.mean()
+          //           << "\n";
+          // if(iter_list.find(iter)!=iter_list.end())
+          //   write_FITS_image(flux_image,"flux",iter);
+          // if(do_cfv_image)
+          //   {
+          //     auto corr_sq_image = (c.sq_wgt / c.wgt) -
+          //       (c.correction_image * c.correction_image);
+          //     write_FITS_image(corr_sq_image, "cfv", iter);
+          //   }
+        }
+    }
   
   // if(outfile_types.find("beam")!=outfile_types.end())
   //   {
