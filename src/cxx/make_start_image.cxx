@@ -5,9 +5,9 @@
 #include "logger.hxx"
 
 arma::mat make_start_image(const std::string &filename,
-                                 const Params &p, int &iter_start)
+                           const Params &p, int &iter_start)
 {
-  arma::mat image(p.NPIXi,p.NPIXj);
+  arma::mat image(p.nj,p.ni);
   iter_start=0;
   if(filename=="flat")
     {
@@ -18,10 +18,10 @@ arma::mat make_start_image(const std::string &filename,
       CCfits::FITS hdus(filename);
       CCfits::PHDU &phdu(hdus.pHDU());
       phdu.readAllKeys();
-      if(p.NPIXi!=phdu.axis(0) || p.NPIXj!=phdu.axis(1))
+      if(p.ni!=phdu.axis(0) || p.nj!=phdu.axis(1))
         LOG4CXX_FATAL(logger,"STARTING_IMAGE " << filename
                       << "has incorrect dimensions\n"
-                      << "  Must be: " << p.NPIXi << " " << p.NPIXj << "\n"
+                      << "  Must be: " << p.ni << " " << p.nj << "\n"
                       << "  Actual value: " << phdu.axis(0) << " "
                       << phdu.axis(1) << "\n");
       std::map<std::string,CCfits::Keyword *> &m(phdu.keyWord());
@@ -39,6 +39,14 @@ arma::mat make_start_image(const std::string &filename,
                       << " has inconsistent CRVAL1\n"
                       << "  Should be: " << p.crval2 << "\n"
                       << "  Actual value: " << crval2 << "\n");
+
+      if(m.find("BUNIT")==m.end())
+        {
+          for(auto &a: m)
+            std::cout << a.first << "\n";
+        LOG4CXX_FATAL(logger,"STARTING_IMAGE " << filename
+                      << " is missing BUNIT\n");
+        }
       m["BUNIT"]->value(bunit);
       if(bunit!=p.flux_units)
         LOG4CXX_FATAL(logger,"STARTING_IMAGE " << filename
@@ -59,9 +67,9 @@ arma::mat make_start_image(const std::string &filename,
         
       std::valarray<double> valarray_image;
       phdu.read(valarray_image);
-      for(int i=0;i<p.NPIXi;++i)
-        for(int j=0;j<p.NPIXj;++j)
-          image(i,j)=valarray_image[i+p.NPIXi*j];
+      for(int i=0;i<p.ni;++i)
+        for(int j=0;j<p.nj;++j)
+          image(j,i)=valarray_image[j+p.nj*i];
     }
   return image;
 }

@@ -13,7 +13,7 @@ std::ostream& operator<<(std::ostream& out, const Params &p)
       << "\n  DRF_PREFIX " << p.drf_prefix
 
       << "\n\nOutput image geometry:"
-      << "\n  NPIX " << p.NPIXi << " " << p.NPIXj
+      << "\n  NPIX " << p.ni << " " << p.nj
       << boost::format("\n  DEG_PER_PIX %.6f")
     % (p.radians_per_pix*180/boost::math::constants::pi<double>())
       << boost::format("\n  CRVAL1 %.5f") % p.crval1

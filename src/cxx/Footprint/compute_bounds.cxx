@@ -2,7 +2,7 @@
 
 std::vector<int> Footprint::compute_bounds(const arma::mat &response,
                                            const int &i_center, const int &j_center,
-                                           const int &NPIXi, const int &NPIXj)
+                                           const int &ni, const int &nj)
 {
   int j_size(response.n_rows), i_size(response.n_cols);
   int radius_pixels(j_size/2);
@@ -23,20 +23,20 @@ std::vector<int> Footprint::compute_bounds(const arma::mat &response,
       j0_resp -= j0_image;
       j0_image = 0;
     }
-  else if(j1_image>NPIXj)
+  else if(j1_image>nj)
     {
-      j1_resp -= j1_image-NPIXj;
-      j1_image = NPIXj;
+      j1_resp -= j1_image-nj;
+      j1_image = nj;
     }
   if(i0_image<0)
     {
       i0_resp -= i0_image;
       i0_image = 0;
     }
-  else if(i1_image>NPIXi)
+  else if(i1_image>ni)
     {
-      i1_resp -= i1_image-NPIXi;
-      i1_image = NPIXi;
+      i1_resp -= i1_image-ni;
+      i1_image = ni;
     }
   return {j0_image, j1_image, i0_image, i1_image,
       j0_resp, j1_resp, i0_resp, i1_resp};

@@ -44,8 +44,8 @@ void write_fits(const arma::mat &image, const std::string &file_type,
   float cdelt_rounded(p.radians_per_pix*180/boost::math::constants::pi<double>());
   phdu.addKey("CDELT1",-cdelt_rounded,"left(+) to right(-)");
   phdu.addKey("CDELT2", cdelt_rounded, "bottom(-) to top(+)");
-  phdu.addKey("CRPIX1", (p.NPIXi+1)/2 , "center pixel");
-  phdu.addKey("CRPIX2", (p.NPIXj+1)/2 , "center pixel");
+  phdu.addKey("CRPIX1", (p.ni+1)/2 , "center pixel");
+  phdu.addKey("CRPIX2", (p.nj+1)/2 , "center pixel");
   std::string t_comment("HIRES");
   if(file_type=="flux")
     t_comment+=" flux";

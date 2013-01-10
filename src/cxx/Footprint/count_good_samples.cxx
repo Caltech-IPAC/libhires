@@ -1,11 +1,11 @@
 #include "../Footprint.hxx"
 
 double Footprint::count_good_samples(const double &radians_per_pix,
-                                     const int &NPIXi, const int &NPIXj,
+                                     const int &ni, const int &nj,
                                      const std::vector<Sample> &samples)
 {
-  const double x_radius = (radians_per_pix * (NPIXi-1)) / 2.0;
-  const double y_radius = (radians_per_pix * (NPIXj-1)) / 2.0;
+  const double x_radius = (radians_per_pix * (ni-1)) / 2.0;
+  const double y_radius = (radians_per_pix * (nj-1)) / 2.0;
   int total_samps = 0;
   int total_good  = 0;
   good.resize(samples.size());

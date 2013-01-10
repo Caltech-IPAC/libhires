@@ -18,14 +18,14 @@ public:
   std::vector<double> flux;
   std::vector<int> j0_im, j1_im, i0_im, i1_im, j0_ft, j1_ft, i0_ft, i1_ft;
 
-  Footprint(const double &radians_per_pix, const int &NPIXi, const int &NPIXj,
+  Footprint(const double &radians_per_pix, const int &ni, const int &nj,
             const double &min_sample_flux, const double &angle_tolerance,
             const double &footprints_per_pix,
             const std::map<int,Detector> &detectors,
             std::vector<Sample> &samples);
 
   double count_good_samples(const double &radians_per_pix,
-                            const int &NPIXi, const int &NPIXj,
+                            const int &ni, const int &nj,
                             const std::vector<Sample> &samples);
   const arma::mat *
   get_response(const int &detector_id, const double &i_frac,
@@ -43,11 +43,11 @@ public:
 
   std::vector<int> compute_bounds(const arma::mat &response,
                                   const int &i_center, const int &j_center,
-                                  const int &NPIXi, const int &NPIXj);
+                                  const int &ni, const int &nj);
 
-  arma::mat calc_wgt_image(const int &NPIXi, const int &NPIXj)
+  arma::mat calc_wgt_image(const int &ni, const int &nj)
   {
-    arma::mat result(NPIXi,NPIXj);
+    arma::mat result(nj,ni);
     result.fill(1e-8);
     for(size_t r=0;r<responses.size();++r)
       {

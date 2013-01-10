@@ -12,7 +12,7 @@ public:
   std::string infile_prefix, outfile_prefix, drf_prefix, ctype1, ctype2,
     boost_type, starting_image, beam_starting_image, flux_units, log_filename;
   std::vector<std::string> outfile_types;
-  int NPIXi, NPIXj, iter_max, boost_max_iter, footprints_per_pix, beam_spike_n;
+  int ni, nj, iter_max, boost_max_iter, footprints_per_pix, beam_spike_n;
   double radians_per_pix, crval1, crval2, min_sample_flux, angle_tolerance,
     beam_spike_height;
   std::vector<int> iter_list;

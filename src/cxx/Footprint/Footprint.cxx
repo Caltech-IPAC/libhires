@@ -3,13 +3,13 @@
 
 #include "../Footprint.hxx"
 
-Footprint::Footprint(const double &radians_per_pix, const int &NPIXi, const int &NPIXj,
+Footprint::Footprint(const double &radians_per_pix, const int &ni, const int &nj,
                      const double &min_sample_flux, const double &angle_tolerance,
                      const double &footprints_per_pix,
                      const std::map<int,Detector> &detectors,
                      std::vector<Sample> &samples)
 {
-  size_t num_good=count_good_samples(radians_per_pix,NPIXi,NPIXj,samples);
+  size_t num_good=count_good_samples(radians_per_pix,ni,nj,samples);
   j0_im.reserve(num_good);
   j1_im.reserve(num_good);
   i0_im.reserve(num_good);
@@ -19,7 +19,7 @@ Footprint::Footprint(const double &radians_per_pix, const int &NPIXi, const int 
   i0_ft.reserve(num_good);
   i1_ft.reserve(num_good);
   
-  double i_offset(NPIXi/2.0), j_offset(NPIXj/2.0);
+  double i_offset(ni/2.0), j_offset(nj/2.0);
 
   int n_fluxes_reset(0);
   int num_footprints(0);
@@ -86,7 +86,7 @@ Footprint::Footprint(const double &radians_per_pix, const int &NPIXi, const int 
                                            radians_per_pix,
                                            detectors));
           std::vector<int> bounds(compute_bounds(*(*responses.rbegin()),
-                                                 i_int,j_int,NPIXi,NPIXj));
+                                                 i_int,j_int,ni,nj));
 
           if(samples[i].flux[j]<min_sample_flux)
             {

@@ -71,11 +71,11 @@ Params::Params(int argc, char* argv[]):
           ss >> key;
           if(key=="SIZE_NPIX")
             {
-              ss >> NPIXi;
+              ss >> ni;
               if(words.size()>=3)
-                ss >> NPIXj;
+                ss >> nj;
               else
-                NPIXj=NPIXi;
+                nj=ni;
             }
           else if(key=="ARCSEC_PER_PIX")
             {

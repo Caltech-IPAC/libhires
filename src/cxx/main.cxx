@@ -23,7 +23,7 @@ std::vector<Sample> read_all_IN_files(const Params::Data_Type &dt,
                                       const Gnomonic &projection);
 
 arma::mat make_start_image(const std::string &filename,
-                                 const Params &p, int &iter_start);
+                           const Params &p, int &iter_start);
 
 void compute_correction(const int &nx, const int &ny,
                         const Footprint &fp,
@@ -67,12 +67,12 @@ int main(int argc, char* argv[])
   std::vector<Sample> samples(read_all_IN_files(params.data_type,
                                                 params.infile_prefix,
                                                 projection));
-  Footprint footprints(params.radians_per_pix,params.NPIXi,params.NPIXj,
+  Footprint footprints(params.radians_per_pix,params.ni,params.nj,
                        params.min_sample_flux,params.angle_tolerance,
                        params.footprints_per_pix,
                        detectors,samples);
-  arma::mat wgt_image(footprints.calc_wgt_image(params.NPIXi,
-                                                      params.NPIXj));
+  arma::mat wgt_image(footprints.calc_wgt_image(params.ni,
+                                                params.nj));
 
   if(std::find(params.outfile_types.begin(),params.outfile_types.end(),"cov")
      !=params.outfile_types.end())
@@ -92,7 +92,7 @@ int main(int argc, char* argv[])
             && find(params.iter_list.begin(),params.iter_list.end(),iter)
             !=params.iter_list.end();
           arma::mat correction,correction_squared;
-          compute_correction(params.NPIXi,params.NPIXj,
+          compute_correction(params.ni,params.nj,
                              footprints,flux_image,iter,do_cfv_image,
                              params.boost_func, params.boost_max_iter,
                              correction,correction_squared);
@@ -117,7 +117,7 @@ int main(int argc, char* argv[])
     {
       arma::mat spike_image=create_spike_image(params.beam_spike_n,
                                                params.beam_spike_height,
-                                               params.NPIXi,params.NPIXj);
+                                               params.ni,params.nj);
       set_fluxes_to_sim_values(footprints,spike_image);
       int iter_start;
       arma::mat beam_image=make_start_image(params.beam_starting_image,
@@ -125,7 +125,7 @@ int main(int argc, char* argv[])
       for(int iter=iter_start+1;iter<=params.iter_max;++iter)
         {
           arma::mat correction,correction_squared;
-          compute_correction(params.NPIXi,params.NPIXj,
+          compute_correction(params.ni,params.nj,
                              footprints,beam_image,iter,false,
                              params.boost_func, params.boost_max_iter,
                              correction,correction_squared);
