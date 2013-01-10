@@ -34,6 +34,9 @@ void compute_correction(const int &nx, const int &ny,
                         arma::mat &correction,
                         arma::mat &correction_squared);
 
+arma::mat create_spike_image(const int &n, const double &height, const int &nx,
+                             const int &ny);
+
 int main(int argc, char* argv[])
 {
   Params params(argc,argv);
@@ -105,20 +108,22 @@ int main(int argc, char* argv[])
         }
     }
   
-  // if(outfile_types.find("beam")!=outfile_types.end())
-  //   {
-  //     auto spike_image=create_spike_image(params.beam_spike_n,
-  //                                         beam_spike_height);
-  //     set_fluxes_to_sim_values(all_footprints,spike_image);
-  //     int iter_start;
-  //     auto beam_image=make_start_image(params.beam_starting_image,iter_start);
-  //     for(iter=iter_start+1;iter<=params.iter_max;++iter)
-  //       {
-  //         Corr_Wgt_Image c(all_footprints,beam_image,iter,false);
-  //         beam_image*=c.correction_image;
-  //         if(iter_list.find(iter)!=iter_list.end())
-  //           write_FITS_image(beam_image,"beam",iter);
-  //       }
-  //   }
-  // log.step << "End Processing\n";
+  if(find(params.outfile_types.begin(),params.outfile_types.end(),"beam")
+     !=params.outfile_types.end())
+    {
+      arma::mat spike_image=create_spike_image(params.beam_spike_n,
+                                               params.beam_spike_height,
+                                               params.NPIXi,params.NPIXj);
+      // set_fluxes_to_sim_values(all_footprints,spike_image);
+      // int iter_start;
+      // auto beam_image=make_start_image(params.beam_starting_image,iter_start);
+      // for(iter=iter_start+1;iter<=params.iter_max;++iter)
+      //   {
+      //     Corr_Wgt_Image c(all_footprints,beam_image,iter,false);
+      //     beam_image*=c.correction_image;
+      //     if(iter_list.find(iter)!=iter_list.end())
+      //       write_FITS_image(beam_image,"beam",iter);
+      //   }
+    }
+  LOG4CXX_INFO(logger,"End Processing\n");
 }

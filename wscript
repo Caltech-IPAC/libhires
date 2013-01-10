@@ -150,6 +150,7 @@ def build(ctx):
         source=[
             'src/cxx/main.cxx',
             'src/cxx/compute_correction.cxx',
+            'src/cxx/create_spike_image.cxx',
             'src/cxx/make_start_image.cxx',
             'src/cxx/read_all_DRF_files/read_all_DRF_files.cxx',
             'src/cxx/read_all_DRF_files/read_all_DRF_planck.cxx',
