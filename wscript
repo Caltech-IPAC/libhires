@@ -142,11 +142,14 @@ def configure(ctx):
 
     ctx.env.append_value('CPPFLAGS', '-I/usr/include/eigen3')
 
+    ctx.env.append_value('LINKFLAGS', '-larmadillo')
+
 def build(ctx):
     # tree index generator
     ctx.program(
         source=[
             'src/cxx/main.cxx',
+            'src/cxx/compute_correction.cxx',
             'src/cxx/make_start_image.cxx',
             'src/cxx/read_all_DRF_files/read_all_DRF_files.cxx',
             'src/cxx/read_all_DRF_files/read_all_DRF_planck.cxx',

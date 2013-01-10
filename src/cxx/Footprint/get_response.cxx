@@ -4,7 +4,7 @@
 
 /* Return appropriate footprint array, generating it if needed */
 
-const Eigen::MatrixXd *
+const arma::mat *
 Footprint::get_response(const int &detector_id, const double &i_frac,
                         const double &j_frac, const double &angle,
                         const double &angle_tolerance,

@@ -1,10 +1,10 @@
 #include "../Footprint.hxx"
 
-std::vector<int> Footprint::compute_bounds(const Eigen::MatrixXd &response,
+std::vector<int> Footprint::compute_bounds(const arma::mat &response,
                                            const int &i_center, const int &j_center,
                                            const int &NPIXi, const int &NPIXj)
 {
-  int j_size(response.rows()), i_size(response.cols());
+  int j_size(response.n_rows), i_size(response.n_cols);
   int radius_pixels(j_size/2);
   int j0_resp=0;
   int j1_resp = j_size;

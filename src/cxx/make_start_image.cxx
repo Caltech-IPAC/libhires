@@ -1,13 +1,13 @@
-#include <Eigen/Dense>
+#include <armadillo>
 #include <CCfits>
 #include <valarray>
 #include "Params.hxx"
 #include "logger.hxx"
 
-Eigen::MatrixXd make_start_image(const std::string &filename,
+arma::mat make_start_image(const std::string &filename,
                                  const Params &p, int &iter_start)
 {
-  Eigen::MatrixXd image(p.NPIXi,p.NPIXj);
+  arma::mat image(p.NPIXi,p.NPIXj);
   iter_start=0;
   if(filename=="flat")
     {

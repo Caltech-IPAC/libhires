@@ -7,14 +7,14 @@
 #include <chrono>
 #include <limits>
 #include <CCfits>
-#include <Eigen/Dense>
+#include <armadillo>
 #include <boost/filesystem.hpp>
 #include <boost/math/constants/constants.hpp>
 #include "Params.hxx"
 #include "version.hxx"
 #include "logger.hxx"
 
-void write_fits(const Eigen::MatrixXd &image, const std::string &file_type,
+void write_fits(const arma::mat &image, const std::string &file_type,
                 const Params &p, const int &iteration)
 {
   boost::filesystem::path dir(p.outfile_prefix);
@@ -26,7 +26,7 @@ void write_fits(const Eigen::MatrixXd &image, const std::string &file_type,
   filename << ".fits";
   boost::filesystem::path fits_file(filename.str());
   
-  long axes[]={image.cols(),image.rows()};
+  long axes[]={image.n_cols,image.n_rows};
   boost::filesystem::remove(fits_file);
   CCfits::FITS outfile(fits_file.string(),FLOAT_IMG,2,axes);
 
@@ -75,10 +75,10 @@ void write_fits(const Eigen::MatrixXd &image, const std::string &file_type,
   phdu.addKey("CREATED","HIRES " + version,
               "software version that created this file");
 
-  std::valarray<float> temp(image.cols()*image.rows());
-  for(int i=0;i<image.cols();++i)
-    for(int j=0;j<image.rows();++j)
-      temp[i+image.cols()*j]=image(j,i);
+  std::valarray<float> temp(image.n_cols*image.n_rows);
+  for(size_t i=0;i<image.n_cols;++i)
+    for(size_t j=0;j<image.n_rows;++j)
+      temp[i+image.n_cols*j]=image(j,i);
   phdu.write(1,temp.size(),temp);
   LOG4CXX_INFO(logger,"Output file written: " << fits_file.string() << "\n");
 }
