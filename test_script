@@ -1,0 +1,17 @@
+#!/bin/bash
+g++ analyse.cxx -o analyse -lCCfits -I/usr/include/CCfits
+
+cd Planck/m33/
+mkdir -p cxx
+../../build/hires planck  IN/m33_857 cxx/m33_857 ../params/PLANCK.params ../params/857.params m33.params > /dev/null
+#mkdir -p python
+#python ../../src/python/hires_Planck.py IN/m33_857 python/m33_857 ../params/PLANCK.params ../params/857.params m33.params > /dev/null
+../../analyse cxx/m33_857_cov.fits python/m33_857_cov.fits
+../../analyse cxx/m33_857_flux_2.fits python/m33_857_flux_2.fits
+
+cd ../boost_m33
+mkdir -p cxx
+../../build/hires planck  IN/m33_857 cxx/m33_857 ../params/PLANCK.params ../params/857.params m33.params > /dev/null
+#mkdir -p python
+#python ../../src/python/hires_Planck.py IN/m33_857 python/m33_857 ../params/PLANCK.params ../params/857.params m33.params > /dev/null
+../../analyse cxx/m33_857_beam_1.fits python/m33_857_beam_1.fits
