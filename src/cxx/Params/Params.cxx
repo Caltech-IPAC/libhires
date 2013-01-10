@@ -37,8 +37,6 @@ Params::Params(int argc, char* argv[]):
       exit(1);
     }
 
-  std::map<Data_Type,std::string> flux_unit_types{{Data_Type::planck,"K_RJ"},
-      {Data_Type::spire,"Jy/beam"}};
   if(data_type==Data_Type::planck)
     flux_units="K_RJ";
 
