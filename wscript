@@ -148,7 +148,7 @@ def build(ctx):
         source=[
             'src/cxx/main.cxx',
             'src/cxx/read_all_DRF_files/read_all_DRF_files.cxx',
-            'src/cxx/read_all_DRF_files/read_all_DRF_planck/read_all_DRF_planck.cxx',
+            'src/cxx/read_all_DRF_files/read_all_DRF_planck.cxx',
             'src/cxx/read_all_IN_files/read_all_IN_files.cxx',
             'src/cxx/read_all_IN_files/read_one_IN_planck.cxx',
             'src/cxx/Footprint/Footprint.cxx',

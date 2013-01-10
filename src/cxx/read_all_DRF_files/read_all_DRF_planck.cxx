@@ -1,4 +1,4 @@
-#include "../../Detector.hxx"
+#include "../Detector.hxx"
 
 std::map<int,Detector>
 read_all_DRF_planck(const std::string &DRF_prefix)
