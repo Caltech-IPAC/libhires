@@ -39,6 +39,8 @@ Params::Params(int argc, char* argv[]):
 
   if(data_type==Data_Type::planck)
     flux_units="K_RJ";
+  else if(data_type==Data_Type::spire)
+    flux_units="Jy/beam";
 
   infile_prefix=argv[2];
   outfile_prefix=argv[3];
