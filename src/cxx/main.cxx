@@ -60,6 +60,7 @@ int main(int argc, char* argv[])
 
   LOG4CXX_INFO(logger, params);
 
+
   std::map<int,Detector> detectors(read_all_DRF_files(params.data_type,
                                                       params.drf_prefix));
 
@@ -82,7 +83,7 @@ int main(int argc, char* argv[])
     {
       int iter_start;
       arma::mat flux_image=make_start_image(params.starting_image,
-                                                  params, iter_start);
+                                            params, iter_start);
       for(int iter= iter_start+1; iter<=params.iter_max; ++iter)
         {
           bool do_cfv_image=
@@ -119,14 +120,20 @@ int main(int argc, char* argv[])
                                                params.NPIXi,params.NPIXj);
       set_fluxes_to_sim_values(footprints,spike_image);
       int iter_start;
-      // auto beam_image=make_start_image(params.beam_starting_image,iter_start);
-      // for(iter=iter_start+1;iter<=params.iter_max;++iter)
-      //   {
-      //     Corr_Wgt_Image c(all_footprints,beam_image,iter,false);
-      //     beam_image*=c.correction_image;
-      //     if(iter_list.find(iter)!=iter_list.end())
-      //       write_FITS_image(beam_image,"beam",iter);
-      //   }
+      arma::mat beam_image=make_start_image(params.beam_starting_image,
+                                            params, iter_start);
+      for(int iter=iter_start+1;iter<=params.iter_max;++iter)
+        {
+          arma::mat correction,correction_squared;
+          compute_correction(params.NPIXi,params.NPIXj,
+                             footprints,beam_image,iter,false,
+                             params.boost_func, params.boost_max_iter,
+                             correction,correction_squared);
+          beam_image*=correction/wgt_image;
+          if(find(params.iter_list.begin(),params.iter_list.end(),iter)
+             !=params.iter_list.end())
+            write_fits(beam_image,"beam",params,iter);
+        }
     }
   LOG4CXX_INFO(logger,"End Processing\n");
 }
