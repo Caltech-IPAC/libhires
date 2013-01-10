@@ -5,9 +5,9 @@ cd Planck/m33/
 mkdir -p cxx
 ../../build/hires planck  IN/m33_857 cxx/m33_857 ../params/PLANCK.params ../params/857.params m33.params > /dev/null
 ../../build/hires planck  IN/m33_857 cxx/m33_857 ../params/PLANCK.params ../params/857.params m33_restart.params > /dev/null
-mkdir -p python
-python ../../src/python/hires_Planck.py IN/m33_857 python/m33_857 ../params/PLANCK.params ../params/857.params m33.params > /dev/null
-python ../../src/python/hires_Planck.py IN/m33_857 python/m33_857 ../params/PLANCK.params ../params/857.params m33_restart.params > /dev/null
+#mkdir -p python
+#python ../../src/python/hires_Planck.py IN/m33_857 python/m33_857 ../params/PLANCK.params ../params/857.params m33.params > /dev/null
+#python ../../src/python/hires_Planck.py IN/m33_857 python/m33_857 ../params/PLANCK.params ../params/857.params m33_restart.params > /dev/null
 ../../analyse cxx/m33_857_cov.fits python/m33_857_cov.fits
 ../../analyse cxx/m33_857_flux_3.fits python/m33_857_flux_3.fits
 
