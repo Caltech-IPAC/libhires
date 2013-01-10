@@ -661,7 +661,8 @@ def make_start_image(filename):
              '   Should be: %.5f', filename, CRVAL2)
         if (kwd['BUNIT'] != FLUX_UNITS):
             log(LOG_error, "STARTING_IMAGE %s has inconsistent BUNIT\n" + \
-             "   Should be: '%s'", filename, FLUX_UNITS)
+             "   Should be: '%s'\n" + \
+             "   Actually is: '%s'", filename, FLUX_UNITS, kwd['BUNIT'])
         if kwd.has_key('ITERNUM'):
             iter_start = kwd['ITERNUM']
             log(LOG_info, 'ITERNUM in %s is %d', filename, iter_start)
