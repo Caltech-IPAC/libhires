@@ -129,7 +129,7 @@ int main(int argc, char* argv[])
                              footprints,beam_image,iter,false,
                              params.boost_func, params.boost_max_iter,
                              correction,correction_squared);
-          beam_image*=correction/wgt_image;
+          beam_image%=correction/wgt_image;
           if(find(params.iter_list.begin(),params.iter_list.end(),iter)
              !=params.iter_list.end())
             write_fits(beam_image,"beam",params,iter);
