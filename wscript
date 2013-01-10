@@ -156,6 +156,7 @@ def build(ctx):
             'src/cxx/read_all_DRF_files/read_all_DRF_planck.cxx',
             'src/cxx/read_all_IN_files/read_all_IN_files.cxx',
             'src/cxx/read_all_IN_files/read_one_IN_planck.cxx',
+            'src/cxx/set_fluxes_to_sim_values.cxx',
             'src/cxx/Footprint/Footprint.cxx',
             'src/cxx/Footprint/compute_bounds.cxx',
             'src/cxx/Footprint/count_good_samples.cxx',

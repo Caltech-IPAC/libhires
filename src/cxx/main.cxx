@@ -37,6 +37,9 @@ void compute_correction(const int &nx, const int &ny,
 arma::mat create_spike_image(const int &n, const double &height, const int &nx,
                              const int &ny);
 
+void set_fluxes_to_sim_values(Footprint &fp,
+                              const arma::mat &sim_image);
+
 int main(int argc, char* argv[])
 {
   Params params(argc,argv);
@@ -114,8 +117,8 @@ int main(int argc, char* argv[])
       arma::mat spike_image=create_spike_image(params.beam_spike_n,
                                                params.beam_spike_height,
                                                params.NPIXi,params.NPIXj);
-      // set_fluxes_to_sim_values(all_footprints,spike_image);
-      // int iter_start;
+      set_fluxes_to_sim_values(footprints,spike_image);
+      int iter_start;
       // auto beam_image=make_start_image(params.beam_starting_image,iter_start);
       // for(iter=iter_start+1;iter<=params.iter_max;++iter)
       //   {
