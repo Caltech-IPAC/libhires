@@ -40,19 +40,6 @@ arma::mat make_start_image(const std::string &filename,
                       << "  Should be: " << p.crval2 << "\n"
                       << "  Actual value: " << crval2 << "\n");
 
-      if(m.find("BUNIT")==m.end())
-        {
-          for(auto &a: m)
-            std::cout << a.first << "\n";
-        LOG4CXX_FATAL(logger,"STARTING_IMAGE " << filename
-                      << " is missing BUNIT\n");
-        }
-      m["BUNIT"]->value(bunit);
-      if(bunit!=p.flux_units)
-        LOG4CXX_FATAL(logger,"STARTING_IMAGE " << filename
-                      << " has inconsistent BUNIT\n"
-                      << "  Should be: " << p.flux_units << "\n"
-                      << "  Actual value: " << bunit << "\n");
       if(m.find("ITERNUM")!=m.end())
         {
           m["ITERNUM"]->value(iter_start);
@@ -69,7 +56,7 @@ arma::mat make_start_image(const std::string &filename,
       phdu.read(valarray_image);
       for(int i=0;i<p.ni;++i)
         for(int j=0;j<p.nj;++j)
-          image(j,i)=valarray_image[j+p.nj*i];
+          image(j,i)=valarray_image[i+p.ni*j];
     }
   return image;
 }
