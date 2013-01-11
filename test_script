@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 g++ analyse.cxx -o analyse -lCCfits -I/usr/include/CCfits
 
 cd Planck/m33/
