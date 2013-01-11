@@ -105,35 +105,47 @@ def configure(ctx):
 
     ctx.env.append_value('CXXFLAGS', '-std=c++11')
 
-    ctx.env.append_value('CPPFLAGS', '-I/usr/include/eigen3')
-
     ctx.env.append_value('LINKFLAGS', '-larmadillo')
 
 def build(ctx):
-    # tree index generator
-    ctx.program(
-        source=[
-            'src/cxx/main.cxx',
-            'src/cxx/read_all_DRF_files/read_all_DRF_files.cxx',
-            'src/cxx/read_all_DRF_files/read_all_DRF_planck.cxx',
-            'src/cxx/read_all_IN_files/read_all_IN_files.cxx',
-            'src/cxx/read_all_IN_files/read_one_IN_planck.cxx',
-            'src/cxx/Footprint/Footprint.cxx',
-            'src/cxx/Footprint/compute_bounds.cxx',
-            'src/cxx/Footprint/compute_correction.cxx',
-            'src/cxx/Footprint/count_good_samples.cxx',
-            'src/cxx/Footprint/get_response.cxx',
-            'src/cxx/Footprint/generate_response.cxx',
-            'src/cxx/Footprint/set_fluxes_to_sim_values.cxx',
-            'src/cxx/Hires/Hires.cxx',
-            'src/cxx/Hires/compute_images.cxx',
-            'src/cxx/Hires/ostream_operator.cxx',
-            'src/cxx/Hires/spike_image.cxx',
-            'src/cxx/Hires/start_image.cxx',
-            'src/cxx/Hires/write_fits.cxx'],
+    cxx_sources=[
+        'src/cxx/read_all_DRF_files/read_all_DRF_files.cxx',
+        'src/cxx/read_all_DRF_files/read_all_DRF_planck.cxx',
+        'src/cxx/read_all_IN_files/read_all_IN_files.cxx',
+        'src/cxx/read_all_IN_files/read_one_IN_planck.cxx',
+        'src/cxx/Footprint/Footprint.cxx',
+        'src/cxx/Footprint/compute_bounds.cxx',
+        'src/cxx/Footprint/compute_correction.cxx',
+        'src/cxx/Footprint/count_good_samples.cxx',
+        'src/cxx/Footprint/get_response.cxx',
+        'src/cxx/Footprint/generate_response.cxx',
+        'src/cxx/Footprint/set_fluxes_to_sim_values.cxx',
+        'src/cxx/Hires/Hires.cxx',
+        'src/cxx/Hires/compute_images.cxx',
+        'src/cxx/Hires/ostream_operator.cxx',
+        'src/cxx/Hires/spike_image.cxx',
+        'src/cxx/Hires/start_image.cxx',
+        'src/cxx/Hires/write_fits.cxx']
+    ctx.stlib(
+        source=cxx_sources,
         target='hires',
-        name='hires',
-        install_path=os.path.join(ctx.env.PREFIX, 'bin'),
+        name='hires_st',
+        install_path=os.path.join(ctx.env.PREFIX, 'lib'),
         use=['ccfits','boost']
+    )
+    ctx.shlib(
+        source=cxx_sources,
+        target='hires',
+        name='hires_sh',
+        install_path=os.path.join(ctx.env.PREFIX, 'lib'),
+        use=['ccfits','boost']
+    )
+
+    ctx.program(
+        source=['src/cxx/main.cxx'],
+        target='hires',
+        name='hires_bin',
+        install_path=os.path.join(ctx.env.PREFIX, 'bin'),
+        use=['ccfits','boost','hires_st']
     )
 
