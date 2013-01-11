@@ -7,133 +7,51 @@
 #include <log4cxx/patternlayout.h>
 
 #include "Params.hxx"
-#include "Detector.hxx"
-#include "Sample.hxx"
-#include "Gnomonic.hxx"
-#include "Footprint.hxx"
-#include "write_fits.hxx"
+#include "Exception.hxx"
 
 log4cxx::LoggerPtr logger(log4cxx::Logger::getRootLogger());
 
-std::map<int,Detector> read_all_DRF_files(const Params::Data_Type &dt,
-                                          const std::string &DRF_prefix);
-
-std::vector<Sample> read_all_IN_files(const Params::Data_Type &dt,
-                                      const std::string &prefix,
-                                      const Gnomonic &projection);
-
-arma::mat make_start_image(const std::string &filename,
-                           const Params &p, int &iter_start);
-
-void compute_correction(const int &nx, const int &ny,
-                        const Footprint &fp,
-                        const arma::mat &flux_image,
-                        const int &iter, const bool &do_cfv,
-                        const std::function<double (double)> &boost_func,
-                        const int &boost_max_iter,
-                        arma::mat &correction,
-                        arma::mat &correction_squared);
-
-arma::mat create_spike_image(const int &n, const double &height, const int &nx,
-                             const int &ny);
-
-void set_fluxes_to_sim_values(Footprint &fp,
-                              const arma::mat &sim_image);
-
 int main(int argc, char* argv[])
 {
-  Params params(argc,argv);
-  Gnomonic projection(params.crval1,params.crval2);
-
-  log4cxx::PatternLayoutPtr layout(new log4cxx::PatternLayout("\%m"));
-  log4cxx::FileAppenderPtr
-    file_appender(new log4cxx::FileAppender(layout,params.log_filename,false));
-  log4cxx::ConsoleAppenderPtr
-    console_appender(new log4cxx::ConsoleAppender(layout));
-  logger->addAppender(file_appender);
-  logger->addAppender(console_appender);
-
-  LOG4CXX_INFO(logger,"HIRES invoked as: ");
-  for(int i=0;i<argc;++i)
-    LOG4CXX_INFO(logger,argv[i] << " ");
-  LOG4CXX_INFO(logger,"\n");
-
-  LOG4CXX_INFO(logger, params);
-
-
-  std::map<int,Detector> detectors(read_all_DRF_files(params.data_type,
-                                                      params.drf_prefix));
-
-  std::vector<Sample> samples(read_all_IN_files(params.data_type,
-                                                params.infile_prefix,
-                                                projection));
-  Footprint footprints(params.radians_per_pix,params.ni,params.nj,
-                       params.min_sample_flux,params.angle_tolerance,
-                       params.footprints_per_pix,
-                       detectors,samples);
-  arma::mat wgt_image(footprints.calc_wgt_image(params.ni,
-                                                params.nj));
-
-  if(std::find(params.outfile_types.begin(),params.outfile_types.end(),"cov")
-     !=params.outfile_types.end())
-    write_fits(wgt_image,"cov",params);
-
-  if(find(params.outfile_types.begin(),params.outfile_types.end(),"flux")
-     !=params.outfile_types.end())
+  if(argc<5)
     {
-      int iter_start;
-      arma::mat flux_image=make_start_image(params.starting_image,
-                                            params, iter_start);
-      for(int iter= iter_start+1; iter<=params.iter_max; ++iter)
-        {
-          bool do_cfv_image=
-            find(params.outfile_types.begin(),params.outfile_types.end(),"cfv")
-            !=params.outfile_types.end()
-            && find(params.iter_list.begin(),params.iter_list.end(),iter)
-            !=params.iter_list.end();
-          arma::mat correction,correction_squared;
-          compute_correction(params.ni,params.nj,
-                             footprints,flux_image,iter,do_cfv_image,
-                             params.boost_func, params.boost_max_iter,
-                             correction,correction_squared);
-          correction/=wgt_image;
-          flux_image%=correction;
-          LOG4CXX_INFO(logger,"Mean flux in image " << mean(mean(flux_image))
-                       << "\n");
-          if(find(params.iter_list.begin(),params.iter_list.end(),iter)
-             !=params.iter_list.end())
-            write_fits(flux_image,"flux",params,iter);
-          if(do_cfv_image)
-            {
-              arma::mat corr_sq_image = (correction_squared/wgt_image)
-                - square(correction);
-              write_fits(correction_squared,"cfv",params,iter);
-            }
-        }
+      std::cerr << "Usage: hires data_type IN_prefix OUT_prefix"
+        " param_file1 param_file2 ...\n";
+      exit(1);
     }
-  
-  if(find(params.outfile_types.begin(),params.outfile_types.end(),"beam")
-     !=params.outfile_types.end())
+
+  std::vector<std::string> args;
+  for(int i=4;i<argc;++i)
+    args.emplace_back(argv[i]);
+
+  try
     {
-      arma::mat spike_image=create_spike_image(params.beam_spike_n,
-                                               params.beam_spike_height,
-                                               params.ni,params.nj);
-      set_fluxes_to_sim_values(footprints,spike_image);
-      int iter_start;
-      arma::mat beam_image=make_start_image(params.beam_starting_image,
-                                            params, iter_start);
-      for(int iter=iter_start+1;iter<=params.iter_max;++iter)
-        {
-          arma::mat correction,correction_squared;
-          compute_correction(params.ni,params.nj,
-                             footprints,beam_image,iter,false,
-                             params.boost_func, params.boost_max_iter,
-                             correction,correction_squared);
-          beam_image%=correction/wgt_image;
-          if(find(params.iter_list.begin(),params.iter_list.end(),iter)
-             !=params.iter_list.end())
-            write_fits(beam_image,"beam",params,iter);
-        }
+      hires::Params params(argv[1],argv[2],argv[3],args);
+
+      log4cxx::PatternLayoutPtr layout(new log4cxx::PatternLayout("\%m"));
+      log4cxx::FileAppenderPtr
+        file_appender(new log4cxx::FileAppender(layout,params.log_filename,false));
+      log4cxx::ConsoleAppenderPtr
+        console_appender(new log4cxx::ConsoleAppender(layout));
+      logger->addAppender(file_appender);
+      logger->addAppender(console_appender);
+
+      logger->setLevel(log4cxx::Level::getError());
+
+      LOG4CXX_INFO(logger,"HIRES invoked as: ");
+      for(int i=0;i<argc;++i)
+        LOG4CXX_INFO(logger,argv[i] << " ");
+      LOG4CXX_INFO(logger,"\n");
+
+      LOG4CXX_INFO(logger, params);
+
+      params.compute_images();
+
+      LOG4CXX_INFO(logger,"End Processing\n");
     }
-  LOG4CXX_INFO(logger,"End Processing\n");
+  catch(hires::Exception &e)
+    {
+      std::cerr << e.what() << "\n";
+      exit(1);
+    }
 }

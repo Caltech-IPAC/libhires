@@ -133,7 +133,7 @@ def configure(ctx):
     if ctx.options.debug:
         ctx.env.append_value('CXXFLAGS', '-g')
     else:
-        ctx.env.append_value('CXXFLAGS', '-O2')
+        ctx.env.append_value('CXXFLAGS', '-Ofast')
         ctx.env.append_value('CXXFLAGS', '-mtune=native')
         ctx.env.append_value('CXXFLAGS', '-march=native')
         ctx.env.append_value('CXXFLAGS', '-DNDEBUG')
@@ -149,22 +149,23 @@ def build(ctx):
     ctx.program(
         source=[
             'src/cxx/main.cxx',
-            'src/cxx/compute_correction.cxx',
-            'src/cxx/create_spike_image.cxx',
-            'src/cxx/make_start_image.cxx',
             'src/cxx/read_all_DRF_files/read_all_DRF_files.cxx',
             'src/cxx/read_all_DRF_files/read_all_DRF_planck.cxx',
             'src/cxx/read_all_IN_files/read_all_IN_files.cxx',
             'src/cxx/read_all_IN_files/read_one_IN_planck.cxx',
-            'src/cxx/set_fluxes_to_sim_values.cxx',
             'src/cxx/Footprint/Footprint.cxx',
             'src/cxx/Footprint/compute_bounds.cxx',
+            'src/cxx/Footprint/compute_correction.cxx',
             'src/cxx/Footprint/count_good_samples.cxx',
             'src/cxx/Footprint/get_response.cxx',
             'src/cxx/Footprint/generate_response.cxx',
+            'src/cxx/Footprint/set_fluxes_to_sim_values.cxx',
             'src/cxx/Params/Params.cxx',
+            'src/cxx/Params/compute_images.cxx',
             'src/cxx/Params/ostream_operator.cxx',
-            'src/cxx/write_fits.cxx'],
+            'src/cxx/Params/spike_image.cxx',
+            'src/cxx/Params/start_image.cxx',
+            'src/cxx/Params/write_fits.cxx'],
         target='hires',
         name='hires',
         install_path=os.path.join(ctx.env.PREFIX, 'bin'),
