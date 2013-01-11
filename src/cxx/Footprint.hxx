@@ -68,7 +68,6 @@ namespace hires
               result(j,i)+=(*responses[r])(j+j0_ft[r]-j0_im[r],
                                            i+i0_ft[r]-i0_im[r]);
         }
-      LOG4CXX_INFO(logger,"Weight array computed\n");
       return result;
     }
   };

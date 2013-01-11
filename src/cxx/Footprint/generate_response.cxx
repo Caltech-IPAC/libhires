@@ -17,7 +17,7 @@ namespace hires
     std::map<int,Detector>::const_iterator d(detectors.find(detector_id));
     if(d==detectors.end())
       {
-        std:stringstream ss;
+        std::stringstream ss;
         ss << "Can not find this id in the list of detectors: "
            << detector_id;
         throw Exception(ss.str());

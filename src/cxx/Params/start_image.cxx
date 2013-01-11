@@ -2,7 +2,7 @@
 #include <CCfits>
 #include <valarray>
 #include "../Params.hxx"
-#include "../logger.hxx"
+#include "../Exception.hxx"
 
 namespace hires
 {
@@ -53,16 +53,7 @@ namespace hires
           }
 
         if(m.find("ITERNUM")!=m.end())
-          {
-            m["ITERNUM"]->value(iter_start);
-            LOG4CXX_INFO(logger,"ITERNUM in " << filename << " is "
-                         << iter_start << "\n");
-          }
-        else
-          {
-            LOG4CXX_INFO(logger,"No ITERNUM keyword in START_IMAGE "
-                         << filename << "\n");
-          }
+          m["ITERNUM"]->value(iter_start);
         
         std::valarray<double> valarray_image;
         phdu.read(valarray_image);

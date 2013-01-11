@@ -12,7 +12,6 @@
 #include <boost/math/constants/constants.hpp>
 #include "../Params.hxx"
 #include "../version.hxx"
-#include "../logger.hxx"
 
 namespace hires
 {
@@ -82,6 +81,5 @@ namespace hires
       for(size_t j=0;j<image.n_rows;++j)
         temp[i+image.n_cols*j]=image(j,i);
     phdu.write(1,temp.size(),temp);
-    LOG4CXX_INFO(logger,"Output file written: " << fits_file.string() << "\n");
   }
 }

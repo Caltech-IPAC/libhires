@@ -48,8 +48,6 @@ namespace hires
                                           correction,correction_squared);
             correction/=wgt_image;
             flux_image%=correction;
-            LOG4CXX_INFO(logger,"Mean flux in image " << mean(mean(flux_image))
-                         << "\n");
             if(find(iter_list.begin(),iter_list.end(),iter)
                !=iter_list.end())
               {

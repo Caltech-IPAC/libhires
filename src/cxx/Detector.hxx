@@ -6,7 +6,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/math/constants/constants.hpp>
 #include <CCfits>
-#include "logger.hxx"
+#include "Exception.hxx"
 
 namespace hires
 {
@@ -50,12 +50,6 @@ namespace hires
       radius_radians = radius_pix * radians_per_pix;
 
       phdu.read(detector_response);
-      LOG4CXX_INFO(logger, "detector: " << id 
-                   << "; file=" << p.filename()
-                   << "; radius= " << radius_pix
-                   << "; pixels = "
-                   << radius_radians*60*180/boost::math::constants::pi<double>()
-                   << " arcmin\n");
     }
 
     double response(const double &du, const double &dv) const

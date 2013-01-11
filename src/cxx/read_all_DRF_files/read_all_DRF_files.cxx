@@ -1,6 +1,5 @@
 #include "../Params.hxx"
 #include "../Detector.hxx"
-#include "../logger.hxx"
 
 namespace hires
 {
@@ -16,7 +15,7 @@ namespace hires
         return read_all_DRF_planck(DRF_prefix);
         break;
         // case Params::Data_Type::spire:
-        //   return read_all_DRF_spire(DRF_prefix,logger);
+        //   return read_all_DRF_spire(DRF_prefix);
         //   break;
       default:
         throw Exception("No valid DRF reader known for "

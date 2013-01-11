@@ -19,6 +19,5 @@ namespace hires
             }
         flux[n]=accu(integration);
       }
-    LOG4CXX_INFO(logger,"Fluxes have been reset to simulated values\n");
   }
 }

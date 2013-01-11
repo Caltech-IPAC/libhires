@@ -3,7 +3,7 @@
 #include "../Sample.hxx"
 #include "../Params.hxx"
 #include "../Gnomonic.hxx"
-#include "../logger.hxx"
+#include "../Exception.hxx"
 
 namespace hires
 {
@@ -30,12 +30,10 @@ namespace hires
               read_one_IN_planck(d->path(),projection,samples);
             else
               abort();
-            LOG4CXX_INFO(logger,"read samples from " << d->path().string() << "\n");
           }
       }
     if(samples.empty())
       throw Exception("No input files for: " + prefix);
-    LOG4CXX_INFO(logger,"IN data files (samples) reading complete\n");
     return samples;
   }
 }

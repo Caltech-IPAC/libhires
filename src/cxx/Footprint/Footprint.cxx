@@ -1,6 +1,3 @@
-#include <log4cxx/logger.h>
-#include <log4cxx/fileappender.h>
-
 #include "../Footprint.hxx"
 
 namespace hires
@@ -109,10 +106,5 @@ namespace hires
             ++num_footprints;
           }
       }
-    LOG4CXX_INFO(logger,"Footprint creation complete\n");
-    LOG4CXX_INFO(logger,num_footprints << " footprints created\n");
-    LOG4CXX_INFO(logger,"(" << responses_complete.size()
-                 << " full response arrays created)\n");
-    LOG4CXX_INFO(logger,n_fluxes_reset << " sample fluxes reset to minimum\n");
   }
 }

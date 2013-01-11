@@ -28,17 +28,6 @@ def options(ctx):
                    help='Names of the ccfits libraries without prefix or suffix\n'
                    '(e.g. "CCFITS"')
 
-    log4cxx=ctx.add_option_group('log4cxx Options')
-    log4cxx.add_option('--log4cxx-dir',
-                   help='Base directory where log4cxx is installed')
-    log4cxx.add_option('--log4cxx-incdir',
-                   help='Directory where log4cxx include files are installed')
-    log4cxx.add_option('--log4cxx-libdir',
-                   help='Directory where log4cxx library files are installed')
-    log4cxx.add_option('--log4cxx-libs',
-                   help='Names of the log4cxx libraries without prefix or suffix\n'
-                   '(e.g. "log4cxx"')
-
     boost=ctx.add_option_group('boost Options')
     boost.add_option('--boost-dir',
                    help='Base directory where boost is installed')
@@ -81,30 +70,6 @@ def configure(ctx):
                   rpath=[ctx.options.ccfits_libdir],
                   lib=[ccfits_libs])
 
-
-    # Find LOG4CXX
-    if ctx.options.log4cxx_dir:
-        if not ctx.options.log4cxx_incdir:
-            ctx.options.log4cxx_incdir=ctx.options.log4cxx_dir + "/include"
-        if not ctx.options.log4cxx_libdir:
-            ctx.options.log4cxx_libdir=ctx.options.log4cxx_dir + "/lib"
-    frag="#include <log4cxx/logger.h>\n" + 'int main()\n' \
-        + "{log4cxx::Logger::getRootLogger();}\n"
-    if ctx.options.log4cxx_incdir:
-        log4cxx_inc=ctx.options.log4cxx_incdir
-    else:
-        log4cxx_inc='/usr/include'
-    if ctx.options.log4cxx_libs:
-        log4cxx_libs=ctx.options.log4cxx_libs
-    else:
-        log4cxx_libs="log4cxx"
-
-    ctx.check_cxx(msg="Checking for Log4cxx",
-                  fragment=frag,
-                  includes=[log4cxx_inc], uselib_store='log4cxx',
-                  libpath=[ctx.options.log4cxx_libdir],
-                  rpath=[ctx.options.log4cxx_libdir],
-                  lib=[log4cxx_libs])
 
     # Find Boost
     if ctx.options.boost_dir:
@@ -169,6 +134,6 @@ def build(ctx):
         target='hires',
         name='hires',
         install_path=os.path.join(ctx.env.PREFIX, 'bin'),
-        use=['ccfits','log4cxx','boost']
+        use=['ccfits','boost']
     )
 

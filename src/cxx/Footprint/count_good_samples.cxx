@@ -25,17 +25,11 @@ namespace hires
           }
       }
 
-    LOG4CXX_INFO(logger, "image size degrees  = " << x_radius*2.0 << " x "
-                 << y_radius*2.0 << "\n");
 
-    LOG4CXX_INFO(logger, "IN data samples scanning complete\n");
-    LOG4CXX_INFO(logger, total_samps << " data samples read\n");
     if(total_good==0)
       throw Exception("All data samples rejected (probably out of image)");
-    LOG4CXX_INFO(logger, total_good << " data samples good\n");
-    LOG4CXX_INFO(logger, total_samps-total_good << " data samples rejected\n");
     if(static_cast<double>(total_good)/total_samps < 0.5)
-      LOG4CXX_WARN(logger, "More than 50% of data samples rejected\n");
+      std::cerr << "More than 50% of data samples rejected\n";
     return total_good;
   }
 }

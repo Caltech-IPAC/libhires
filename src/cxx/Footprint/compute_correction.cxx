@@ -16,8 +16,6 @@ namespace hires
     if(do_cfv)
       correction_squared.zeros(nx,ny);
 
-    std::string boost_mode;
-
     for(size_t n=0;n<flux.size();++n)
       {
         arma::mat integration(j1_im[n]-j0_im[n],
@@ -33,7 +31,6 @@ namespace hires
         if(iter==1 && iter<=boost_max_iter)
           {
             scale=boost_func(scale);
-            boost_mode="   (BOOSTED correction)\n";
           }
         for(int i=0;i<i1_im[n]-i0_im[n];++i)
           for(int j=0;j<j1_im[n]-j0_im[n];++j)
@@ -51,8 +48,5 @@ namespace hires
                 }
           }
       }
-    LOG4CXX_INFO(logger,"Correction array compute, iter " << iter << "\n");
-    if(!boost_mode.empty())
-      LOG4CXX_INFO(logger,boost_mode);
   }
 }
