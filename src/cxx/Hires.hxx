@@ -7,6 +7,7 @@
 #include <functional>
 #include <armadillo>
 #include <map>
+#include "Sample.hxx"
 
 namespace hires
 {
@@ -29,25 +30,29 @@ namespace hires
 
     enum class Data_Type {planck, spire} data_type;
 
-    void compute_images()
+    void compute_images(std::vector<Sample> &samples)
     {
       arma::mat wgt_image;
       std::map<int,arma::mat> flux_images;
       std::map<int,arma::mat> cfv_images;
       std::map<int,arma::mat> beam_images;
-      compute_images(wgt_image,flux_images,cfv_images,beam_images,true);
-    }
-    void compute_images(arma::mat &wgt_image,
-                        std::map<int,arma::mat> &flux_images,
-                        std::map<int,arma::mat> &cfv_images,
-                        std::map<int,arma::mat> &beam_images)
-    {
-      compute_images(wgt_image,flux_images,cfv_images,beam_images,false);
+      compute_images(wgt_image,flux_images,cfv_images,
+                     beam_images,samples,true);
     }
     void compute_images(arma::mat &wgt_image,
                         std::map<int,arma::mat> &flux_images,
                         std::map<int,arma::mat> &cfv_images,
                         std::map<int,arma::mat> &beam_images,
+                        std::vector<Sample> &samples)
+    {
+      compute_images(wgt_image,flux_images,cfv_images,
+                     beam_images,samples,false);
+    }
+    void compute_images(arma::mat &wgt_image,
+                        std::map<int,arma::mat> &flux_images,
+                        std::map<int,arma::mat> &cfv_images,
+                        std::map<int,arma::mat> &beam_images,
+                        std::vector<Sample> &samples,
                         const bool &write_images);
 
     arma::mat spike_image();

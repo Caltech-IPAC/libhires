@@ -1,7 +1,5 @@
 #include "../Hires.hxx"
-#include "../Gnomonic.hxx"
 #include "../Detector.hxx"
-#include "../Sample.hxx"
 #include "../Footprint.hxx"
 
 namespace hires
@@ -9,21 +7,14 @@ namespace hires
   std::map<int,Detector> read_all_DRF_files(const Hires::Data_Type &dt,
                                             const std::string &DRF_prefix);
 
-  std::vector<Sample> read_all_IN_files(const Hires::Data_Type &dt,
-                                        const std::string &prefix,
-                                        const Gnomonic &projection);
-
   void Hires::compute_images(arma::mat &wgt_image,
                              std::map<int,arma::mat> &flux_images,
                              std::map<int,arma::mat> &cfv_images,
                              std::map<int,arma::mat> &beam_images,
+                             std::vector<Sample> &samples,
                              const bool &write_images)
   {
     std::map<int,Detector> detectors(read_all_DRF_files(data_type,drf_prefix));
-    Gnomonic projection(crval1,crval2);
-    std::vector<Sample> samples(read_all_IN_files(data_type,infile_prefix,
-                                                  projection));
-
     Footprint footprints(radians_per_pix,ni,nj,min_sample_flux,angle_tolerance,
                          footprints_per_pix,detectors,samples);
     wgt_image=footprints.calc_wgt_image(ni,nj);
