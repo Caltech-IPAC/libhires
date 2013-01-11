@@ -33,17 +33,17 @@ namespace hires
       m["CDELT2"]->value(cdelt2);
 
       if(nx!=ny)
-        LOG4CXX_ERROR(logger,"In " << p.string() << " NAXIS1 must equal NAXIS2\n");
+        throw Exception("In " + p.string() + " NAXIS1 must equal NAXIS2\n");
       if(nx%2==0)
-        LOG4CXX_ERROR(logger,"In " << p.string() << " NAXIS1 must be odd\n");
+        throw Exception("In " + p.string() + " NAXIS1 must be odd\n");
       /* This seems bogus.  Floating point comparisons can be tricky. */
       if(abs(cdelt1) != abs(cdelt2))
-        LOG4CXX_ERROR(logger, "In " << p.string()
-                      << " CDELT1 and CDELT2 must be same size\n");
+        throw Exception("In " + p.string()
+                        + " CDELT1 and CDELT2 must be same size\n");
       if(cdelt1 >= 0)
-        LOG4CXX_ERROR(logger, "In " << p.string() << " CDELT1 must be negative\n");
+        throw Exception("In " + p.string() + " CDELT1 must be negative\n");
       if(cdelt2 <= 0)
-        LOG4CXX_ERROR(logger, "In " << p.string() << " CDELT2 must be positive\n");
+        throw Exception("In " + p.string() + " CDELT2 must be positive\n");
 
       radians_per_pix=cdelt2*boost::math::constants::pi<double>()/180;
       int radius_pix = nx / 2;

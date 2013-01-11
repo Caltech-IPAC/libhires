@@ -20,25 +20,37 @@ namespace hires
         CCfits::PHDU &phdu(hdus.pHDU());
         phdu.readAllKeys();
         if(ni!=phdu.axis(0) || nj!=phdu.axis(1))
-          LOG4CXX_FATAL(logger,"STARTING_IMAGE " << filename
-                        << "has incorrect dimensions\n"
-                        << "  Must be: " << ni << " " << nj << "\n"
-                        << "  Actual value: " << phdu.axis(0) << " "
-                        << phdu.axis(1) << "\n");
+          {
+            std::stringstream ss;
+            ss << "STARTING_IMAGE " << filename
+               << "has incorrect dimensions\n"
+               << "  Must be: " << ni << " " << nj << "\n"
+               << "  Actual value: " << phdu.axis(0) << " "
+               << phdu.axis(1);
+            throw Exception(ss.str());
+          }
         std::map<std::string,CCfits::Keyword *> &m(phdu.keyWord());
         double CRVAL1, CRVAL2;
         m["CRVAL1"]->value(CRVAL1);
         if(std::abs(CRVAL1-crval1)>0.001)
-          LOG4CXX_FATAL(logger,"STARTING_IMAGE " << filename
-                        << " has inconsistent values\n"
-                        << "  Should be: " << crval1 << "\n"
-                        << "  Actual value: " << CRVAL1 << "\n");
+          {
+            std::stringstream ss;
+            ss << "STARTING_IMAGE " << filename
+               << " has inconsistent values\n"
+               << "  Should be: " << crval1 << "\n"
+               << "  Actual value: " << CRVAL1;
+            throw Exception(ss.str());
+          }
         m["CRVAL2"]->value(CRVAL2);
         if(std::abs(CRVAL2-crval2)>0.001)
-          LOG4CXX_FATAL(logger,"STARTING_IMAGE " << filename
-                        << " has inconsistent CRVAL1\n"
-                        << "  Should be: " << crval2 << "\n"
-                        << "  Actual value: " << CRVAL2 << "\n");
+          {
+            std::stringstream ss;
+            ss << "STARTING_IMAGE " << filename
+               << " has inconsistent CRVAL1\n"
+               << "  Should be: " << crval2 << "\n"
+               << "  Actual value: " << CRVAL2;
+            throw Exception(ss.str());
+          }
 
         if(m.find("ITERNUM")!=m.end())
           {

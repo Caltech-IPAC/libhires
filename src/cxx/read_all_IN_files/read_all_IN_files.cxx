@@ -34,7 +34,7 @@ namespace hires
           }
       }
     if(samples.empty())
-      LOG4CXX_FATAL(logger,"No input files for: " << prefix << "\n");
+      throw Exception("No input files for: " + prefix);
     LOG4CXX_INFO(logger,"IN data files (samples) reading complete\n");
     return samples;
   }

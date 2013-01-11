@@ -20,7 +20,7 @@ namespace hires
           }
       }
     if(detectors.empty())
-      LOG4CXX_FATAL(logger,"No valid detectors found in " << DRF_prefix << "\n");
+      throw Exception("No valid detectors found in " + DRF_prefix);
     LOG4CXX_INFO(logger,detectors.size() << "DRF files read\n");
     return detectors;
   }

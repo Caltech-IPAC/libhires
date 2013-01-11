@@ -19,7 +19,8 @@ namespace hires
         //   return read_all_DRF_spire(DRF_prefix,logger);
         //   break;
       default:
-        LOG4CXX_FATAL(logger,"No valid DRF reader known for " << Params::type_string(dt) << "\n");
+        throw Exception("No valid DRF reader known for "
+                        + Params::type_string(dt));
         break;
       }
     return std::map<int,Detector>();

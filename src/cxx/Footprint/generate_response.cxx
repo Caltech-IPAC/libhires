@@ -16,8 +16,12 @@ namespace hires
   {
     std::map<int,Detector>::const_iterator d(detectors.find(detector_id));
     if(d==detectors.end())
-      LOG4CXX_FATAL(logger,"Can not find this id in the list of detectors: "
-                    << detector_id << "\n");
+      {
+        std:stringstream ss;
+        ss << "Can not find this id in the list of detectors: "
+           << detector_id;
+        throw Exception(ss.str());
+      }
     const Detector &detector(d->second);
     const int radius_pix(detector.radius_radians/radians_per_pix);
     const double du_offset(i_offset*radians_per_pix),

@@ -31,8 +31,7 @@ namespace hires
     LOG4CXX_INFO(logger, "IN data samples scanning complete\n");
     LOG4CXX_INFO(logger, total_samps << " data samples read\n");
     if(total_good==0)
-      LOG4CXX_FATAL(logger,
-                    "All data samples rejected (probably out of image)\n" );
+      throw Exception("All data samples rejected (probably out of image)");
     LOG4CXX_INFO(logger, total_good << " data samples good\n");
     LOG4CXX_INFO(logger, total_samps-total_good << " data samples rejected\n");
     if(static_cast<double>(total_good)/total_samps < 0.5)
