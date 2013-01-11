@@ -1,12 +1,12 @@
 #include <armadillo>
 #include <CCfits>
 #include <valarray>
-#include "../Params.hxx"
+#include "../Hires.hxx"
 #include "../Exception.hxx"
 
 namespace hires
 {
-  arma::mat Params::start_image(const std::string &filename, int &iter_start)
+  arma::mat Hires::start_image(const std::string &filename, int &iter_start)
   {
     arma::mat image(nj,ni);
     iter_start=0;

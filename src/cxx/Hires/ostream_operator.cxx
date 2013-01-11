@@ -1,10 +1,10 @@
-#include "../Params.hxx"
+#include "../Hires.hxx"
 #include <boost/format.hpp>
 #include <boost/math/constants/constants.hpp>
 
 namespace hires
 {
-  std::ostream& operator<<(std::ostream& out, const Params &p)
+  std::ostream& operator<<(std::ostream& out, const Hires &p)
   {
     out << "\nInput data file options:"
         << "\n  INFILE_PREFIX " << p.infile_prefix

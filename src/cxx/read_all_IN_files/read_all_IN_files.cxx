@@ -1,7 +1,7 @@
 #include <boost/filesystem.hpp>
 #include <vector>
 #include "../Sample.hxx"
-#include "../Params.hxx"
+#include "../Hires.hxx"
 #include "../Gnomonic.hxx"
 #include "../Exception.hxx"
 
@@ -11,7 +11,7 @@ namespace hires
                           const Gnomonic &projection,
                           std::vector<Sample> &samples);
 
-  std::vector<Sample> read_all_IN_files(const Params::Data_Type &dt,
+  std::vector<Sample> read_all_IN_files(const Hires::Data_Type &dt,
                                         const std::string &prefix,
                                         const Gnomonic &projection)
   {
@@ -26,7 +26,7 @@ namespace hires
         if((s==s2.substr(0,s.size())) && s2.size()>5
            && s2.substr(s2.size()-5)==".fits")
           {
-            if(dt==Params::Data_Type::planck)
+            if(dt==Hires::Data_Type::planck)
               read_one_IN_planck(d->path(),projection,samples);
             else
               abort();

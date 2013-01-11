@@ -1,9 +1,9 @@
 #include <armadillo>
-#include "../Params.hxx"
+#include "../Hires.hxx"
 
 namespace hires
 {
-  arma::mat Params::spike_image()
+  arma::mat Hires::spike_image()
   {
     arma::mat spike(nj,ni);
     spike.fill(0.000001);

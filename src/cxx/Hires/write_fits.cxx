@@ -10,13 +10,13 @@
 #include <armadillo>
 #include <boost/filesystem.hpp>
 #include <boost/math/constants/constants.hpp>
-#include "../Params.hxx"
+#include "../Hires.hxx"
 #include "../version.hxx"
 
 namespace hires
 {
-  void Params::write_fits(const arma::mat &image, const std::string &file_type,
-                          const int &iteration)
+  void Hires::write_fits(const arma::mat &image, const std::string &file_type,
+                         const int &iteration)
   {
     boost::filesystem::path dir(outfile_prefix);
     boost::filesystem::create_directory(dir);

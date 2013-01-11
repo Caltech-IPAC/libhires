@@ -1,4 +1,4 @@
-#include "../Params.hxx"
+#include "../Hires.hxx"
 #include "../Gnomonic.hxx"
 #include "../Detector.hxx"
 #include "../Sample.hxx"
@@ -6,18 +6,18 @@
 
 namespace hires
 {
-  std::map<int,Detector> read_all_DRF_files(const Params::Data_Type &dt,
+  std::map<int,Detector> read_all_DRF_files(const Hires::Data_Type &dt,
                                             const std::string &DRF_prefix);
 
-  std::vector<Sample> read_all_IN_files(const Params::Data_Type &dt,
+  std::vector<Sample> read_all_IN_files(const Hires::Data_Type &dt,
                                         const std::string &prefix,
                                         const Gnomonic &projection);
 
-  void Params::compute_images(arma::mat &wgt_image,
-                              std::map<int,arma::mat> &flux_images,
-                              std::map<int,arma::mat> &cfv_images,
-                              std::map<int,arma::mat> &beam_images,
-                              const bool &write_images)
+  void Hires::compute_images(arma::mat &wgt_image,
+                             std::map<int,arma::mat> &flux_images,
+                             std::map<int,arma::mat> &cfv_images,
+                             std::map<int,arma::mat> &beam_images,
+                             const bool &write_images)
   {
     std::map<int,Detector> detectors(read_all_DRF_files(data_type,drf_prefix));
     Gnomonic projection(crval1,crval2);

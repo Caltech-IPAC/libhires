@@ -10,7 +10,7 @@
 
 namespace hires
 {
-  class Params
+  class Hires
   {
   public:
     std::string infile_prefix, outfile_prefix, drf_prefix, ctype1, ctype2,
@@ -23,9 +23,9 @@ namespace hires
     std::vector<std::tuple<std::string,std::string,std::string>> fits_keywords;
     std::function<double (double)> boost_func;
 
-    Params(const std::string &Data_type, const std::string &Infile_prefix,
-           const std::string &Outfile_prefix,
-           const std::vector<std::string> &param_files);
+    Hires(const std::string &Data_type, const std::string &Infile_prefix,
+          const std::string &Outfile_prefix,
+          const std::vector<std::string> &param_files);
 
     enum class Data_Type {planck, spire} data_type;
 
@@ -72,6 +72,6 @@ namespace hires
     }
   };
 
-  std::ostream& operator<<(std::ostream& out, const Params &p);
+  std::ostream& operator<<(std::ostream& out, const Hires &p);
 }
 #endif

@@ -1,7 +1,7 @@
 #include <vector>
 #include <map>
 
-#include "Params.hxx"
+#include "Hires.hxx"
 #include "Exception.hxx"
 
 int main(int argc, char* argv[])
@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
 
   try
     {
-      hires::Params params(argv[1],argv[2],argv[3],args);
+      hires::Hires params(argv[1],argv[2],argv[3],args);
       params.compute_images();
     }
   catch(hires::Exception &e)
