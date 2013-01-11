@@ -7,7 +7,6 @@ namespace hires
   std::ostream& operator<<(std::ostream& out, const Hires &p)
   {
     out << "\nInput data file options:"
-        << "\n  INFILE_PREFIX " << p.infile_prefix
         << "\n  STARTING_IMAGE " << p.starting_image
         << boost::format("\n  MIN_SAMPLE_FLUX %.6f") % p.min_sample_flux
 
@@ -24,7 +23,6 @@ namespace hires
         << "\n  CTYPE2 " << p.ctype2
 
         << "\n\nOutput file options:"
-        << "\n  OUTFILE_PREFIX " << p.outfile_prefix
         << "\n  OUTFILE_TYPES [";
     for(auto &o: p.outfile_types)
       out << "'" << o << "' ";

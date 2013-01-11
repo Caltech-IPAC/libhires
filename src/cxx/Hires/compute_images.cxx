@@ -12,15 +12,15 @@ namespace hires
                              std::map<int,arma::mat> &cfv_images,
                              std::map<int,arma::mat> &beam_images,
                              std::vector<Sample> &samples,
-                             const bool &write_images)
+                             const std::string &outfile_prefix)
   {
     std::map<int,Detector> detectors(read_all_DRF_files(data_type,drf_prefix));
     Footprint footprints(radians_per_pix,ni,nj,min_sample_flux,angle_tolerance,
                          footprints_per_pix,detectors,samples);
     wgt_image=footprints.calc_wgt_image(ni,nj);
     if(std::find(outfile_types.begin(),outfile_types.end(),"cov")
-       !=outfile_types.end() && write_images)
-      write_fits(wgt_image,"cov");
+       !=outfile_types.end())
+      write_fits(wgt_image,"cov",outfile_prefix);
 
     if(find(outfile_types.begin(),outfile_types.end(),"flux")
        !=outfile_types.end())
@@ -43,15 +43,13 @@ namespace hires
                !=iter_list.end())
               {
                 flux_images[iter]=flux_image;
-                if(write_images)
-                  write_fits(flux_image,"flux",iter);
+                write_fits(flux_image,"flux",iter,outfile_prefix);
                 if(do_cfv_image)
                   {
                     arma::mat corr_sq_image = (correction_squared/wgt_image)
                       - square(correction);
                     cfv_images[iter]=corr_sq_image;
-                    if(write_images)
-                      write_fits(corr_sq_image,"cfv",iter);
+                    write_fits(corr_sq_image,"cfv",iter,outfile_prefix);
                   }
               }
           }
@@ -75,8 +73,7 @@ namespace hires
                !=iter_list.end())
               {
                 beam_images[iter]=beam_image;
-                if(write_images)
-                  write_fits(beam_image,"beam",iter);
+                write_fits(beam_image,"beam",iter,outfile_prefix);
               }
           }
       }

@@ -16,8 +16,10 @@
 namespace hires
 {
   void Hires::write_fits(const arma::mat &image, const std::string &file_type,
-                         const int &iteration)
+                         const int &iteration, const std::string &outfile_prefix)
   {
+    if(outfile_prefix.empty())
+      return;
     boost::filesystem::path dir(outfile_prefix);
     boost::filesystem::create_directory(dir);
     std::stringstream filename;
@@ -61,9 +63,6 @@ namespace hires
     phdu.addKey("FILENAME",
                 fits_file.filename().string(),
                 "name of this file");
-    phdu.addKey("INFILES",
-                boost::filesystem::path(infile_prefix).filename().string()+"*",
-                "Name of input data files");
     if(!drf_prefix.empty())
       phdu.addKey("DRF_IN",
                   boost::filesystem::path(drf_prefix).filename().string()+"*",

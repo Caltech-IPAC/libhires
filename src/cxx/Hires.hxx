@@ -14,7 +14,7 @@ namespace hires
   class Hires
   {
   public:
-    std::string infile_prefix, outfile_prefix, drf_prefix, ctype1, ctype2,
+    std::string drf_prefix, ctype1, ctype2,
       boost_type, starting_image, beam_starting_image, flux_units, log_filename;
     std::vector<std::string> outfile_types;
     int ni, nj, iter_max, boost_max_iter, footprints_per_pix, beam_spike_n;
@@ -24,20 +24,19 @@ namespace hires
     std::vector<std::tuple<std::string,std::string,std::string>> fits_keywords;
     std::function<double (double)> boost_func;
 
-    Hires(const std::string &Data_type, const std::string &Infile_prefix,
-          const std::string &Outfile_prefix,
-          const std::vector<std::string> &param_files);
+    Hires(const std::string &Data_type, const std::vector<std::string> &param_files);
 
     enum class Data_Type {planck, spire} data_type;
 
-    void compute_images(std::vector<Sample> &samples)
+    void compute_images(std::vector<Sample> &samples,
+                        const std::string &outfile_prefix)
     {
       arma::mat wgt_image;
       std::map<int,arma::mat> flux_images;
       std::map<int,arma::mat> cfv_images;
       std::map<int,arma::mat> beam_images;
       compute_images(wgt_image,flux_images,cfv_images,
-                     beam_images,samples,true);
+                     beam_images,samples,outfile_prefix);
     }
     void compute_images(arma::mat &wgt_image,
                         std::map<int,arma::mat> &flux_images,
@@ -46,24 +45,25 @@ namespace hires
                         std::vector<Sample> &samples)
     {
       compute_images(wgt_image,flux_images,cfv_images,
-                     beam_images,samples,false);
+                     beam_images,samples,"");
     }
     void compute_images(arma::mat &wgt_image,
                         std::map<int,arma::mat> &flux_images,
                         std::map<int,arma::mat> &cfv_images,
                         std::map<int,arma::mat> &beam_images,
                         std::vector<Sample> &samples,
-                        const bool &write_images);
+                        const std::string &outfile_prefix);
 
     arma::mat spike_image();
     arma::mat start_image(const std::string &filename, int &iter_start);
 
     void write_fits(const arma::mat &image, const std::string &file_type,
-                    const int &iter);
+                    const int &iter, const std::string &outfile_prefix);
 
-    void write_fits(const arma::mat &image, const std::string &file_type)
+    void write_fits(const arma::mat &image, const std::string &file_type,
+                    const std::string &outfile_prefix)
     {
-      write_fits(image,file_type,std::numeric_limits<int>::max());
+      write_fits(image,file_type,std::numeric_limits<int>::max(),outfile_prefix);
     }
 
     static std::string type_string(const Data_Type &dt)

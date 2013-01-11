@@ -8,11 +8,8 @@
 
 namespace hires
 {
-  Hires::Hires(const std::string &Data_type, const std::string &Infile_prefix,
-               const std::string &Outfile_prefix,
+  Hires::Hires(const std::string &Data_type,
                const std::vector<std::string> &param_files):
-    infile_prefix(Infile_prefix),
-    outfile_prefix(Outfile_prefix),
     starting_image("flat"),
     beam_starting_image("flat"),
     flux_units("??"),
