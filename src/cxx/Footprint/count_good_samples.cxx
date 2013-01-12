@@ -29,7 +29,8 @@ namespace hires
     if(total_good==0)
       throw Exception("All data samples rejected (probably out of image)");
     if(static_cast<double>(total_good)/total_samps < 0.5)
-      std::cerr << "More than 50% of data samples rejected\n";
+      std::cerr << "Warning: Only " << total_good << " of " << total_samps
+                << " data samples accepted\n";
     return total_good;
   }
 }
