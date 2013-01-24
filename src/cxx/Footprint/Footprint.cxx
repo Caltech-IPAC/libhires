@@ -25,46 +25,46 @@ namespace hires
     int n_fluxes_reset(0);
     int num_footprints(0);
 
-    for(size_t i=0;i<samples.size();++i)
+    for(size_t s=0;s<samples.size();++s)
       {
-        const size_t n(good[i].size());
+        const size_t n(good[s].size());
 
         /* Compute angles if needed */
-        if(samples[i].angle.size()==0)
+        if(samples[s].angle.size()==0)
           {
-            samples[i].angle.resize(n);
+            samples[s].angle.resize(n);
             double max_delta=radians_per_pix*16;
             for(size_t j=0;j<n;++j)
               {
-                if(!good[i][j])
+                if(!good[s][j])
                   continue;
                 if(j==n-1)
                   {
-                    samples[i].angle[j]=samples[i].angle[j-1];
-                    good[i][j]=good[i][j-1];
+                    samples[s].angle[j]=samples[s].angle[j-1];
+                    good[s][j]=good[s][j-1];
                   }
                 else
                   {
-                    double x_delta(samples[i].x[j+1]-samples[i].x[j]),
-                      y_delta(samples[i].y[j+1]-samples[i].y[j]);
+                    double x_delta(samples[s].x[j+1]-samples[s].x[j]),
+                      y_delta(samples[s].y[j+1]-samples[s].y[j]);
                     if(std::abs(x_delta) + std::abs(y_delta)>max_delta)
                       {
                         /* non-continuous */
                         if(j>0)
                           {
-                            samples[i].angle[j]=samples[i].angle[j-1];
-                            good[i][j]=good[i][j-1];
+                            samples[s].angle[j]=samples[s].angle[j-1];
+                            good[s][j]=good[s][j-1];
                           }
                         else
                           {
-                            good[i][j]=false; /* Discard sample if we
+                            good[s][j]=false; /* Discard sample if we
                                                  can not compute
                                                  angle */
                           }
                       }
                     else
                       {
-                        samples[i].angle[j]=atan2(y_delta,x_delta);
+                        samples[s].angle[j]=std::atan2(y_delta,x_delta);
                       }
                   }
               }
@@ -72,16 +72,16 @@ namespace hires
 
         for(size_t j=0;j<n;++j)
           {
-            if(!good[i][j])
+            if(!good[s][j])
               continue;
-            double xi((samples[i].x[j]/radians_per_pix)+i_offset),
-              yi((samples[i].y[j]/radians_per_pix)+j_offset);
+            double xi((samples[s].x[j]/radians_per_pix)+i_offset),
+              yi((samples[s].y[j]/radians_per_pix)+j_offset);
 
             int i_int(xi), j_int(yi);
             double i_frac(xi-i_int), j_frac(yi-j_int);
 
-            responses.push_back(get_response(samples[i].id,i_frac,j_frac,
-                                             samples[i].angle[j],
+            responses.push_back(get_response(samples[s].id,i_frac,j_frac,
+                                             samples[s].angle[j],
                                              angle_tolerance,
                                              footprints_per_pix,
                                              radians_per_pix,
@@ -89,12 +89,12 @@ namespace hires
             std::vector<int> bounds(compute_bounds(*(*responses.rbegin()),
                                                    i_int,j_int,ni,nj));
 
-            if(samples[i].flux[j]<min_sample_flux)
+            if(samples[s].flux[j]<min_sample_flux)
               {
-                samples[i].flux[j]=min_sample_flux;
+                samples[s].flux[j]=min_sample_flux;
                 ++n_fluxes_reset;
               }
-            flux.push_back(samples[i].flux[j]);
+            flux.push_back(samples[s].flux[j]);
             j0_im.push_back(bounds[0]);
             j1_im.push_back(bounds[1]);
             i0_im.push_back(bounds[2]);
