@@ -17,8 +17,8 @@ namespace hires
     /* Compute nominal bounds */
     int j0_image = j_center - radius_pixels;
     int j1_image = j_center + radius_pixels + 1;
-    int i0_image = i_center - radius_pixels;     /* iMin */
-    int i1_image = i_center + radius_pixels + 1; /* iMax+1 */
+    int i0_image = i_center - radius_pixels;
+    int i1_image = i_center + radius_pixels + 1;
 
     /* Trim if outside image */
     if(j0_image<0)
@@ -26,7 +26,7 @@ namespace hires
         j0_resp -= j0_image;
         j0_image = 0;
       }
-    else if(j1_image>nj)
+    if(j1_image>nj)
       {
         j1_resp -= j1_image-nj;
         j1_image = nj;
@@ -36,11 +36,12 @@ namespace hires
         i0_resp -= i0_image;
         i0_image = 0;
       }
-    else if(i1_image>ni)
+    if(i1_image>ni)
       {
         i1_resp -= i1_image-ni;
         i1_image = ni;
       }
+
     return {j0_image, j1_image, i0_image, i1_image,
         j0_resp, j1_resp, i0_resp, i1_resp};
   }
