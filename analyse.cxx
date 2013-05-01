@@ -1,4 +1,4 @@
-#include <CCfits>
+#include <CCfits/CCfits>
 
 int main(int argc, char *argv[])
 {
@@ -16,7 +16,8 @@ int main(int argc, char *argv[])
 
   std::valarray<double> diff(py_image-cxx_image);
 
-  std::cout << std::abs(py_image+cxx_image).max()/2 << " "
-            << std::abs(diff).max() << " "
+  std::cout << "Sum: " << std::abs(py_image+cxx_image).max()/2 << "\n"
+            << "Diff: " << std::abs(diff).max() << "\n"
+            << "Scaled Diff: "
             << std::abs(diff/(py_image+cxx_image+abs(cxx_image).max()*1e-30)).max() << "\n";
 }
