@@ -12,88 +12,17 @@ import traceback
 from waflib import Build, Logs, Utils
 
 def options(ctx):
-    ctx.load('compiler_cxx')
+    ctx.load('compiler_cxx CCfits boost')
     ctx.add_option('--debug', help='Include debug symbols and turn ' +
                                    'compiler optimizations off',
                    action='store_true', default=False, dest='debug')
 
-    ccfits=ctx.add_option_group('CCfits Options')
-    ccfits.add_option('--ccfits-dir',
-                   help='Base directory where ccfits is installed')
-    ccfits.add_option('--ccfits-incdir',
-                   help='Directory where ccfits include files are installed')
-    ccfits.add_option('--ccfits-libdir',
-                   help='Directory where ccfits library files are installed')
-    ccfits.add_option('--ccfits-libs',
-                   help='Names of the ccfits libraries without prefix or suffix\n'
-                   '(e.g. "CCFITS"')
-
-    boost=ctx.add_option_group('boost Options')
-    boost.add_option('--boost-dir',
-                   help='Base directory where boost is installed')
-    boost.add_option('--boost-incdir',
-                   help='Directory where boost include files are installed')
-    boost.add_option('--boost-libdir',
-                   help='Directory where boost library files are installed')
-    boost.add_option('--boost-libs',
-                   help='Names of the boost libraries without prefix or suffix\n'
-                   '(e.g. "boost_filesystem boost_system"')
-
 def configure(ctx):
-    ctx.load('compiler_cxx')
+    ctx.load('compiler_cxx CCfits boost')
     ctx.env.append_value('CXXFLAGS', '-Wall')
     ctx.env.append_value('CXXFLAGS', '-Wextra')
     ctx.env.append_value('CXXFLAGS', '-std=c++11')
     ctx.env.append_value('CXXFLAGS', '-D__STDC_CONSTANT_MACROS')
-
-    # Find CCFITS
-    if ctx.options.ccfits_dir:
-        if not ctx.options.ccfits_incdir:
-            ctx.options.ccfits_incdir=ctx.options.ccfits_dir + "/include"
-        if not ctx.options.ccfits_libdir:
-            ctx.options.ccfits_libdir=ctx.options.ccfits_dir + "/lib"
-    frag="#include <CCfits>\n" + 'int main()\n' \
-        + "{CCfits::FITS::setVerboseMode(true);}\n"
-    if ctx.options.ccfits_incdir:
-        ccfits_inc=ctx.options.ccfits_incdir
-    else:
-        ccfits_inc='/usr/include/CCfits'
-    if ctx.options.ccfits_libs:
-        ccfits_libs=ctx.options.ccfits_libs
-    else:
-        ccfits_libs="CCfits"
-
-    ctx.check_cxx(msg="Checking for CCfits",
-                  fragment=frag,
-                  includes=[ccfits_inc], uselib_store='ccfits',
-                  libpath=[ctx.options.ccfits_libdir],
-                  rpath=[ctx.options.ccfits_libdir],
-                  lib=[ccfits_libs])
-
-
-    # Find Boost
-    if ctx.options.boost_dir:
-        if not ctx.options.boost_incdir:
-            ctx.options.boost_incdir=ctx.options.boost_dir + "/include"
-        if not ctx.options.boost_libdir:
-            ctx.options.boost_libdir=ctx.options.boost_dir + "/lib"
-    frag="#include <boost/filesystem.hpp>\n" + 'int main()\n' \
-        + "{boost::filesystem::path();}\n"
-    if ctx.options.boost_incdir:
-        boost_inc=ctx.options.boost_incdir
-    else:
-        boost_inc='/usr/include'
-    if ctx.options.boost_libs:
-        boost_libs=[ctx.options.boost_libs]
-    else:
-        boost_libs=["boost_filesystem","boost_system"]
-
-    ctx.check_cxx(msg="Checking for Boost",
-                  fragment=frag,
-                  includes=[boost_inc], uselib_store='boost',
-                  libpath=[ctx.options.boost_libdir],
-                  rpath=[ctx.options.boost_libdir],
-                  lib=boost_libs)
 
     if ctx.options.debug:
         ctx.env.append_value('CXXFLAGS', '-g')
@@ -131,14 +60,14 @@ def build(ctx):
         target='hires',
         name='hires_st',
         install_path=os.path.join(ctx.env.PREFIX, 'lib'),
-        use=['ccfits','boost']
+        use=['CCfits','boost']
     )
     ctx.shlib(
         source=cxx_sources,
         target='hires',
         name='hires_sh',
         install_path=os.path.join(ctx.env.PREFIX, 'lib'),
-        use=['ccfits','boost']
+        use=['CCfits','boost']
     )
 
     ctx.program(
@@ -146,6 +75,6 @@ def build(ctx):
         target='hires',
         name='hires_bin',
         install_path=os.path.join(ctx.env.PREFIX, 'bin'),
-        use=['ccfits','boost','hires_st']
+        use=['CCfits','boost','hires_st']
     )
 

@@ -6,7 +6,7 @@
 
 #include <chrono>
 #include <limits>
-#include <CCfits>
+#include <CCfits/CCfits>
 #include <armadillo>
 #include <boost/filesystem.hpp>
 #include <boost/math/constants/constants.hpp>

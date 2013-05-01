@@ -5,7 +5,7 @@
 #include <valarray>
 #include <boost/filesystem.hpp>
 #include <boost/math/constants/constants.hpp>
-#include <CCfits>
+#include <CCfits/CCfits>
 #include "Exception.hxx"
 
 namespace hires

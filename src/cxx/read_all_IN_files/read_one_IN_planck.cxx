@@ -1,4 +1,4 @@
-#include <CCfits>
+#include <CCfits/CCfits>
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
 #include <string>

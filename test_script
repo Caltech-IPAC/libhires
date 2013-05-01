@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
-g++ analyse.cxx -o analyse -lCCfits -I/usr/include/CCfits
-./waf-1.7.8 
+g++ analyse.cxx -o analyse -lCCfits
+./waf
 
 cd Planck/m33/
 rm -rf cxx

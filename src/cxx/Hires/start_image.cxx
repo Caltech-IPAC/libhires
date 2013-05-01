@@ -1,5 +1,5 @@
 #include <armadillo>
-#include <CCfits>
+#include <CCfits/CCfits>
 #include <valarray>
 #include "../Hires.hxx"
 #include "../Exception.hxx"
