@@ -17,7 +17,7 @@ def configure(conf):
     else:
         ccfits_incdir=[]
     if conf.options.ccfits_libdir:
-        ccfits_libdir=[conf.options.ccfits_dir]
+        ccfits_libdir=[conf.options.ccfits_libdir]
     else:
         ccfits_libdir=[]
 
