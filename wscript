@@ -55,6 +55,15 @@ def build(ctx):
         'src/cxx/Hires/spike_image.cxx',
         'src/cxx/Hires/start_image.cxx',
         'src/cxx/Hires/write_fits.cxx']
+    headers=[
+        'src/cxx/version.hxx',
+        'src/cxx/Detector.hxx',
+        'src/cxx/Gnomonic.hxx',
+        'src/cxx/Hires.hxx',
+        'src/cxx/Exception.hxx',
+        'src/cxx/Sample.hxx',
+        'src/cxx/Footprint.hxx']
+
     ctx.stlib(
         source=cxx_sources,
         target='hires',
@@ -78,3 +87,7 @@ def build(ctx):
         use=['CCfits','boost','hires_st']
     )
 
+    ctx.install_files(
+        os.path.join(ctx.env.PREFIX, 'include'),
+        headers
+        )
