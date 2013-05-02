@@ -4,7 +4,6 @@
 def configure(conf):
     def get_param(varname,default):
         return getattr(Options.options,varname,'')or default
-    env=conf.env
 
     # Find Boost
     if conf.options.boost_dir:
@@ -19,7 +18,7 @@ def configure(conf):
     else:
         boost_inc=[]
     if conf.options.boost_libdir:
-        boost_libdir=[conf.options.boost_dir]
+        boost_libdir=[conf.options.boost_libdir]
     else:
         boost_libdir=[]
     if conf.options.boost_libs:

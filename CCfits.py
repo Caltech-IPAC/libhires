@@ -4,7 +4,6 @@
 def configure(conf):
     def get_param(varname,default):
         return getattr(Options.options,varname,'')or default
-    env=conf.env
 
     # Find CCFITS
     if conf.options.ccfits_dir:
