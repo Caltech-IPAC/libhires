@@ -43,5 +43,5 @@ def options(opt):
                    help='Directory where armadillo library files are installed')
     armadillo.add_option('--armadillo-libs',
                    help='Names of the armadillo libraries without prefix or suffix\n'
-                   '(e.g. "armadillo"')
+                   '(e.g. "armadillo")')
 
