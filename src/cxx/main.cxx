@@ -14,23 +14,23 @@ namespace hires
 
 int main(int argc, char* argv[])
 {
-  if(argc<5)
+  if(argc<6)
     {
-      std::cerr << "Usage: hires data_type IN_prefix OUT_prefix"
+      std::cerr << "Usage: hires data_type hires_mode IN_prefix OUT_prefix"
         " param_file1 param_file2 ...\n";
       exit(1);
     }
 
   std::vector<std::string> args;
-  for(int i=4;i<argc;++i)
+  for(int i=5;i<argc;++i)
     args.emplace_back(argv[i]);
 
   try
     {
-      hires::Hires hires(argv[1],args);
+      hires::Hires hires(argv[1],argv[2],args);
       hires::Gnomonic projection(hires.crval1,hires.crval2);
       std::vector<hires::Sample> samples(read_all_IN_files(hires.data_type,
-                                                           argv[2],
+                                                           argv[3],
                                                            projection));
       hires.compute_images(samples,argv[3]);
     }

@@ -55,6 +55,12 @@ namespace hires
                             arma::mat &correction,
                             arma::mat &correction_squared);
 
+    void compute_minimap(const double &radians_per_pix,
+                         const int &nx, const int &ny, 
+                         const std::vector<Sample> &samples,
+                         arma::mat &minimap_image,
+                         arma::mat &minimap_hitmap);
+
     void set_fluxes_to_sim_values(const arma::mat &sim_image);
 
     arma::mat calc_wgt_image(const int &ni, const int &nj)

@@ -12,13 +12,13 @@ import traceback
 from waflib import Build, Logs, Utils
 
 def options(ctx):
-    ctx.load('compiler_cxx cfitsio CCfits boost armadillo')
+    ctx.load('compiler_cxx CCfits boost armadillo')
     ctx.add_option('--debug', help='Include debug symbols and turn ' +
                                    'compiler optimizations off',
                    action='store_true', default=False, dest='debug')
 
 def configure(ctx):
-    ctx.load('compiler_cxx cfitsio CCfits boost armadillo')
+    ctx.load('compiler_cxx CCfits boost armadillo')
     ctx.env.append_value('CXXFLAGS', '-Wall')
     ctx.env.append_value('CXXFLAGS', '-Wextra')
     ctx.env.append_value('CXXFLAGS', '-std=c++11')
@@ -47,6 +47,7 @@ def build(ctx):
         'src/cxx/Footprint/get_response.cxx',
         'src/cxx/Footprint/generate_response.cxx',
         'src/cxx/Footprint/set_fluxes_to_sim_values.cxx',
+        'src/cxx/Footprint/compute_minimap.cxx',
         'src/cxx/Hires/Hires.cxx',
         'src/cxx/Hires/compute_images.cxx',
         'src/cxx/Hires/ostream_operator.cxx',
@@ -63,26 +64,28 @@ def build(ctx):
         'src/cxx/Footprint.hxx']
 
     ctx.stlib(
-        source=cxx_sources,
-        target='hires',
-        name='hires_st',
-        install_path=os.path.join(ctx.env.PREFIX, 'lib'),
-        use=['cfitsio','CCfits','boost','armadillo']
+         source=cxx_sources,
+         target='hires',
+         name='hires_st',
+         install_path=os.path.join(ctx.env.PREFIX, 'lib'),
+         use=['CCfits','boost','armadillo']
     )
+
     ctx.shlib(
         source=cxx_sources,
         target='hires',
         name='hires_sh',
         install_path=os.path.join(ctx.env.PREFIX, 'lib'),
-        use=['cfitsio','CCfits','boost','armadillo']
+        use=['CCfits','boost','armadillo']
     )
 
     ctx.program(
         source=['src/cxx/main.cxx'],
         target='hires',
         name='hires_bin',
+        lib=['cfitsio'],
         install_path=os.path.join(ctx.env.PREFIX, 'bin'),
-        use=['cfitsio','CCfits','boost','hires_st','armadillo']
+        use=['CCfits','boost','hires_sh','armadillo']
     )
 
     ctx.install_files(

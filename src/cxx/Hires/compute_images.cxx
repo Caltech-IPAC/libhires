@@ -15,6 +15,7 @@ namespace hires
                              const std::string &outfile_prefix)
   {
     std::map<int,Detector> detectors(read_all_DRF_files(data_type,drf_prefix));
+
     Footprint footprints(radians_per_pix,ni,nj,min_sample_flux,angle_tolerance,
                          footprints_per_pix,detectors,samples);
     wgt_image=footprints.calc_wgt_image(ni,nj);
@@ -27,6 +28,16 @@ namespace hires
       {
         int iter_start;
         arma::mat flux_image(start_image(starting_image,iter_start));
+	arma::mat minimap, hitmap;
+     
+        if (hires_mode == Hires_Mode::minimap || hires_mode == Hires_Mode::both) {
+            footprints.compute_minimap(radians_per_pix,ni,nj,samples,minimap,hitmap);
+            write_fits(minimap, "minimap", 0, outfile_prefix);
+            write_fits(hitmap, "hitmap", 0, outfile_prefix);
+        }
+
+        
+        if (hires_mode == Hires_Mode::hires || hires_mode == Hires_Mode::both) {
         for(int iter= iter_start+1; iter<=iter_max; ++iter)
           {
             bool do_cfv_image=
@@ -37,8 +48,10 @@ namespace hires
                                           flux_image,iter,do_cfv_image,
                                           boost_func, boost_max_iter,
                                           correction,correction_squared);
+
             correction/=wgt_image;
             flux_image%=correction;
+
             if(find(iter_list.begin(),iter_list.end(),iter)
                !=iter_list.end())
               {
@@ -53,6 +66,8 @@ namespace hires
                   }
               }
           }
+        }
+
       }
   
     if(find(outfile_types.begin(),outfile_types.end(),"beam")

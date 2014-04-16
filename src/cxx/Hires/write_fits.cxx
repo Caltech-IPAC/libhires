@@ -45,8 +45,11 @@ namespace hires
     phdu.addKey("CTYPE1",ctype1,"");
     phdu.addKey("CTYPE2",ctype2,"");
     float cdelt_rounded(radians_per_pix*180/boost::math::constants::pi<double>());
-    phdu.addKey("CDELT1",-cdelt_rounded,"left(+) to right(-)");
-    phdu.addKey("CDELT2", cdelt_rounded, "bottom(-) to top(+)");
+    phdu.addKey("CD1_1",-cdelt_rounded,"Degrees / Pixel");
+    phdu.addKey("CD2_1",0.0,"Degrees / Pixel");
+    phdu.addKey("CD1_2", -0.0, "Degrees / Pixel");
+    phdu.addKey("CD2_2",cdelt_rounded,"Degrees / Pixel");
+
     phdu.addKey("CRPIX1", (ni+1)/2 , "center pixel");
     phdu.addKey("CRPIX2", (nj+1)/2 , "center pixel");
     std::string t_comment("HIRES");
@@ -78,7 +81,8 @@ namespace hires
     std::valarray<float> temp(image.n_cols*image.n_rows);
     for(size_t i=0;i<image.n_cols;++i)
       for(size_t j=0;j<image.n_rows;++j)
-        temp[i+image.n_cols*j]=image(j,i);
+// GLON runs backwards
+        temp[i+image.n_cols*j]=image(j,(image.n_cols - 1) - i);
     phdu.write(1,temp.size(),temp);
   }
 }

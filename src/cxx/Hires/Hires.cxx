@@ -9,6 +9,7 @@
 namespace hires
 {
   Hires::Hires(const std::string &Data_type,
+               const std::string &Hires_mode,
                const std::vector<std::string> &param_files):
     starting_image("flat"),
     beam_starting_image("flat"),
@@ -31,6 +32,22 @@ namespace hires
           ss << "data_type is '" << Data_type
              << "' but must be one of ( ";
           for(auto &m: data_types)
+            ss << "'" << m.first << "' ";
+          ss << ")";
+          throw Exception(ss.str());
+        }
+
+      std::map<std::string,Hires_Mode> hires_modes{{"hires",Hires_Mode::hires},
+          {"minimap",Hires_Mode::minimap},
+          {"both",Hires_Mode::both}};
+      if(hires_modes.find(Hires_mode)!=hires_modes.end())
+        hires_mode=hires_modes[Hires_mode];
+      else
+        {
+          std::stringstream ss;
+          ss << "hires_mode is '" << Hires_mode
+             << "' but must be one of ( ";
+          for(auto &m: hires_modes)
             ss << "'" << m.first << "' ";
           ss << ")";
           throw Exception(ss.str());
