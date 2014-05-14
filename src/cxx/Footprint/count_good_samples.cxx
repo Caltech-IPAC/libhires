@@ -12,9 +12,6 @@ namespace hires
     int total_good  = 0;
     good.resize(samples.size());
 
-std::cout << "number of samples = " << samples.size() << "\n";
-std::cout << "x_rad " << x_radius << " y_rad " << y_radius << "\n";
-
     for(size_t i=0; i<samples.size(); ++i)
       {
         good[i].resize(samples[i].x.size());
