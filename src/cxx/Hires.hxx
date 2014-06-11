@@ -20,6 +20,9 @@ namespace hires
     int ni, nj, iter_max, boost_max_iter, footprints_per_pix, beam_spike_n;
     double radians_per_pix, crval1, crval2, min_sample_flux, angle_tolerance,
       beam_spike_height;
+
+    arma::mat hitmap, minimap;
+
     std::vector<int> iter_list;
     std::vector<std::tuple<std::string,std::string,std::string>> fits_keywords;
     std::function<double (double)> boost_func;
@@ -54,6 +57,20 @@ namespace hires
                         std::map<int,arma::mat> &cfv_images,
                         std::map<int,arma::mat> &beam_images,
                         std::vector<Sample> &samples,
+                        const std::string &outfile_prefix);
+
+    void iterate(arma::mat &wgt_image,
+                        std::map<int,arma::mat> &flux_images,
+                        std::map<int,arma::mat> &cfv_images,
+                        std::map<int,arma::mat> &beam_images,
+                        std::vector<Sample> &samples,
+                        int &iter);
+
+    void write_output(arma::mat &wgt_image,
+                        std::map<int,arma::mat> &flux_images,
+                        std::map<int,arma::mat> &cfv_images,
+                        std::map<int,arma::mat> &beam_images,
+                        int &iter,
                         const std::string &outfile_prefix);
 
     arma::mat spike_image();

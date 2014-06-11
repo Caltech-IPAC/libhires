@@ -50,6 +50,8 @@ def build(ctx):
         'src/cxx/Footprint/compute_minimap.cxx',
         'src/cxx/Hires/Hires.cxx',
         'src/cxx/Hires/compute_images.cxx',
+        'src/cxx/Hires/iterate.cxx',
+        'src/cxx/Hires/write_output.cxx',
         'src/cxx/Hires/ostream_operator.cxx',
         'src/cxx/Hires/spike_image.cxx',
         'src/cxx/Hires/start_image.cxx',
