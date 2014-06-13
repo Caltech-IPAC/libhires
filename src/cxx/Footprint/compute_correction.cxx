@@ -40,7 +40,7 @@ namespace hires
         double flux_prime(accu(integration));
 
         double scale(flux[n]/flux_prime);
-        if(iter==1 && iter<=boost_max_iter)
+        if(iter != 1 && iter <= boost_max_iter)
           {
             scale=boost_func(scale);
           }
