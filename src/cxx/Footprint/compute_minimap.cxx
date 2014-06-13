@@ -19,9 +19,9 @@ namespace hires
   )
   {
     double i_offset(nx/2.0), j_offset(ny/2.0);
-    arma::mat integration(nx, ny);
-    arma::mat hitcnt(nx, ny);
-  
+    arma::mat integration(ny, nx);
+    arma::mat hitcnt(ny, nx);
+ 
     integration.zeros();
     hitcnt.zeros();
 
@@ -35,8 +35,8 @@ namespace hires
 	    double xi((samples[i].x[j]/radians_per_pix) + i_offset);
             double yi((samples[i].y[j]/radians_per_pix) + j_offset);
             int i_int(xi), j_int(yi);
-	    integration(i_int,j_int) += samples[i].flux[j];
-            hitcnt(i_int,j_int) += 1.0;
+	    integration(j_int,i_int) += samples[i].flux[j];
+            hitcnt(j_int,i_int) += 1.0;
           }  
       }
 

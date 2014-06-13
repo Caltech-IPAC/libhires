@@ -17,9 +17,9 @@ namespace hires
    arma::mat &correction,
    arma::mat &correction_squared)
   {
-    correction.zeros(nx,ny);
+    correction.zeros(ny,nx);
     if(do_cfv)
-      correction_squared.zeros(nx,ny);
+      correction_squared.zeros(ny,nx);
 
     for(size_t n=0;n<flux.size();++n)
        {
