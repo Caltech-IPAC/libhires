@@ -27,7 +27,7 @@ namespace hires
     std::vector<std::tuple<std::string,std::string,std::string>> fits_keywords;
     std::function<double (double)> boost_func;
 
-    Hires(const std::string &Data_type, const std::string &Hires_mode, const std::vector<std::string> &param_files);
+    Hires(const std::string &Data_type, const std::string &Hires_mode, const std::string &param_str);
 
 
     enum class Data_Type {planck, spire} data_type;

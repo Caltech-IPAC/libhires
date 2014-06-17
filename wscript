@@ -81,14 +81,14 @@ def build(ctx):
         use=['CCfits','boost','armadillo']
     )
 
-    ctx.program(
-        source=['src/cxx/main.cxx'],
-        target='hires',
-        name='hires_bin',
-        lib=['cfitsio'],
-        install_path=os.path.join(ctx.env.PREFIX, 'bin'),
-        use=['CCfits','boost','hires_sh','armadillo']
-    )
+#    ctx.program(
+#        source=['src/cxx/main.cxx'],
+#        target='hires',
+#        name='hires_bin',
+#        lib=['cfitsio'],
+#        install_path=os.path.join(ctx.env.PREFIX, 'bin'),
+#        use=['CCfits','boost','hires_sh','armadillo']
+#    )
 
     ctx.install_files(
         os.path.join(ctx.env.PREFIX, 'include'),
