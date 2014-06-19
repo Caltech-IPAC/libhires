@@ -10,7 +10,7 @@ namespace hires
 {
   Hires::Hires(const std::string &Data_type,
                const std::string &Hires_mode,
-               const std::string &param_str):
+               const std::vector<std::string> param_str):
     starting_image("flat"),
     beam_starting_image("flat"),
     flux_units("??"),
@@ -58,20 +58,19 @@ namespace hires
       else if(data_type==Data_Type::spire)
         flux_units="Jy/beam";
 
-      std::istringstream iss(param_str);
-//      std::vector<std::string> line;
-      std::string line;
-      while (std::getline(iss, line, ',')) {
+      for (int i = 0; i <= param_str.size(); i++) {
           std::vector<std::string> words;
-          boost::split(words,line,boost::is_any_of("=\t "),
+          boost::split(words,param_str[i],boost::is_any_of("=\t "),
                            boost::token_compress_on);
           if (words.size()<2)
               throw Exception("Parameter: " + words[0]
                                 + " has no value in file:\n");
+          std::string line;
+          for (int j = 0; j < words.size(); j++) line += words[j]+" ";
+
           std::stringstream ss(line);
           std::string key;
           ss >> key;
-//std::cout << "found key = " << key << "\n";
 
           if (key=="SIZE_NPIX") {
               ss >> ni;
