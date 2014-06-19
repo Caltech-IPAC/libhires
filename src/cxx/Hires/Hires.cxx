@@ -58,7 +58,7 @@ namespace hires
       else if(data_type==Data_Type::spire)
         flux_units="Jy/beam";
 
-      for (int i = 0; i <= param_str.size(); i++) {
+      for (int i = 0; i < param_str.size(); i++) {
           std::vector<std::string> words;
           boost::split(words,param_str[i],boost::is_any_of("=\t "),
                            boost::token_compress_on);
@@ -71,6 +71,8 @@ namespace hires
           std::stringstream ss(line);
           std::string key;
           ss >> key;
+
+          boost::to_upper(key);
 
           if (key=="SIZE_NPIX") {
               ss >> ni;
@@ -137,6 +139,7 @@ namespace hires
                ss >> boost_max_iter;
                if (words.size() >= 3)
                    ss >> boost_type;
+               boost::to_upper(boost_type);
                if (boost_type == "TIMES_2")
                    boost_func = [](const double &x) {return x+x-1.0;};
                else if (boost_type == "TIMES_3")
@@ -153,6 +156,7 @@ namespace hires
            else if (key=="KWD") {
                std::string kwd;
                ss >> kwd;
+               boost::to_upper(kwd);
                bool need_warn(true);
 
                if (kwd=="CRVAL1")
