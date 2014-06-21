@@ -7,64 +7,53 @@
 #include <functional>
 #include <armadillo>
 #include <map>
+#include "Hires_Parameters.hxx"
 #include "Sample.hxx"
+#include "Exception.hxx"
 
-namespace hires
-{
-  class Hires
+namespace hires {
+
+class Hires : public Hires_Parameters
   {
   public:
-    std::string drf_prefix, ctype1, ctype2,
-      boost_type, starting_image, beam_starting_image, flux_units, log_filename;
-    std::vector<std::string> outfile_types;
-    int ni, nj, iter_max, boost_max_iter, footprints_per_pix, beam_spike_n;
-    double radians_per_pix, crval1, crval2, min_sample_flux, angle_tolerance,
-      beam_spike_height;
-
     arma::mat hitmap, minimap;
 
-    std::vector<int> iter_list;
-    std::vector<std::tuple<std::string,std::string,std::string>> fits_keywords;
-    std::function<double (double)> boost_func;
 
-    Hires(const std::string &Data_type, const std::string &Hires_mode, 
-       const std::vector<std::string> param_str);
-
-
-    enum class Data_Type {planck, spire} data_type;
-    enum class Hires_Mode {hires, minimap, both} hires_mode;
-
-    void compute_images(std::vector<Sample> &samples,
-                        const std::string &outfile_prefix)
-    {
-      arma::mat wgt_image;
-      std::map<int,arma::mat> flux_images;
-      std::map<int,arma::mat> cfv_images;
-      std::map<int,arma::mat> beam_images;
-      compute_images(wgt_image,flux_images,cfv_images,
-                     beam_images,samples,outfile_prefix);
-    }
-    void compute_images(arma::mat &wgt_image,
-                        std::map<int,arma::mat> &flux_images,
-                        std::map<int,arma::mat> &cfv_images,
-                        std::map<int,arma::mat> &beam_images,
-                        std::vector<Sample> &samples)
-    {
-      compute_images(wgt_image,flux_images,cfv_images,
-                     beam_images,samples,"");
-    }
-    void compute_images(arma::mat &wgt_image,
-                        std::map<int,arma::mat> &flux_images,
-                        std::map<int,arma::mat> &cfv_images,
-                        std::map<int,arma::mat> &beam_images,
-                        std::vector<Sample> &samples,
-                        const std::string &outfile_prefix);
+// Constructors
+// takes Hires_Parameters as single argument
+    Hires(const Hires_Parameters &hp) : Hires_Parameters(hp.data_type, 
+           hp.hires_mode, 
+           hp.drf_prefix,
+           hp.ctype1,
+           hp.ctype2,
+           hp.boost_type,
+           hp.starting_image,
+           hp.beam_starting_image,
+           hp.flux_units,
+           hp.log_filename,
+           hp.outfile_types,
+           hp.ni,
+           hp.nj,
+           hp.boost_max_iter,
+           hp.footprints_per_pix,
+           hp.beam_spike_n,
+           hp.radians_per_pix,
+           hp.crval1,
+           hp.crval2,
+           hp.min_sample_flux,
+           hp.angle_tolerance,
+           hp.beam_spike_height,  
+           hp.fits_keywords,
+           hp.boost_func,
+           hp.iter_max,
+           hp.iter_list) {
+    };
 
     void iterate(arma::mat &wgt_image,
                         std::map<int,arma::mat> &flux_images,
                         std::map<int,arma::mat> &cfv_images,
                         std::map<int,arma::mat> &beam_images,
-                        std::vector<Sample> &samples,
+                        std::vector<hires::Sample> &samples,
                         int &iter);
 
     void write_output(arma::mat &wgt_image,
@@ -73,6 +62,7 @@ namespace hires
                         std::map<int,arma::mat> &beam_images,
                         int &iter,
                         const std::string &outfile_prefix);
+
 
     arma::mat spike_image();
     arma::mat start_image(const std::string &filename, int &iter_start);

@@ -1,27 +1,16 @@
-#include "../Hires.hxx"
+#include "../Hires_Parameters.hxx"
 #include <fstream>
 #include <sstream>
 #include <map>
 #include <algorithm>
 #include <boost/math/constants/constants.hpp>
-#include "../Exception.hxx"
 
-namespace hires
+namespace hires {
+
+void Hires_Parameters::parse_command_line(const std::string &Data_type, 
+                      const std::string &Hires_mode, 
+                      const std::vector<std::string> param_str)
 {
-  Hires::Hires(const std::string &Data_type,
-               const std::string &Hires_mode,
-               const std::vector<std::string> param_str):
-    starting_image("flat"),
-    beam_starting_image("flat"),
-    flux_units("??"),
-    log_filename("logfile.log"),
-    outfile_types{"flux"},
-    boost_max_iter(0),
-    footprints_per_pix(1),
-    beam_spike_n(5),
-    min_sample_flux(std::numeric_limits<double>::min()),
-    beam_spike_height(10)
-    {
       std::map<std::string,Data_Type> data_types{{"planck",Data_Type::planck},
           {"spire",Data_Type::spire}};
       if(data_types.find(Data_type)!=data_types.end())
@@ -34,7 +23,7 @@ namespace hires
           for(auto &m: data_types)
             ss << "'" << m.first << "' ";
           ss << ")";
-          throw Exception(ss.str());
+          throw std::runtime_error(ss.str());
         }
 
       std::map<std::string,Hires_Mode> hires_modes{{"hires",Hires_Mode::hires},
@@ -50,7 +39,7 @@ namespace hires
           for(auto &m: hires_modes)
             ss << "'" << m.first << "' ";
           ss << ")";
-          throw Exception(ss.str());
+          throw std::runtime_error(ss.str());
         }
 
       if(data_type==Data_Type::planck)
@@ -63,7 +52,7 @@ namespace hires
           boost::split(words,param_str[i],boost::is_any_of("=\t "),
                            boost::token_compress_on);
           if (words.size()<2)
-              throw Exception("Parameter: " + words[0]
+              throw std::runtime_error("Parameter: " + words[0]
                                 + " has no value in file:\n");
           std::string line;
           for (int j = 0; j < words.size(); j++) line += words[j]+" ";
@@ -151,7 +140,7 @@ namespace hires
                else if (boost_type == "CUBED")
                    boost_func = [](const double &x) {return x*x*x;};
                else
-                  throw Exception("Unknown BOOST type: " + boost_type);
+                  throw std::runtime_error("Unknown BOOST type: " + boost_type);
            }
            else if (key=="KWD") {
                std::string kwd;
@@ -183,7 +172,7 @@ namespace hires
             else if(key=="")
                 continue;
             else
-                throw Exception("ERROR: Unknown parameter name: "
+                throw std::runtime_error("ERROR: Unknown parameter name: "
                                 + key);
             }
        
@@ -194,7 +183,7 @@ namespace hires
         {
           if(find(valid_outfile_types.begin(),valid_outfile_types.end(),t)
              ==valid_outfile_types.end())
-            throw Exception("Illegal OUTFILE_TYPE: " + t);
+            throw std::runtime_error("Illegal OUTFILE_TYPE: " + t);
         }
 
       iter_list.push_back(iter_max); /* make sure to output files for
@@ -202,5 +191,5 @@ namespace hires
       std::sort(iter_list.begin(),iter_list.end());
       iter_list.resize(std::unique(iter_list.begin(),
                                    iter_list.end())-iter_list.begin());
-    }
+}
 }
