@@ -4,8 +4,6 @@ namespace hires {
 
 void Hires_Parameters::set_default_values()
 {
-    data_type = Data_Type::planck;
-    hires_mode = Hires_Mode::both;
     drf_prefix = "";
     ctype1 = "RA -- TAN";
     ctype2 = "DEC -- TAN";
@@ -14,7 +12,7 @@ void Hires_Parameters::set_default_values()
     beam_starting_image = "flat";
     flux_units = "??";
     log_filename = "logfile.log";
-    outfile_types = {"flux"},
+    outfile_types = {"hires"},
     ni = 500;
     nj = 500;
     boost_max_iter = 0;
@@ -33,8 +31,5 @@ void Hires_Parameters::set_default_values()
     fits_keywords.push_back(std::make_tuple(kwd, val, comment));
 
     boost_func = [](const double &x) {return x+x-1.0;};
-
-    iter_max = 0;
-    iter_list.push_back(0);
 }
 }

@@ -2,10 +2,7 @@
 
 namespace hires {
 
-void Hires_Parameters::dump_params()
-{
-//    std::cout << "data_type = " << data_type << "\n";
-//    std::cout << "hires_mode = " << hires_mode << "\n";
+void Hires_Parameters::dump_params() {
     std::cout << "drf_prefix " << drf_prefix.c_str() << "\n";
     std::cout << "ctype1 " << ctype1.c_str() << "\n";
     std::cout << "ctype2 " << ctype2.c_str() << "\n";
@@ -23,7 +20,6 @@ void Hires_Parameters::dump_params()
     std::cout << "crval1 " << crval1 << "\n";
     std::cout << "crval2 " << crval2 << "\n";
     std::cout << "min_sample_flux " << min_sample_flux << "\n";
-    std::cout << "iter_max " << iter_max << "\n";
 }
 }
 

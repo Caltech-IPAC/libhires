@@ -26,10 +26,7 @@ namespace hires
         << "\n  OUTFILE_TYPES [";
     for(auto &o: p.outfile_types)
       out << "'" << o << "' ";
-    out << "]\n  ITER_MAX " << p.iter_max
-        << "\n  ITER_LIST [";
-    for(auto &o: p.iter_list)
-      out << o << " ";
+
     out << "]\n  FLUX_UNITS " << p.flux_units;
 
     if(find(p.outfile_types.begin(),p.outfile_types.end(),"beam")

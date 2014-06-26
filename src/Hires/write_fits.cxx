@@ -15,19 +15,15 @@
 
 namespace hires
 {
-  void Hires::write_fits(const arma::mat &image, const std::string &file_type,
-                         const int &iteration, const std::string &outfile_prefix)
+  void Hires::write_fits(const arma::mat &image, 
+			 const std::vector<std::tuple<std::string,std::string,std::string>> file_specific_keywords,
+                         const std::string &outfile_name)
   {
-    if(outfile_prefix.empty())
+    if (outfile_name.empty())
       return;
-    boost::filesystem::path dir(outfile_prefix);
-    boost::filesystem::create_directory(dir);
-    std::stringstream filename;
-    filename << outfile_prefix << "_" << file_type;
-    if(iteration!=std::numeric_limits<int>::max())
-      filename << "_" << iteration;
-    filename << ".fits";
-    boost::filesystem::path fits_file(filename.str());
+
+
+    boost::filesystem::path fits_file(outfile_name);
   
     long axes[]={image.n_cols,image.n_rows};
     boost::filesystem::remove(fits_file);
@@ -35,11 +31,14 @@ namespace hires
 
     CCfits::PHDU &phdu(outfile.pHDU());
 
-    if(file_type=="flux")
-      phdu.addKey("BUNIT",flux_units,"");
     for(auto &keywords: fits_keywords)
       phdu.addKey(std::get<0>(keywords),std::get<1>(keywords),
                   std::get<2>(keywords));
+
+    for(auto &keywords: file_specific_keywords)
+      phdu.addKey(std::get<0>(keywords),std::get<1>(keywords),
+                  std::get<2>(keywords));
+
     phdu.addKey("CRVAL1",crval1,"");
     phdu.addKey("CRVAL2",crval2,"");
     phdu.addKey("CTYPE1",ctype1,"");
@@ -52,17 +51,7 @@ namespace hires
 
     phdu.addKey("CRPIX1", (ni+1)/2 , "center pixel");
     phdu.addKey("CRPIX2", (nj+1)/2 , "center pixel");
-    std::string t_comment("HIRES");
-    if(file_type=="flux")
-      t_comment+=" flux";
-    else if(file_type=="cov")
-      t_comment+= " coverage";
-    else if(file_type=="cfv")
-      t_comment+= " correction factor variance";
-    t_comment+= " image";
-    phdu.addKey("FILETYPE", file_type, t_comment);
-    if(iteration!=std::numeric_limits<int>::max())
-      phdu.addKey("ITERNUM", iteration, "HIRES iteration number");
+
     phdu.addKey("FILENAME",
                 fits_file.filename().string(),
                 "name of this file");
@@ -83,6 +72,7 @@ namespace hires
       for(size_t j=0;j<image.n_rows;++j)
 // GLON runs backwards
         temp[i+image.n_cols*j]=image(j,(image.n_cols - 1) - i);
+
     phdu.write(1,temp.size(),temp);
   }
 }
