@@ -36,36 +36,34 @@ def configure(ctx):
 
 def build(ctx):
     cxx_sources=[
-        'src/cxx/read_all_DRF_files/read_all_DRF_files.cxx',
-        'src/cxx/read_all_DRF_files/read_all_DRF_planck.cxx',
-        'src/cxx/read_all_IN_files/read_all_IN_files.cxx',
-        'src/cxx/read_all_IN_files/read_one_IN_planck.cxx',
-        'src/cxx/Footprint/Footprint.cxx',
-        'src/cxx/Footprint/compute_bounds.cxx',
-        'src/cxx/Footprint/compute_correction.cxx',
-        'src/cxx/Footprint/count_good_samples.cxx',
-        'src/cxx/Footprint/get_response.cxx',
-        'src/cxx/Footprint/generate_response.cxx',
-        'src/cxx/Footprint/set_fluxes_to_sim_values.cxx',
-        'src/cxx/Footprint/compute_minimap.cxx',
-        'src/cxx/Hires_Parameters/set_default_values.cxx',
-        'src/cxx/Hires_Parameters/parse_command_line.cxx',
-        'src/cxx/Hires_Parameters/dump_params.cxx',
-        'src/cxx/Hires/iterate.cxx',
-        'src/cxx/Hires/write_output.cxx',
-        'src/cxx/Hires/ostream_operator.cxx',
-        'src/cxx/Hires/spike_image.cxx',
-        'src/cxx/Hires/start_image.cxx',
-        'src/cxx/Hires/write_fits.cxx']
+        'src/read_all_DRF_files/read_all_DRF_files.cxx',
+        'src/read_all_DRF_files/read_all_DRF_planck.cxx',
+        'src/Footprint/Footprint.cxx',
+        'src/Footprint/compute_bounds.cxx',
+        'src/Footprint/compute_correction.cxx',
+        'src/Footprint/count_good_samples.cxx',
+        'src/Footprint/get_response.cxx',
+        'src/Footprint/generate_response.cxx',
+        'src/Footprint/set_fluxes_to_sim_values.cxx',
+        'src/Footprint/compute_minimap.cxx',
+        'src/Hires_Parameters/set_default_values.cxx',
+        'src/Hires_Parameters/parse_command_line.cxx',
+        'src/Hires_Parameters/dump_params.cxx',
+        'src/Hires/iterate.cxx',
+        'src/Hires/write_output.cxx',
+        'src/Hires/ostream_operator.cxx',
+        'src/Hires/spike_image.cxx',
+        'src/Hires/start_image.cxx',
+        'src/Hires/write_fits.cxx']
     headers=[
-        'src/cxx/version.hxx',
-        'src/cxx/Detector.hxx',
-        'src/cxx/Gnomonic.hxx',
-        'src/cxx/Hires_Parameters.hxx',
-        'src/cxx/Hires.hxx',
-        'src/cxx/Exception.hxx',
-        'src/cxx/Sample.hxx',
-        'src/cxx/Footprint.hxx']
+        'src/version.hxx',
+        'src/Detector.hxx',
+        'src/Gnomonic.hxx',
+        'src/Hires_Parameters.hxx',
+        'src/Hires.hxx',
+        'src/Exception.hxx',
+        'src/Sample.hxx',
+        'src/Footprint.hxx']
 
     ctx.stlib(
          source=cxx_sources,
@@ -82,15 +80,6 @@ def build(ctx):
         install_path=os.path.join(ctx.env.PREFIX, 'lib'),
         use=['CCfits','boost','armadillo']
     )
-
-#    ctx.program(
-#        source=['src/cxx/main.cxx'],
-#        target='hires',
-#        name='hires_bin',
-#        lib=['cfitsio'],
-#        install_path=os.path.join(ctx.env.PREFIX, 'bin'),
-#        use=['CCfits','boost','hires_sh','armadillo']
-#    )
 
     ctx.install_files(
         os.path.join(ctx.env.PREFIX, 'include'),
