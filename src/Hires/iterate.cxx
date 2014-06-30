@@ -6,12 +6,8 @@ namespace hires
 {
 std::map<int,Detector> read_all_DRF_files(const std::string &DRF_prefix);
 
-void Hires::iterate(arma::mat &wgt_image,
-                             std::map<int,arma::mat> &flux_images,
-                             std::map<int,arma::mat> &cfv_images,
-                             std::map<int,arma::mat> &beam_images,
-                             std::vector<Sample> &samples,
-			     int &iter) 
+void Hires::iterate(int &iter,
+                             std::vector<Sample> &samples) 
 {
     std::map<int,Detector> detectors(read_all_DRF_files(drf_prefix));
 

@@ -4,7 +4,7 @@
 
 namespace hires {
 
-inline std::string GENFILENAME(std::string p, std::string type, int iter) 
+inline std::string genfilename(std::string p, std::string type, int iter) 
 { 
     std::stringstream tmpss;    
     tmpss << p << "_" << type; 
@@ -14,43 +14,12 @@ inline std::string GENFILENAME(std::string p, std::string type, int iter)
     return (tmpss.str()); 
 }
 
-// assumes filename, iter, flux_units from context
-#define WRITEFILE(image, desc, isflux) \
-{ \
-    std::stringstream istr; \
-    istr << iter; \
-    std::string kwd, val, comment; \
-\
-    file_specific_keywords.clear(); \
-\
-    kwd = "ITERNUM"; val = istr.str(); comment = "HIRES iteration number"; \
-    file_specific_keywords.push_back( \
-        std::make_tuple(kwd, val, comment)); \
-\
-    kwd = "FILETYPE"; val = desc; comment = ""; \
-    file_specific_keywords.push_back( \
-        std::make_tuple(kwd, val, comment)); \
-\
-    if ((isflux)) { \
-        kwd = "BUNIT"; val = flux_units; comment = ""; \
-        file_specific_keywords.push_back( \
-            std::make_tuple(kwd, val, comment)); \
-    } \
-\
-    write_fits((image), file_specific_keywords, filename); \
-}
 
-
-void Hires::write_output(arma::mat &wgt_image,
-                             std::map<int,arma::mat> &flux_images,
-                             std::map<int,arma::mat> &cfv_images,
-                             std::map<int,arma::mat> &beam_images,
-                             int &iter,
+void Hires::write_output(int &iter,
                              Image_Type image_type,
                              const std::string &outfile_name) 
 {
     std::string filename;
-    std::vector<std::tuple<std::string,std::string,std::string>> file_specific_keywords;
 
 // Written out only at iteration 0.
     if (iter == 0) {
@@ -62,9 +31,9 @@ void Hires::write_output(arma::mat &wgt_image,
             std::find(outfile_types.begin(),outfile_types.end(),"cov")
             != outfile_types.end())) {
         filename = (image_type == Image_Type::all ?
-            GENFILENAME(outfile_name, "cov", iter) : 
+            genfilename(outfile_name, "cov", iter) : 
             outfile_name);
-        WRITEFILE(wgt_image, "HIRES covariance image", 0);
+        write_file(wgt_image, filename, "HIRES covariance image", iter, 0);
     }
 
 // Minimap
@@ -73,9 +42,9 @@ void Hires::write_output(arma::mat &wgt_image,
             std::find(outfile_types.begin(),outfile_types.end(),"minimap")
             != outfile_types.end())) {
         filename = (image_type == Image_Type::all ?
-            GENFILENAME(outfile_name, "minimap", iter) : 
+            genfilename(outfile_name, "minimap", iter) : 
             outfile_name);
-        WRITEFILE(minimap, "MINIMAP flux image", 1);
+        write_file(minimap, filename, "MINIMAP flux image", iter, 1);
     }
 
 // Hit count
@@ -84,9 +53,9 @@ void Hires::write_output(arma::mat &wgt_image,
             std::find(outfile_types.begin(),outfile_types.end(),"hitmap")
             != outfile_types.end())) {
         filename = (image_type == Image_Type::all ?
-            GENFILENAME(outfile_name, "hitmap", iter) : 
+            genfilename(outfile_name, "hitmap", iter) : 
             outfile_name);
-        WRITEFILE(hitmap, "MINIMAP hit count image", 0);
+        write_file(hitmap, filename, "MINIMAP hit count image", iter, 0);
     }
     } else { 
 // Written out at iter > 0
@@ -96,9 +65,9 @@ void Hires::write_output(arma::mat &wgt_image,
             std::find(outfile_types.begin(),outfile_types.end(),"hires")
             != outfile_types.end())) {
         filename = (image_type == Image_Type::all ?
-            GENFILENAME(outfile_name, "hires", iter) : 
+            genfilename(outfile_name, "hires", iter) : 
             outfile_name);
-        WRITEFILE(flux_images[iter], "HIRES flux image", 1);
+        write_file(flux_images[iter], filename, "HIRES flux image", iter, 1);
     }
 
 // HIRES CFV image
@@ -107,9 +76,9 @@ void Hires::write_output(arma::mat &wgt_image,
             std::find(outfile_types.begin(),outfile_types.end(),"cfv")
             != outfile_types.end())) {
         filename = (image_type == Image_Type::all ?
-            GENFILENAME(outfile_name, "cfv", iter) : 
+            genfilename(outfile_name, "cfv", iter) : 
             outfile_name);
-        WRITEFILE(cfv_images[iter], "HIRES correction factor variance image", 0);
+        write_file(cfv_images[iter], filename, "HIRES correction factor variance image", iter, 0);
     }
 
 // HIRES beam image
@@ -118,9 +87,9 @@ void Hires::write_output(arma::mat &wgt_image,
             std::find(outfile_types.begin(),outfile_types.end(),"beam")
             != outfile_types.end())) {
         filename = (image_type == Image_Type::all ?
-            GENFILENAME(outfile_name, "beam", iter) : 
+            genfilename(outfile_name, "beam", iter) : 
             outfile_name);
-        WRITEFILE(beam_images[iter], "HIRES beam image", 0);
+        write_file(beam_images[iter], filename, "HIRES beam image", iter, 0);
     }
     } // end iter > 0
 }

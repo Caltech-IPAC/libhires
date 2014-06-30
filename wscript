@@ -51,6 +51,7 @@ def build(ctx):
         'src/Hires_Parameters/dump_params.cxx',
         'src/Hires/iterate.cxx',
         'src/Hires/write_output.cxx',
+        'src/Hires/write_file.cxx',
         'src/Hires/ostream_operator.cxx',
         'src/Hires/spike_image.cxx',
         'src/Hires/start_image.cxx',
