@@ -84,6 +84,11 @@ public:
         parse_command_line(param_str);
     }
 
+// Constructor #3: set default values only 
+    Hires_Parameters( ) {
+        set_default_values();
+    }
+
 // Populates parameter values based on defaults
     void set_default_values();
 
