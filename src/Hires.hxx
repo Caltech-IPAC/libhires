@@ -17,6 +17,10 @@ class Hires : public Hires_Parameters
   {
   public:
     arma::mat hitmap, minimap;
+    arma::mat wgt_image;
+    std::map<int,arma::mat> flux_images;
+    std::map<int,arma::mat> cfv_images;
+    std::map<int,arma::mat> beam_images;
 
 // Constructors
 // takes Hires_Parameters as single argument
@@ -45,20 +49,18 @@ class Hires : public Hires_Parameters
            hp.boost_func) {
     };
 
-    void iterate(arma::mat &wgt_image,
-        std::map<int,arma::mat> &flux_images,
-        std::map<int,arma::mat> &cfv_images,
-        std::map<int,arma::mat> &beam_images,
-        std::vector<hires::Sample> &samples,
-        int &iter);
+    void iterate(int &iter,
+        std::vector<hires::Sample> &samples);
 
-    void write_output(arma::mat &wgt_image,
-        std::map<int,arma::mat> &flux_images,
-        std::map<int,arma::mat> &cfv_images,
-        std::map<int,arma::mat> &beam_images,
-        int &iter,
+    void write_output(int &iter,
         const Image_Type image_type,
         const std::string &outfile_prefix);
+
+    void write_file(arma::mat image, 
+        std::string filename, 
+        const char *desc, 
+        int iter, 
+        int isflux);
 
     arma::mat spike_image();
     arma::mat start_image(const std::string &filename, int &iter_start);
