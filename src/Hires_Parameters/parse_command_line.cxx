@@ -9,7 +9,7 @@ namespace hires {
 
 void Hires_Parameters::parse_command_line(const std::vector<std::string> param_str)
 {
-      for (int i = 0; i < param_str.size(); i++) {
+      for (size_t i = 0; i < param_str.size(); ++i) {
           std::vector<std::string> words;
           boost::split(words,param_str[i],boost::is_any_of("=\t "),
                            boost::token_compress_on);
@@ -17,7 +17,7 @@ void Hires_Parameters::parse_command_line(const std::vector<std::string> param_s
               throw std::runtime_error("Parameter: " + words[0]
                                 + " has no value in file:\n");
           std::string line;
-          for (int j = 0; j < words.size(); j++) line += words[j]+" ";
+          for (size_t j = 0; j < words.size(); ++j) line += words[j]+" ";
 
           std::stringstream ss(line);
           std::string key;
