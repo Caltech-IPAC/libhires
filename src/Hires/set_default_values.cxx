@@ -1,9 +1,6 @@
-#include "../Hires_Parameters.hxx"
+#include "../Hires.hxx"
 
-namespace hires
-{
-
-void Hires_Parameters::set_default_values ()
+void hires::Hires::set_default_values ()
 {
   drf_prefix = "";
   ctype1 = "RA -- TAN";
@@ -33,4 +30,4 @@ void Hires_Parameters::set_default_values ()
   boost_func = [](const double &x)
   { return x + x - 1.0; };
 }
-}
+

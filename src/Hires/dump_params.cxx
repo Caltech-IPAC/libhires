@@ -1,9 +1,6 @@
-#include "../Hires_Parameters.hxx"
+#include "../Hires.hxx"
 
-namespace hires
-{
-
-void Hires_Parameters::dump_params ()
+void hires::Hires::dump_params ()
 {
   std::cout << "drf_prefix " << drf_prefix.c_str () << "\n";
   std::cout << "ctype1 " << ctype1.c_str () << "\n";
@@ -23,31 +20,3 @@ void Hires_Parameters::dump_params ()
   std::cout << "crval2 " << crval2 << "\n";
   std::cout << "min_sample_flux " << min_sample_flux << "\n";
 }
-}
-
-/*
-        Hires(hp.data_type,
-           hp.hires_mode,
-           hp.drf_prefix,
-           hp.ctype1,
-           hp.ctype2,
-           hp.boost_type,
-           hp.starting_image,
-           hp.beam_starting_image,
-           hp.flux_units,
-           hp.log_filename,
-           hp.outfile_types,
-           hp.ni,
-           hp.nj,
-           hp.boost_max_iter,
-           hp.footprints_per_pix,
-           hp.beam_spike_n,
-           hp.radians_per_pix,
-           hp.crval1,
-           hp.crval2,
-           hp.min_sample_flux,
-           hp.angle_tolerance,
-           hp.beam_spike_height,
-           hp.fits_keywords,
-           hp.boost_func);
-*/

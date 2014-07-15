@@ -1,15 +1,17 @@
-#include "../Hires_Parameters.hxx"
 #include <fstream>
 #include <sstream>
 #include <map>
 #include <algorithm>
+
 #include <boost/math/constants/constants.hpp>
+
+#include "../Hires.hxx"
 
 namespace hires
 {
 
 void
-Hires_Parameters::parse_command_line (const std::vector<std::string> param_str)
+Hires::parse_command_line (const std::vector<std::string> param_str)
 {
   for (size_t i = 0; i < param_str.size (); ++i)
     {
