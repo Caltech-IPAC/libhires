@@ -1,11 +1,6 @@
 #include <armadillo>
 #include "../Footprint.hxx"
 
-// Test for NaN with bitwise logic
-bool isNaN(float x) {
-    return ((int&)x & 0x7fffffff) >= 0x7f800001;
-}
-
 namespace hires
 {
   void Footprint::compute_correction
@@ -23,18 +18,13 @@ namespace hires
 
     for(size_t n=0;n<flux.size();++n)
        {
-// Don't process TOI samples having NaN values.
-        if (isNaN(flux[n])) continue;
-
         arma::mat integration(j1_im[n]-j0_im[n],
                               i1_im[n]-i0_im[n]);
         for(int i=0;i<i1_im[n]-i0_im[n];++i)
           for(int j=0;j<j1_im[n]-j0_im[n];++j)
             {
-//               if (!isNaN(flux_image(j+j0_im[n],i+i0_im[n]))) {
-                  integration(j,i)=flux_image(j+j0_im[n],i+i0_im[n])
-                      *(*responses[n])(j+j0_ft[n],i+i0_ft[n]);
-//               } 
+              integration(j,i)=flux_image(j+j0_im[n],i+i0_im[n])
+                *(*responses[n])(j+j0_ft[n],i+i0_ft[n]);
             } 
 
         double flux_prime(accu(integration));

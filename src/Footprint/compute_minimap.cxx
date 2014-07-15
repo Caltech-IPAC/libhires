@@ -2,11 +2,6 @@
 #include "../Footprint.hxx"
 #include "../Sample.hxx"
 
-// Test for NaN with bitwise logic
-static bool isNaN(float x) {
-    return ((int&)x & 0x7fffffff) >= 0x7f800001;
-}
-
 namespace hires
 {
   void Footprint::compute_minimap
@@ -27,10 +22,9 @@ namespace hires
 
     for (size_t i=0; i < samples.size(); ++i)
       {
-     
 	for (size_t j=0; j < good[i].size(); ++j)
           { 
-            if (!good[i][j] || isNaN(samples[i].flux[j])) continue;
+            if (!good[i][j]) continue;
 
 	    double xi((samples[i].x[j]/radians_per_pix) + i_offset);
             double yi((samples[i].y[j]/radians_per_pix) + j_offset);
