@@ -1,3 +1,5 @@
+#include <boost/math/constants/constants.hpp>
+
 #include "../Hires.hxx"
 
 void hires::Hires::set_default_values ()
