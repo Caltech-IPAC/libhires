@@ -7,7 +7,6 @@ void hires::Hires::set_default_values ()
   ctype2 = "DEC -- TAN";
   boost_type = "TIMES_2";
   flux_units = "??";
-  log_filename = "logfile.log";
   outfile_types = { "hires" }, ni = 500;
   nj = 500;
   boost_max_iter = 0;

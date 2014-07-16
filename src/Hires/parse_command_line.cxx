@@ -76,8 +76,6 @@ void Hires::parse_command_line (const std::vector<std::string> param_str)
         ss >> beam_starting_image;
       else if (key == "FLUX_UNITS")
         ss >> flux_units;
-      else if (key == "LOG_FILENAME")
-        ss >> log_filename;
       else if (key == "BOOST_CORRECTION")
         {
           ss >> boost_max_iter;
