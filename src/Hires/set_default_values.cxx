@@ -13,8 +13,8 @@ void hires::Hires::set_default_values ()
   footprints_per_pix = 1;
   beam_spike_n = 5;
   radians_per_pix = 60 * boost::math::constants::pi<double>() / (3600 * 180);
-  crval1 = 0.0;
-  crval2 = 0.0;
+  crval1 = std::numeric_limits<double>::max();
+  crval2 = std::numeric_limits<double>::max();
   min_sample_flux = std::numeric_limits<double>::min ();
   angle_tolerance = 2.5;
   beam_spike_height = 10;
