@@ -48,7 +48,6 @@ def build(ctx):
         'src/Footprint/compute_minimap.cxx',
         'src/Hires/set_default_values.cxx',
         'src/Hires/parse_command_line.cxx',
-        'src/Hires/dump_params.cxx',
         'src/Hires/iterate.cxx',
         'src/Hires/write_output.cxx',
         'src/Hires/write_file.cxx',
