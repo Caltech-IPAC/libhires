@@ -10,8 +10,7 @@
 namespace hires
 {
 
-void
-Hires::parse_command_line (const std::vector<std::string> param_str)
+void Hires::parse_command_line (const std::vector<std::string> param_str)
 {
   for (size_t i = 0; i < param_str.size (); ++i)
     {

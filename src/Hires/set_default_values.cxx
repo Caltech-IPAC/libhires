@@ -30,4 +30,3 @@ void hires::Hires::set_default_values ()
   boost_func = [](const double &x)
   { return x + x - 1.0; };
 }
-
