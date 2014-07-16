@@ -10,7 +10,7 @@ arma::mat Hires::start_image (const std::string &filename, int &iter_start)
 {
   arma::mat image (nj, ni);
   iter_start = 0;
-  if (filename == "flat")
+  if (filename.empty())
     {
       image.fill (1.0);
     }

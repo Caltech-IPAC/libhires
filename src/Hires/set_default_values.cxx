@@ -6,8 +6,6 @@ void hires::Hires::set_default_values ()
   ctype1 = "RA -- TAN";
   ctype2 = "DEC -- TAN";
   boost_type = "TIMES_2";
-  starting_image = "flat";
-  beam_starting_image = "flat";
   flux_units = "??";
   log_filename = "logfile.log";
   outfile_types = { "hires" }, ni = 500;
