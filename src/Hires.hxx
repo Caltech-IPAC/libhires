@@ -7,6 +7,7 @@
 
 #include <armadillo>
 #include <boost/algorithm/string.hpp>
+#include <boost/math/constants/constants.hpp>
 
 #include "Sample.hxx"
 #include "Exception.hxx"
