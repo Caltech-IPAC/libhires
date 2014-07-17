@@ -15,26 +15,23 @@ inline std::string genfilename (std::string p, std::string type, int iter)
   return (tmpss.str ());
 }
 
-void Hires::write_output (int &iter, Image_Type image_type,
+void Hires::write_output (Image_Type image_type,
                           const std::string &outfile_name)
 {
   std::string filename;
 
-  // Written out only at iteration 0.
-  if (iter == 0)
+  if (iteration == 0)
     {
-
       // Covariance
-
       if (image_type == Image_Type::cov
           || (image_type == Image_Type::all
               && std::find (outfile_types.begin (), outfile_types.end (),
                             "cov") != outfile_types.end ()))
         {
           filename = (image_type == Image_Type::all
-                          ? genfilename (outfile_name, "cov", iter)
+                          ? genfilename (outfile_name, "cov", iteration)
                           : outfile_name);
-          write_file (wgt_image, filename, "HIRES covariance image", iter, 0);
+          write_file (wgt_image, filename, "HIRES covariance image", iteration, 0);
         }
 
       // Minimap
@@ -44,9 +41,9 @@ void Hires::write_output (int &iter, Image_Type image_type,
                             "minimap") != outfile_types.end ()))
         {
           filename = (image_type == Image_Type::all
-                          ? genfilename (outfile_name, "minimap", iter)
+                          ? genfilename (outfile_name, "minimap", iteration)
                           : outfile_name);
-          write_file (minimap, filename, "MINIMAP flux image", iter, 1);
+          write_file (minimap, filename, "MINIMAP flux image", iteration, 1);
         }
 
       // Hit count
@@ -56,9 +53,9 @@ void Hires::write_output (int &iter, Image_Type image_type,
                             "hitmap") != outfile_types.end ()))
         {
           filename = (image_type == Image_Type::all
-                          ? genfilename (outfile_name, "hitmap", iter)
+                          ? genfilename (outfile_name, "hitmap", iteration)
                           : outfile_name);
-          write_file (hitmap, filename, "MINIMAP hit count image", iter, 0);
+          write_file (hitmap, filename, "MINIMAP hit count image", iteration, 0);
         }
     }
   else
@@ -71,9 +68,9 @@ void Hires::write_output (int &iter, Image_Type image_type,
                             "hires") != outfile_types.end ()))
         {
           filename = (image_type == Image_Type::all
-                          ? genfilename (outfile_name, "hires", iter)
+                          ? genfilename (outfile_name, "hires", iteration)
                           : outfile_name);
-          write_file (flux_images[iter], filename, "HIRES flux image", iter,
+          write_file (flux_images[iteration], filename, "HIRES flux image", iteration,
                       1);
         }
 
@@ -84,10 +81,10 @@ void Hires::write_output (int &iter, Image_Type image_type,
                             "cfv") != outfile_types.end ()))
         {
           filename = (image_type == Image_Type::all
-                          ? genfilename (outfile_name, "cfv", iter)
+                          ? genfilename (outfile_name, "cfv", iteration)
                           : outfile_name);
-          write_file (cfv_images[iter], filename,
-                      "HIRES correction factor variance image", iter, 0);
+          write_file (cfv_images[iteration], filename,
+                      "HIRES correction factor variance image", iteration, 0);
         }
 
       // HIRES beam image
@@ -97,11 +94,11 @@ void Hires::write_output (int &iter, Image_Type image_type,
                             "beam") != outfile_types.end ()))
         {
           filename = (image_type == Image_Type::all
-                          ? genfilename (outfile_name, "beam", iter)
+                          ? genfilename (outfile_name, "beam", iteration)
                           : outfile_name);
-          write_file (beam_images[iter], filename, "HIRES beam image", iter,
+          write_file (beam_images[iteration], filename, "HIRES beam image", iteration,
                       0);
         }
-    } // end iter > 0
+    }
 }
-} // end namespace hires
+}
