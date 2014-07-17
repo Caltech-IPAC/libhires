@@ -10,7 +10,7 @@ namespace hires
 arma::mat Footprint::generate_response (
     const int &detector_id, const double &i_offset, const double &j_offset,
     const double &recomposed_angle, const double &radians_per_pix,
-    const std::map<int, Detector> &detectors)
+    const std::map<int, Detector> &detectors) const
 {
   std::map<int, Detector>::const_iterator d (detectors.find (detector_id));
   if (d == detectors.end ())

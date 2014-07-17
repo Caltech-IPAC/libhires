@@ -7,7 +7,7 @@ void Footprint::compute_correction (
     const int &nx, const int &ny, const arma::mat &flux_image, const int &iter,
     const bool &do_cfv, const std::function<double(double)> &boost_func,
     const int &boost_max_iter, arma::mat &correction,
-    arma::mat &correction_squared)
+    arma::mat &correction_squared) const
 {
   correction.zeros (ny, nx);
   if (do_cfv)

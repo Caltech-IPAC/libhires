@@ -8,7 +8,7 @@ void Footprint::compute_minimap (const double &radians_per_pix, const int &nx,
                                  const int &ny,
                                  const std::vector<Sample> &samples,
                                  arma::mat &minimap_image,
-                                 arma::mat &minimap_hitmap)
+                                 arma::mat &minimap_hitmap) const
 {
   double i_offset (nx / 2.0), j_offset (ny / 2.0);
   arma::mat integration (ny, nx);
