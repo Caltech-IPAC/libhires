@@ -62,7 +62,8 @@ public:
   arma::mat calc_wgt_image (const int &ni, const int &nj) const
   {
     arma::mat result (nj, ni);
-    result.fill (1e-8);
+    const double minimum_weight=1e-8;
+    result.fill (minimum_weight);
     for (size_t r = 0; r < responses.size (); ++r)
       {
         for (int i = i0_im[r]; i < i1_im[r]; ++i)
