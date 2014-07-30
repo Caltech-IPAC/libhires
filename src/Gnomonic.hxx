@@ -1,5 +1,4 @@
-#ifndef HIRES_GNOMONIC_HXX
-#define HIRES_GNOMONIC_HXX
+#pragma once
 
 /* Compute gnomonic (tangent plane) projection of lon,lat to x,y
    lat,lon,x,y all in degrees
@@ -45,4 +44,3 @@ public:
 };
 }
 
-#endif

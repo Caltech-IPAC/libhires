@@ -1,5 +1,4 @@
-#ifndef HIRES_FOOTPRINT_HXX
-#define HIRES_FOOTPRINT_HXX
+#pragma once
 
 #include <vector>
 #include <valarray>
@@ -75,5 +74,3 @@ public:
   }
 };
 }
-
-#endif

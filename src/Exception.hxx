@@ -1,5 +1,4 @@
-#ifndef HIRES_EXCEPTION_HXX
-#define HIRES_EXCEPTION_HXX
+#pragma once
 
 namespace hires
 {
@@ -9,5 +8,3 @@ public:
   Exception (const std::string &s) : std::runtime_error (s) {}
 };
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef HIRES_DETECTOR_HXX
-#define HIRES_DETECTOR_HXX
+#pragma once
 
 #include <string>
 #include <valarray>
@@ -80,4 +79,3 @@ template <> inline void swap (hires::Detector &a, hires::Detector &b)
 }
 }
 
-#endif
