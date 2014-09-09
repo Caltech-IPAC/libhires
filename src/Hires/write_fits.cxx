@@ -53,8 +53,6 @@ void Hires::write_fits (
   phdu.addKey ("CRPIX1", (ni + 1) / 2, "center pixel");
   phdu.addKey ("CRPIX2", (nj + 1) / 2, "center pixel");
 
-  phdu.addKey ("FILENAME", fits_file.filename ().string (),
-               "name of this file");
   if (!drf_prefix.empty ())
     phdu.addKey ("DRF_IN",
                  boost::filesystem::path (drf_prefix).filename ().string ()
