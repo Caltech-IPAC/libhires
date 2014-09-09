@@ -53,12 +53,6 @@ void Hires::write_fits (
   phdu.addKey ("CRPIX1", (ni + 1) / 2, "center pixel");
   phdu.addKey ("CRPIX2", (nj + 1) / 2, "center pixel");
 
-  if (!drf_prefix.empty ())
-    phdu.addKey ("DRF_IN",
-                 boost::filesystem::path (drf_prefix).filename ().string ()
-                 + "*",
-                 "Name of Detector Response Files");
-
   std::chrono::system_clock::time_point tp (std::chrono::system_clock::now ());
   std::time_t now (std::chrono::system_clock::to_time_t (tp));
   phdu.addKey ("DATE", std::string (std::ctime (&now)),

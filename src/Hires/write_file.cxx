@@ -26,6 +26,12 @@ void Hires::write_file (arma::mat image, std::string filename,
   comment = "";
   file_specific_keywords.push_back (std::make_tuple (kwd, val, comment));
 
+  if (iter!=0)
+    file_specific_keywords.push_back
+      (std::make_tuple ("DRF_IN",
+                        boost::filesystem::path (drf_prefix).filename ().string ()
+                        + "*",
+                        "Name of Detector Response Files"));
   if (isflux)
     {
       kwd = "BUNIT";
