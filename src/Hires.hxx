@@ -37,7 +37,7 @@ public:
   std::map<int, arma::mat> cfv_images;
   std::map<int, arma::mat> beam_images;
 
-  Hires (): ctype1 ("RA---TAN"), ctype2 ("DEC---TAN"),
+  Hires (): ctype1 ("RA---TAN"), ctype2 ("DEC--TAN"),
             boost_type ("TIMES_2"), flux_units ("??"),
             outfile_types ({ "hires" }), ni (500),
             nj (500), boost_max_iter (0),
