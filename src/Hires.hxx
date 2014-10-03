@@ -30,12 +30,7 @@ public:
   std::function<double(double)> boost_func;
 
   size_t iteration;
-
-  arma::mat hitmap, minimap;
-  arma::mat wgt_image;
-  std::map<int, arma::mat> flux_images;
-  std::map<int, arma::mat> cfv_images;
-  std::map<int, arma::mat> beam_images;
+  arma::mat hitmap, minimap, wgt_image, flux_images, cfv_images, beam_images;
 
   Hires (): ctype1 ("RA -- TAN"), ctype2 ("DEC -- TAN"),
             boost_type ("TIMES_2"), flux_units ("??"),

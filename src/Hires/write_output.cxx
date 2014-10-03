@@ -70,7 +70,7 @@ void Hires::write_output (Image_Type image_type,
           filename = (image_type == Image_Type::all
                           ? genfilename (outfile_name, "hires", iteration)
                           : outfile_name);
-          write_file (flux_images[iteration], filename, "HIRES flux image", iteration,
+          write_file (flux_images, filename, "HIRES flux image", iteration,
                       1);
         }
 
@@ -83,7 +83,7 @@ void Hires::write_output (Image_Type image_type,
           filename = (image_type == Image_Type::all
                           ? genfilename (outfile_name, "cfv", iteration)
                           : outfile_name);
-          write_file (cfv_images[iteration], filename,
+          write_file (cfv_images, filename,
                       "HIRES correction factor variance image", iteration, 0);
         }
 
@@ -96,7 +96,7 @@ void Hires::write_output (Image_Type image_type,
           filename = (image_type == Image_Type::all
                           ? genfilename (outfile_name, "beam", iteration)
                           : outfile_name);
-          write_file (beam_images[iteration], filename, "HIRES beam image", iteration,
+          write_file (beam_images, filename, "HIRES beam image", iteration,
                       0);
         }
     }

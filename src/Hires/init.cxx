@@ -20,7 +20,7 @@ void Hires::init (std::vector<Sample> &samples)
   //
   // Standard hires/minimap processing - always happens.
   //
-  flux_images[0] = start_image (starting_image, iter_start);
+  flux_images = start_image (starting_image, iter_start);
   footprints.compute_minimap (radians_per_pix, ni, nj, samples, minimap,
                               hitmap);
   //
@@ -30,7 +30,7 @@ void Hires::init (std::vector<Sample> &samples)
       != outfile_types.end ())
     {
       footprints.set_fluxes_to_sim_values (spike_image ());
-      beam_images[0] = start_image (beam_starting_image, iter_start);
+      beam_images = start_image (beam_starting_image, iter_start);
     }
 }
 }

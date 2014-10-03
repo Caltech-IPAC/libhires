@@ -18,15 +18,13 @@ void Hires::iterate (std::vector<Sample> &samples)
   // Standard hires/minimap processing - always happens.
   //
   arma::mat correction, correction_squared;
-  footprints.compute_correction (ni, nj, flux_images[iteration], iteration+1, 1,
+  footprints.compute_correction (ni, nj, flux_images, iteration+1, 1,
                                  boost_func, boost_max_iter, correction,
                                  correction_squared);
   correction /= wgt_image;
-  flux_images[iteration+1] = flux_images[iteration] % correction; // Schur product
+  flux_images%=correction; // Schur product
 
-  arma::mat corr_sq_image = (correction_squared / wgt_image)
-    - square (correction);
-  cfv_images[iteration+1] = corr_sq_image;
+  cfv_images = (correction_squared / wgt_image) - square (correction);
 
   //
   // Optional HIRES beam generation
@@ -37,11 +35,11 @@ void Hires::iterate (std::vector<Sample> &samples)
       footprints.set_fluxes_to_sim_values (spike_image ());
 
       arma::mat correction, correction_squared;
-      footprints.compute_correction (ni, nj, beam_images[iteration], iteration+1,
+      footprints.compute_correction (ni, nj, beam_images, iteration+1,
                                      false, boost_func, boost_max_iter,
                                      correction, correction_squared);
-      beam_images[iteration+1] = beam_images[iteration] % correction
-        / wgt_image; // Schur product
+      beam_images%=correction;
+      beam_images/=wgt_image; // Schur product
     }
   ++iteration;
 }
