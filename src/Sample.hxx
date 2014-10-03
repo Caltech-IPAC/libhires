@@ -1,5 +1,4 @@
-#ifndef HIRES_SAMPLE_HXX
-#define HIRES_SAMPLE_HXX
+#pragma once
 
 #include <valarray>
 #include <utility>
@@ -27,4 +26,3 @@ public:
 };
 }
 
-#endif

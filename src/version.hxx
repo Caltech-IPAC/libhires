@@ -1,6 +1,3 @@
-#ifndef HIRES_VERSION_HXX
-#define HIRES_VERSION_HXX
-
+#pragma once
 const std::string version ("v2_0");
 
-#endif
