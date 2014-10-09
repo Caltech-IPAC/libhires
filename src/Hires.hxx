@@ -32,7 +32,7 @@ public:
   size_t iteration;
   arma::mat hitmap, minimap, wgt_image, flux_images, cfv_images, beam_images;
 
-  Hires (): ctype1 ("RA---TAN"), ctype2 ("DEC--TAN"),
+  Hires (): ctype1 ("GLON-TAN"), ctype2 ("GLAT-TAN"),
             boost_type ("TIMES_2"), flux_units ("??"),
             outfile_types ({ "hires" }), ni (500),
             nj (500), boost_max_iter (0),
