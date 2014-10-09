@@ -40,7 +40,7 @@ public:
             radians_per_pix (60 * boost::math::constants::pi<double>() / (3600 * 180)),
             crval1 (std::numeric_limits<double>::max()),
             crval2 (std::numeric_limits<double>::max()),
-            min_sample_flux (std::numeric_limits<double>::min ()),
+            min_sample_flux (std::numeric_limits<double>::lowest ()),
             angle_tolerance (2.5),
             beam_spike_height (10),
             fits_keywords ({std::make_tuple
@@ -75,6 +75,9 @@ public:
   };
 
   void write_output (const Image_Type image_type,
+                     const std::string &outfile_prefix);
+
+  std::string write_output_worker (const Image_Type image_type,
                      const std::string &outfile_prefix);
 
   void write_file (arma::mat image, std::string filename, const char *desc,

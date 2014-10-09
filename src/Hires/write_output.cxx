@@ -18,7 +18,15 @@ inline std::string genfilename (std::string p, std::string type, int iter)
 void Hires::write_output (Image_Type image_type,
                           const std::string &outfile_name)
 {
-  std::string filename;
+    std::string filename = write_output_worker(image_type, outfile_name);
+}
+
+
+std::string Hires::write_output_worker(Image_Type image_type,
+                          const std::string &outfile_name)
+{
+
+  std::string filename = "null";
 
   if (iteration == 0)
     {
@@ -100,5 +108,6 @@ void Hires::write_output (Image_Type image_type,
                       0);
         }
     }
+    return filename;
 }
 }
