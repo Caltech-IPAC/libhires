@@ -77,7 +77,7 @@ public:
   void write_output (const Image_Type image_type,
                      const std::string &outfile_prefix);
 
-  std::string write_output_worker (const Image_Type image_type,
+  std::vector<std::string> write_output_worker (const Image_Type image_type,
                      const std::string &outfile_prefix);
 
   void write_file (arma::mat image, std::string filename, const char *desc,

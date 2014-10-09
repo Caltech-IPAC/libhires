@@ -18,15 +18,15 @@ inline std::string genfilename (std::string p, std::string type, int iter)
 void Hires::write_output (Image_Type image_type,
                           const std::string &outfile_name)
 {
-    std::string filename = write_output_worker(image_type, outfile_name);
+    std::vector<std::string> filename_list = write_output_worker(image_type, outfile_name);
 }
 
 
-std::string Hires::write_output_worker(Image_Type image_type,
+std::vector<std::string> Hires::write_output_worker(Image_Type image_type,
                           const std::string &outfile_name)
 {
-
-  std::string filename = "null";
+  std::string filename;
+  std::vector<std::string> filename_list;
 
   if (iteration == 0)
     {
@@ -39,6 +39,7 @@ std::string Hires::write_output_worker(Image_Type image_type,
           filename = (image_type == Image_Type::all
                           ? genfilename (outfile_name, "cov", iteration)
                           : outfile_name);
+          filename_list.push_back(filename);
           write_file (wgt_image, filename, "HIRES covariance image", iteration, 0);
         }
 
@@ -51,6 +52,7 @@ std::string Hires::write_output_worker(Image_Type image_type,
           filename = (image_type == Image_Type::all
                           ? genfilename (outfile_name, "minimap", iteration)
                           : outfile_name);
+          filename_list.push_back(filename);
           write_file (minimap, filename, "MINIMAP flux image", iteration, 1);
         }
 
@@ -63,6 +65,7 @@ std::string Hires::write_output_worker(Image_Type image_type,
           filename = (image_type == Image_Type::all
                           ? genfilename (outfile_name, "hitmap", iteration)
                           : outfile_name);
+          filename_list.push_back(filename);
           write_file (hitmap, filename, "MINIMAP hit count image", iteration, 0);
         }
     }
@@ -78,6 +81,7 @@ std::string Hires::write_output_worker(Image_Type image_type,
           filename = (image_type == Image_Type::all
                           ? genfilename (outfile_name, "hires", iteration)
                           : outfile_name);
+          filename_list.push_back(filename);
           write_file (flux_images, filename, "HIRES flux image", iteration,
                       1);
         }
@@ -91,6 +95,7 @@ std::string Hires::write_output_worker(Image_Type image_type,
           filename = (image_type == Image_Type::all
                           ? genfilename (outfile_name, "cfv", iteration)
                           : outfile_name);
+          filename_list.push_back(filename);
           write_file (cfv_images, filename,
                       "HIRES correction factor variance image", iteration, 0);
         }
@@ -104,10 +109,11 @@ std::string Hires::write_output_worker(Image_Type image_type,
           filename = (image_type == Image_Type::all
                           ? genfilename (outfile_name, "beam", iteration)
                           : outfile_name);
+          filename_list.push_back(filename);
           write_file (beam_images, filename, "HIRES beam image", iteration,
                       0);
         }
     }
-    return filename;
+    return filename_list;
 }
 }
