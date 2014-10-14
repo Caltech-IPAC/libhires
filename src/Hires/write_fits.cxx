@@ -50,8 +50,8 @@ void Hires::write_fits (
   phdu.addKey ("CD1_2", -0.0, "Degrees / Pixel");
   phdu.addKey ("CD2_2", cdelt_rounded, "Degrees / Pixel");
 
-  phdu.addKey ("CRPIX1", (ni + 1) / 2, "center pixel");
-  phdu.addKey ("CRPIX2", (nj + 1) / 2, "center pixel");
+  phdu.addKey ("CRPIX1", (ni + 1) / 2.0, "center pixel");
+  phdu.addKey ("CRPIX2", (nj + 1) / 2.0, "center pixel");
 
   std::chrono::system_clock::time_point tp (std::chrono::system_clock::now ());
   std::time_t now (std::chrono::system_clock::to_time_t (tp));
