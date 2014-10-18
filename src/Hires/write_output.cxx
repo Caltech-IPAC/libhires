@@ -23,10 +23,7 @@ void Hires::write_output (Image_Type image_type,
   if (iteration == 0)
     {
       // Covariance
-      if (image_type == Image_Type::cov
-          || (image_type == Image_Type::all
-              && std::find (outfile_types.begin (), outfile_types.end (),
-                            "cov") != outfile_types.end ()))
+      if (image_type == Image_Type::cov || image_type == Image_Type::all)
         {
           filename = (image_type == Image_Type::all
                           ? genfilename (outfile_name, "cov", iteration)
@@ -35,10 +32,7 @@ void Hires::write_output (Image_Type image_type,
         }
 
       // Minimap
-      if (image_type == Image_Type::minimap
-          || (image_type == Image_Type::all
-              && std::find (outfile_types.begin (), outfile_types.end (),
-                            "minimap") != outfile_types.end ()))
+      if (image_type == Image_Type::minimap || image_type == Image_Type::all)
         {
           filename = (image_type == Image_Type::all
                           ? genfilename (outfile_name, "minimap", iteration)
@@ -47,10 +41,7 @@ void Hires::write_output (Image_Type image_type,
         }
 
       // Hit count
-      if (image_type == Image_Type::hitmap
-          || (image_type == Image_Type::all
-              && std::find (outfile_types.begin (), outfile_types.end (),
-                            "hitmap") != outfile_types.end ()))
+      if (image_type == Image_Type::hitmap || image_type == Image_Type::all)
         {
           filename = (image_type == Image_Type::all
                           ? genfilename (outfile_name, "hitmap", iteration)
@@ -62,10 +53,7 @@ void Hires::write_output (Image_Type image_type,
     {
       // Written out at iter > 0
       // HIRES flux image
-      if (image_type == Image_Type::hires
-          || (image_type == Image_Type::all
-              && std::find (outfile_types.begin (), outfile_types.end (),
-                            "hires") != outfile_types.end ()))
+      if (image_type == Image_Type::hires || image_type == Image_Type::all)
         {
           filename = (image_type == Image_Type::all
                           ? genfilename (outfile_name, "hires", iteration)
@@ -75,10 +63,7 @@ void Hires::write_output (Image_Type image_type,
         }
 
       // HIRES CFV image
-      if (image_type == Image_Type::cfv
-          || (image_type == Image_Type::all
-              && std::find (outfile_types.begin (), outfile_types.end (),
-                            "cfv") != outfile_types.end ()))
+      if (image_type == Image_Type::cfv || image_type == Image_Type::all)
         {
           filename = (image_type == Image_Type::all
                           ? genfilename (outfile_name, "cfv", iteration)
@@ -89,10 +74,11 @@ void Hires::write_output (Image_Type image_type,
 
       // HIRES beam image
       if (image_type == Image_Type::beam
-          || (image_type == Image_Type::all
-              && std::find (outfile_types.begin (), outfile_types.end (),
-                            "beam") != outfile_types.end ()))
+          || (image_type == Image_Type::all && generate_beams))
         {
+          if(!generate_beams)
+            throw Exception("Asking for beam output, but no beams were "
+                            "generated");
           filename = (image_type == Image_Type::all
                           ? genfilename (outfile_name, "beam", iteration)
                           : outfile_name);

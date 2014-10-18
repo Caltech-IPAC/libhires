@@ -15,10 +15,11 @@
 
 namespace hires
 {
-void Hires::write_fits (
-    const arma::mat &image,
-    const std::vector<std::tuple<std::string, std::string, std::string> >
-        file_specific_keywords, const std::string &outfile_name)
+void Hires::write_fits (const arma::mat &image,
+                        const std::vector<std::pair<std::string,
+                                                    std::pair<std::string,
+                                                              std::string> > >
+                        &file_specific_keywords, const std::string &outfile_name)
 {
   if (outfile_name.empty ())
     return;
@@ -32,17 +33,14 @@ void Hires::write_fits (
   CCfits::PHDU &phdu (outfile.pHDU ());
 
   for (auto &keywords : fits_keywords)
-    phdu.addKey (std::get<0>(keywords), std::get<1>(keywords),
-                 std::get<2>(keywords));
+    phdu.addKey (keywords.first, keywords.second.first, keywords.second.second);
 
   for (auto &keywords : file_specific_keywords)
-    phdu.addKey (std::get<0>(keywords), std::get<1>(keywords),
-                 std::get<2>(keywords));
+    phdu.addKey (keywords.first, keywords.second.first,
+                 keywords.second.second);
 
-  phdu.addKey ("CRVAL1", crval1, "");
-  phdu.addKey ("CRVAL2", crval2, "");
-  phdu.addKey ("CTYPE1", ctype1, "");
-  phdu.addKey ("CTYPE2", ctype2, "");
+  phdu.addKey ("CRVAL1", crval[0], "");
+  phdu.addKey ("CRVAL2", crval[1], "");
   float cdelt_rounded (radians_per_pix * 180
                        / boost::math::constants::pi<double>());
   phdu.addKey ("CD1_1", -cdelt_rounded, "Degrees / Pixel");
@@ -50,8 +48,8 @@ void Hires::write_fits (
   phdu.addKey ("CD1_2", -0.0, "Degrees / Pixel");
   phdu.addKey ("CD2_2", cdelt_rounded, "Degrees / Pixel");
 
-  phdu.addKey ("CRPIX1", (ni + 1) / 2, "center pixel");
-  phdu.addKey ("CRPIX2", (nj + 1) / 2, "center pixel");
+  phdu.addKey ("CRPIX1", (nxy[0] + 1) / 2.0, "center pixel");
+  phdu.addKey ("CRPIX2", (nxy[1] + 1) / 2.0, "center pixel");
 
   std::chrono::system_clock::time_point tp (std::chrono::system_clock::now ());
   std::time_t now (std::chrono::system_clock::to_time_t (tp));

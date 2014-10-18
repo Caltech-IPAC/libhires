@@ -3,11 +3,11 @@
 namespace hires
 {
 double Footprint::count_good_samples (const double &radians_per_pix,
-                                      const int &ni, const int &nj,
+                                      const std::array<int,2> &nxy,
                                       const std::vector<Sample> &samples)
 {
-  const double x_radius = (radians_per_pix * (ni - 1)) / 2.0;
-  const double y_radius = (radians_per_pix * (nj - 1)) / 2.0;
+  const std::array<double,2> radius{{(radians_per_pix * (nxy[0] - 1)) / 2.0,
+        (radians_per_pix * (nxy[1] - 1)) / 2.0}};
   int total_samps = 0;
   int total_good = 0;
   good.resize (samples.size ());
@@ -18,10 +18,10 @@ double Footprint::count_good_samples (const double &radians_per_pix,
       total_samps += good[i].size ();
       for (size_t j = 0; j < good[i].size (); ++j)
         {
-          good[i][j] = (samples[i].x[j] > -x_radius)
-                       && (samples[i].x[j] < x_radius)
-                       && (samples[i].y[j] > -y_radius)
-                       && (samples[i].y[j] < y_radius);
+          good[i][j] = (samples[i].x[j] > -radius[0])
+                       && (samples[i].x[j] < radius[0])
+                       && (samples[i].y[j] > -radius[1])
+                       && (samples[i].y[j] < radius[1]);
           if (good[i][j])
             ++total_good;
         }

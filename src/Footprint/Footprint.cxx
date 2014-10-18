@@ -2,14 +2,15 @@
 
 namespace hires
 {
-Footprint::Footprint (const double &radians_per_pix, const int &ni,
-                      const int &nj, const double &min_sample_flux,
+Footprint::Footprint (const double &radians_per_pix,
+                      const std::array<int,2> &nxy,
+                      const double &min_sample_signal,
                       const double &angle_tolerance,
                       const double &footprints_per_pix,
                       const std::map<int, Detector> &detectors,
                       std::vector<Sample> &samples)
 {
-  size_t num_good = count_good_samples (radians_per_pix, ni, nj, samples);
+  size_t num_good = count_good_samples (radians_per_pix, nxy, samples);
   j0_im.reserve (num_good);
   j1_im.reserve (num_good);
   i0_im.reserve (num_good);
@@ -19,9 +20,9 @@ Footprint::Footprint (const double &radians_per_pix, const int &ni,
   i0_ft.reserve (num_good);
   i1_ft.reserve (num_good);
 
-  double i_offset (ni / 2.0), j_offset (nj / 2.0);
+  std::array<double,2> offset{{nxy[0] / 2.0, nxy[1] / 2.0}};
 
-  int n_fluxes_reset (0);
+  int n_signals_reset (0);
   int num_footprints (0);
 
   for (size_t s = 0; s < samples.size (); ++s)
@@ -73,8 +74,8 @@ Footprint::Footprint (const double &radians_per_pix, const int &ni,
         {
           if (!good[s][j])
             continue;
-          double xi ((samples[s].x[j] / radians_per_pix) + i_offset),
-              yi ((samples[s].y[j] / radians_per_pix) + j_offset);
+          double xi ((samples[s].x[j] / radians_per_pix) + offset[0]),
+              yi ((samples[s].y[j] / radians_per_pix) + offset[1]);
 
           int i_int (xi), j_int (yi);
           double i_frac (xi - i_int), j_frac (yi - j_int);
@@ -84,14 +85,14 @@ Footprint::Footprint (const double &radians_per_pix, const int &ni,
                             angle_tolerance, footprints_per_pix,
                             radians_per_pix, detectors));
           std::vector<int> bounds (
-              compute_bounds (*(*responses.rbegin ()), i_int, j_int, ni, nj));
+              compute_bounds (*(*responses.rbegin ()), i_int, j_int, nxy));
 
-          if (samples[s].flux[j] < min_sample_flux)
+          if (samples[s].signal[j] < min_sample_signal)
             {
-              samples[s].flux[j] = min_sample_flux;
-              ++n_fluxes_reset;
+              samples[s].signal[j] = min_sample_signal;
+              ++n_signals_reset;
             }
-          flux.push_back (samples[s].flux[j]);
+          signal.push_back (samples[s].signal[j]);
           j0_im.push_back (bounds[0]);
           j1_im.push_back (bounds[1]);
           i0_im.push_back (bounds[2]);

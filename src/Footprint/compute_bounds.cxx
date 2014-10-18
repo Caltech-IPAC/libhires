@@ -4,8 +4,8 @@ namespace hires
 {
 std::vector<int> Footprint::compute_bounds (const arma::mat &response,
                                             const int &i_center,
-                                            const int &j_center, const int &ni,
-                                            const int &nj) const
+                                            const int &j_center,
+                                            const std::array<int,2> &nxy) const
 {
   int j_size (response.n_rows), i_size (response.n_cols);
   int radius_pixels (j_size / 2);
@@ -26,20 +26,20 @@ std::vector<int> Footprint::compute_bounds (const arma::mat &response,
       j0_resp -= j0_image;
       j0_image = 0;
     }
-  if (j1_image > nj)
+  if (j1_image > nxy[1])
     {
-      j1_resp -= j1_image - nj;
-      j1_image = nj;
+      j1_resp -= j1_image - nxy[1];
+      j1_image = nxy[1];
     }
   if (i0_image < 0)
     {
       i0_resp -= i0_image;
       i0_image = 0;
     }
-  if (i1_image > ni)
+  if (i1_image > nxy[0])
     {
-      i1_resp -= i1_image - ni;
-      i1_image = ni;
+      i1_resp -= i1_image - nxy[0];
+      i1_image = nxy[0];
     }
 
   return { j0_image, j1_image, i0_image, i1_image,

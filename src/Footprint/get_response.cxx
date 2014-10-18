@@ -12,9 +12,8 @@ const arma::mat *Footprint::get_response (
     const double &footprints_per_pix, const double &radians_per_pix,
     const std::map<int, Detector> &detectors)
 {
-  double rounded_angle = std::round (angle / angle_tolerance);
-  const int angle_id (rounded_angle);
-  double recomposed_angle (rounded_angle * angle_tolerance);
+  const int angle_id (std::round (angle / angle_tolerance));
+  double recomposed_angle (angle_id * angle_tolerance);
   int i_id (i_frac * footprints_per_pix), j_id (j_frac * footprints_per_pix);
   auto key = std::make_tuple (detector_id, angle_id, i_id, j_id);
 

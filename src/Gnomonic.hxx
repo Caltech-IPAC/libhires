@@ -32,7 +32,7 @@ public:
   }
 
   template <class T>
-  std::pair<T, T> lonlat2xy (const T &lon, const T &lat) const
+  std::pair<T, T> radians_to_xy (const T &lon, const T &lat) const
   {
     T cos_dlon (std::cos (lon - lon0)), sin_dlon (std::sin (lon - lon0));
     T sin_lat (std::sin (lat)), cos_lat (std::cos (lat));
@@ -40,6 +40,12 @@ public:
     T x = (cos_lat * sin_dlon) / cos_c;
     T y = (cos_lat0 * sin_lat - sin_lat0 * cos_lat * cos_dlon) / cos_c;
     return std::make_pair (x, y);
+  }
+
+  template <class T>
+  std::pair<T, T> degrees_to_xy (const T &lon, const T &lat) const
+  {
+    return radians_to_xy(radians(lon),radians(lat));
   }
 };
 }

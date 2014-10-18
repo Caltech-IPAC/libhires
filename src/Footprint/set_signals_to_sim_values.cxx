@@ -1,14 +1,14 @@
-/* Calculate simulated fluxes; replace fp.flux value
-   Estimates what flux values would generate the input image */
+/* Calculate simulated signals; replace fp.signal value
+   Estimates what signal values would generate the input image */
 
 #include "../Footprint.hxx"
 #include <armadillo>
 
 namespace hires
 {
-void Footprint::set_fluxes_to_sim_values (const arma::mat &sim_image)
+void Footprint::set_signals_to_sim_values (const arma::mat &sim_image)
 {
-  for (size_t n = 0; n < flux.size (); ++n)
+  for (size_t n = 0; n < signal.size (); ++n)
     {
       arma::mat integration (j1_im[n] - j0_im[n], i1_im[n] - i0_im[n]);
       for (int i = 0; i < i1_im[n] - i0_im[n]; ++i)
@@ -17,7 +17,7 @@ void Footprint::set_fluxes_to_sim_values (const arma::mat &sim_image)
             integration (j, i) = sim_image (j + j0_im[n], i + i0_im[n])
                                  * (*responses[n])(j + j0_ft[n], i + i0_ft[n]);
           }
-      flux[n] = accu (integration);
+      signal[n] = accu (integration);
     }
 }
 }

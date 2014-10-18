@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <string>
 #include <iostream>
 #include <functional>
@@ -7,6 +8,7 @@
 
 #include <armadillo>
 #include <boost/algorithm/string.hpp>
+#include <boost/filesystem.hpp>
 #include <boost/math/constants/constants.hpp>
 
 #include "Sample.hxx"
@@ -18,50 +20,73 @@ namespace hires
 class Hires
 {
 public:
-  std::string drf_prefix, ctype1, ctype2, boost_type, starting_image,
-      beam_starting_image, flux_units;
-  std::vector<std::string> outfile_types;
-  int ni, nj, boost_max_iter, footprints_per_pix, beam_spike_n;
-  double radians_per_pix, crval1, crval2, min_sample_flux, angle_tolerance,
-      beam_spike_height;
+  std::string starting_image, beam_starting_image;
+  boost::filesystem::path drf_prefix;
+  std::array<int,2> nxy;
+  int footprints_per_pix, beam_spike_n;
+  std::array<double,2> crval;
+  double radians_per_pix, min_sample_flux, angle_tolerance, beam_spike_height;
+  bool generate_beams=false;
 
-  std::vector<std::tuple<std::string, std::string, std::string> >
+  std::vector<std::pair<std::string, std::pair<std::string, std::string> > >
   fits_keywords;
-  std::function<double(double)> boost_func;
+
+  std::function<double(double)> boost_function;
+  
+  // FIXME: Why isn't this const?
+  std::vector<Sample> &samples;
 
   size_t iteration;
   arma::mat hitmap, minimap, wgt_image, flux_images, cfv_images, beam_images;
 
-  Hires (): ctype1 ("RA---TAN"), ctype2 ("DEC--TAN"),
-            boost_type ("TIMES_2"), flux_units ("??"),
-            outfile_types ({ "hires" }), ni (500),
-            nj (500), boost_max_iter (0),
-            footprints_per_pix (1), beam_spike_n (5),
-            radians_per_pix (60 * boost::math::constants::pi<double>() / (3600 * 180)),
-            crval1 (std::numeric_limits<double>::max()),
-            crval2 (std::numeric_limits<double>::max()),
-            min_sample_flux (std::numeric_limits<double>::min ()),
-            angle_tolerance (2.5),
-            beam_spike_height (10),
-            fits_keywords ({std::make_tuple
-                  (std::string ("AUTHOR"),
-                   std::string ("LIBHIRES"),
-                   std::string(""))}),
-            boost_func ([](const double &x)
-                        { return x + x - 1.0; }),
-            iteration(0) {}
-
-  Hires (const std::vector<std::string> param_str) : Hires ()
+  Hires (const std::array<int,2> &Nxy,
+         const std::array<double,2> &Crval, const double &Radians_per_pix,
+         const bool &Generate_beams,
+         const boost::filesystem::path &Drf_prefix,
+         const std::string &boost_function_string,
+         const std::vector<std::pair<std::string, std::pair<std::string,
+                                                            std::string> > >
+         &Fits_keywords,
+         std::vector<Sample> &Samples):
+    drf_prefix(Drf_prefix),
+    nxy(Nxy), footprints_per_pix (1), beam_spike_n (5),
+    crval(Crval), radians_per_pix(Radians_per_pix),
+    min_sample_flux (std::numeric_limits<double>::lowest ()),
+    angle_tolerance (2.5),
+    beam_spike_height (10),
+    generate_beams(Generate_beams),
+    fits_keywords(Fits_keywords),
+    samples(Samples),
+    iteration(0)
   {
-    parse_command_line (param_str);
+    fits_keywords.push_back({std::string ("AUTHOR"),
+          {std::string ("LIBHIRES"),
+              std::string("")}});
+
+    std::map<std::string,std::function<double(double)> > boost_functions=
+      {{"TIMES_2",[](const double &x) { return x + x - 1.0; }},
+       {"TIMES_3", [](const double &x) { return x + x + x - 2.0; }},
+       {"SQUARED", [](const double &x) { return x * x; }},
+       {"EXP_2.5", [](const double &x) { return pow (x, 2.5); }},
+       {"CUBED", [](const double &x) { return x * x * x; }}};
+
+    auto f=boost_functions.find(boost_function_string);
+    if(f==boost_functions.end())
+      {
+        if(!boost_function_string.empty())
+          throw Exception("Invalid boost function string: "
+                          + boost_function_string);
+      }
+    else
+      {
+        boost_function=f->second;
+      }
   }
 
-
-  void parse_command_line (const std::vector<std::string> param_str);
   void dump_params ();
 
-  void init (std::vector<hires::Sample> &samples);
-  void iterate (std::vector<hires::Sample> &samples);
+  void init ();
+  void iterate (const bool &boosting);
 
   enum class Image_Type
   {
@@ -83,10 +108,11 @@ public:
   arma::mat spike_image ();
   arma::mat start_image (const std::string &filename, int &iter_start);
 
-  void write_fits (
-      const arma::mat &image,
-      const std::vector<std::tuple<std::string, std::string, std::string> >
-          file_specific_keywords, const std::string &outfile_name);
+  void write_fits (const arma::mat &image,
+                   const std::vector<std::pair<std::string,
+                                               std::pair<std::string,
+                                                         std::string> > >
+                   &file_specific_keywords, const std::string &outfile_name);
 };
 
 std::ostream &operator<<(std::ostream &out, const Hires &p);
