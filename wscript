@@ -44,7 +44,7 @@ def build(ctx):
         'src/Footprint/get_response.cxx',
         'src/Footprint/generate_response.cxx',
         'src/Footprint/set_signals_to_sim_values.cxx',
-        'src/Footprint/compute_minimap.cxx',
+        'src/Hires/compute_minimap.cxx',
         'src/Hires/iterate.cxx',
         'src/Hires/init.cxx',
         'src/Hires/write_output.cxx',

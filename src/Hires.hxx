@@ -71,9 +71,10 @@ public:
     output_types(Output_types),
     fits_keywords(Fits_keywords),
     samples(Samples),
-    detectors (read_DRF (drf_file)),
     iteration(0)
   {
+    if(running_hires())
+      detectors=read_DRF (drf_file);
     fits_keywords.push_back({std::string ("AUTHOR"),
           {std::string ("LIBHIRES"),
               std::string("")}});
@@ -102,6 +103,16 @@ public:
 
   void init ();
   void iterate (const bool &boosting);
+
+  void compute_minimap ();
+
+  bool running_hires() const
+  {
+    return output_types.find(Image_Type::hires_image)!=output_types.end()
+      || output_types.find(Image_Type::hires_covariance)!=output_types.end()
+      || output_types.find(Image_Type::hires_correction)!=output_types.end()
+      || output_types.find(Image_Type::hires_beam)!=output_types.end();
+  }
 
   void write_output (const std::string &outfile_prefix);
   void write_file (const std::string &output_prefix, const Image_Type &type);

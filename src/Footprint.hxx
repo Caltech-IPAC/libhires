@@ -53,11 +53,6 @@ public:
                            arma::mat &correction,
                            arma::mat &correction_squared) const;
 
-  void compute_minimap (const double &radians_per_pix,
-                        const std::array<int,2> &nxy,
-                        const std::vector<Sample> &samples,
-                        arma::mat &minimap_image, arma::mat &minimap_hitmap) const;
-
   void set_signals_to_sim_values (const arma::mat &sim_image);
 
   arma::mat calc_wgt_image (const std::array<int,2> &nxy) const
