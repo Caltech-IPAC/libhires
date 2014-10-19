@@ -15,16 +15,11 @@ void Hires::init ()
   // FIXME: Shouldn't I just use iteration?
   int iter_start;
 
-  //
-  // Standard hires/minimap processing - always happens.
-  //
   flux_images = start_image (starting_image, iter_start);
   footprints.compute_minimap (radians_per_pix, nxy, samples, minimap,
                               hitmap);
-  //
-  // Optional HIRES beam generation
-  //
-  if (generate_beams)
+
+  if (output_types.find(Image_Type::hires_beam)!=output_types.end())
     {
       footprints.set_signals_to_sim_values (spike_image ());
       beam_images = start_image (beam_starting_image, iter_start);

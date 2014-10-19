@@ -5,6 +5,7 @@
 #include <iostream>
 #include <functional>
 #include <map>
+#include <set>
 
 #include <armadillo>
 #include <boost/algorithm/string.hpp>
@@ -22,13 +23,23 @@ std::map<int, Detector> read_DRF (const boost::filesystem::path &DRF_file);
 class Hires
 {
 public:
+  enum class Image_Type
+  {
+    hires_image,
+    hires_covariance,
+    hires_correction,
+    hires_beam,
+    minimap_image,
+    minimap_hitmap
+  };
+
   std::string starting_image, beam_starting_image;
   boost::filesystem::path drf_file;
   std::array<int,2> nxy;
   int footprints_per_pix, beam_spike_n;
   std::array<double,2> crval;
   double radians_per_pix, min_sample_flux, angle_tolerance, beam_spike_height;
-  bool generate_beams=false;
+  std::set<Image_Type> output_types;
 
   std::vector<std::pair<std::string, std::pair<std::string, std::string> > >
   fits_keywords;
@@ -44,7 +55,7 @@ public:
 
   Hires (const std::array<int,2> &Nxy,
          const std::array<double,2> &Crval, const double &Radians_per_pix,
-         const bool &Generate_beams,
+         const std::set<Image_Type> &Output_types,
          const boost::filesystem::path &Drf_file,
          const std::string &boost_function_string,
          const std::vector<std::pair<std::string, std::pair<std::string,
@@ -57,7 +68,7 @@ public:
     min_sample_flux (std::numeric_limits<double>::lowest ()),
     angle_tolerance (2.5),
     beam_spike_height (10),
-    generate_beams(Generate_beams),
+    output_types(Output_types),
     fits_keywords(Fits_keywords),
     samples(Samples),
     detectors (read_DRF (drf_file)),
@@ -92,22 +103,8 @@ public:
   void init ();
   void iterate (const bool &boosting);
 
-  enum class Image_Type
-  {
-    all,
-    hires,
-    cov,
-    cfv,
-    beam,
-    minimap,
-    hitmap
-  };
-
-  void write_output (const Image_Type image_type,
-                     const std::string &outfile_prefix);
-
-  void write_file (arma::mat image, std::string filename, const char *desc,
-                   int iter, int isflux);
+  void write_output (const std::string &outfile_prefix);
+  void write_file (const std::string &output_prefix, const Image_Type &type);
 
   arma::mat spike_image ();
   arma::mat start_image (const std::string &filename, int &iter_start);

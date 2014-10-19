@@ -12,9 +12,7 @@ void Hires::iterate (const bool &boosting)
                         angle_tolerance, footprints_per_pix, detectors,
                         samples);
   wgt_image = footprints.calc_wgt_image (nxy);
-  //
-  // Standard hires/minimap processing - always happens.
-  //
+
   arma::mat correction, correction_squared;
   footprints.compute_correction (nxy, flux_images, iteration+1, 1,
                                  boosting, boost_function, correction,
@@ -24,10 +22,7 @@ void Hires::iterate (const bool &boosting)
 
   cfv_images = (correction_squared / wgt_image) - square (correction);
 
-  //
-  // Optional HIRES beam generation
-  //
-  if (generate_beams)
+  if (output_types.find(Image_Type::hires_beam)!=output_types.end())
     {
       footprints.set_signals_to_sim_values (spike_image ());
 
