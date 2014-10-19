@@ -13,15 +13,17 @@
 
 #include "Sample.hxx"
 #include "Exception.hxx"
+#include "Detector.hxx"
 
 namespace hires
 {
+std::map<int, Detector> read_DRF (const boost::filesystem::path &DRF_file);
 
 class Hires
 {
 public:
   std::string starting_image, beam_starting_image;
-  boost::filesystem::path drf_prefix;
+  boost::filesystem::path drf_file;
   std::array<int,2> nxy;
   int footprints_per_pix, beam_spike_n;
   std::array<double,2> crval;
@@ -36,19 +38,20 @@ public:
   // FIXME: Why isn't this const?
   std::vector<Sample> &samples;
 
+  std::map<int, Detector> detectors;
   size_t iteration;
   arma::mat hitmap, minimap, wgt_image, flux_images, cfv_images, beam_images;
 
   Hires (const std::array<int,2> &Nxy,
          const std::array<double,2> &Crval, const double &Radians_per_pix,
          const bool &Generate_beams,
-         const boost::filesystem::path &Drf_prefix,
+         const boost::filesystem::path &Drf_file,
          const std::string &boost_function_string,
          const std::vector<std::pair<std::string, std::pair<std::string,
                                                             std::string> > >
          &Fits_keywords,
          std::vector<Sample> &Samples):
-    drf_prefix(Drf_prefix),
+    drf_file(Drf_file),
     nxy(Nxy), footprints_per_pix (1), beam_spike_n (5),
     crval(Crval), radians_per_pix(Radians_per_pix),
     min_sample_flux (std::numeric_limits<double>::lowest ()),
@@ -57,6 +60,7 @@ public:
     generate_beams(Generate_beams),
     fits_keywords(Fits_keywords),
     samples(Samples),
+    detectors (read_DRF (drf_file)),
     iteration(0)
   {
     fits_keywords.push_back({std::string ("AUTHOR"),

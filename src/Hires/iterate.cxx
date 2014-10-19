@@ -6,13 +6,8 @@
 
 namespace hires
 {
-std::map<int, Detector> read_all_DRF_files
-(const boost::filesystem::path &DRF_prefix);
-
 void Hires::iterate (const bool &boosting)
 {
-  std::map<int, Detector> detectors (read_all_DRF_files (drf_prefix));
-
   Footprint footprints (radians_per_pix, nxy, min_sample_flux,
                         angle_tolerance, footprints_per_pix, detectors,
                         samples);

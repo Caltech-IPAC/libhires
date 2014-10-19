@@ -21,10 +21,7 @@ void Hires::write_file (arma::mat image, std::string filename,
               
 
       file_specific_keywords.push_back
-        ({"DRF_IN",
-            { boost::filesystem::path (drf_prefix).filename ().string ()
-                + "*",
-                "Name of Detector Response Files"}});
+        ({"DRF_IN", {drf_file.string (), "Name of Detector Response Files"}});
     }
 
   if (!isflux)

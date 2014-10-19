@@ -36,8 +36,7 @@ def configure(ctx):
 
 def build(ctx):
     cxx_sources=[
-        'src/read_all_DRF_files/read_all_DRF_files.cxx',
-        'src/read_all_DRF_files/read_all_DRF_planck.cxx',
+        'src/read_DRF.cxx',
         'src/Footprint/Footprint.cxx',
         'src/Footprint/compute_bounds.cxx',
         'src/Footprint/compute_correction.cxx',
