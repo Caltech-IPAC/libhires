@@ -63,7 +63,9 @@ void Footprint::compute_correction (
 {
   // FIXME: Currently use all available cores.  It would be better to
   // make this configurable.
-  const size_t num_threads=std::thread::hardware_concurrency();
+  size_t num_threads=std::thread::hardware_concurrency();
+  if(num_threads==0)
+    num_threads=4;
 
   std::vector<arma::mat> local_correction(num_threads);
   std::vector<std::thread> threads;
