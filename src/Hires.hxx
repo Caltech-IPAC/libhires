@@ -64,12 +64,8 @@ public:
          const std::vector<Sample> &Samples);
 
   void dump_params ();
-
-  void init ();
   void iterate (const bool &boosting);
-
   void compute_minimap ();
-
   bool running_hires() const
   {
     return output_types.find(Image_Type::hires_image)!=output_types.end()
