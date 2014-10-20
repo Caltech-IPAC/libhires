@@ -21,10 +21,10 @@ public:
   std::vector<int> j0_im, j1_im, i0_im, i1_im, j0_ft, j1_ft, i0_ft, i1_ft;
 
   Footprint (const double &radians_per_pix, const std::array<int,2> &nxy,
-             const double &min_sample_signal, const double &angle_tolerance,
+             const double &angle_tolerance,
              const double &footprints_per_pix,
              const std::map<int, Detector> &detectors,
-             std::vector<Sample> &samples);
+             const std::vector<Sample> &samples);
 
   double count_good_samples (const double &radians_per_pix,
                              const std::array<int,2> &nxy,

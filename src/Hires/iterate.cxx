@@ -8,7 +8,7 @@ namespace hires
 {
 void Hires::iterate (const bool &boosting)
 {
-  Footprint footprints (radians_per_pix, nxy, min_sample_flux,
+  Footprint footprints (radians_per_pix, nxy,
                         angle_tolerance, footprints_per_pix, detectors,
                         samples);
   wgt_image = footprints.calc_wgt_image (nxy);

@@ -4,11 +4,10 @@ namespace hires
 {
 Footprint::Footprint (const double &radians_per_pix,
                       const std::array<int,2> &nxy,
-                      const double &min_sample_signal,
                       const double &angle_tolerance,
                       const double &footprints_per_pix,
                       const std::map<int, Detector> &detectors,
-                      std::vector<Sample> &samples)
+                      const std::vector<Sample> &samples)
 {
   size_t num_good = count_good_samples (radians_per_pix, nxy, samples);
   j0_im.reserve (num_good);
@@ -22,7 +21,6 @@ Footprint::Footprint (const double &radians_per_pix,
 
   std::array<double,2> offset{{nxy[0] / 2.0, nxy[1] / 2.0}};
 
-  int n_signals_reset (0);
   int num_footprints (0);
 
   for (size_t s = 0; s < samples.size (); ++s)
@@ -45,11 +43,6 @@ Footprint::Footprint (const double &radians_per_pix,
           std::vector<int> bounds (
               compute_bounds (*(*responses.rbegin ()), i_int, j_int, nxy));
 
-          if (samples[s].signal[j] < min_sample_signal)
-            {
-              samples[s].signal[j] = min_sample_signal;
-              ++n_signals_reset;
-            }
           signal.push_back (samples[s].signal[j]);
           j0_im.push_back (bounds[0]);
           j1_im.push_back (bounds[1]);

@@ -38,7 +38,7 @@ public:
   std::array<int,2> nxy;
   int footprints_per_pix, beam_spike_n;
   std::array<double,2> crval;
-  double radians_per_pix, min_sample_flux, angle_tolerance, beam_spike_height;
+  double radians_per_pix, angle_tolerance, beam_spike_height;
   std::set<Image_Type> output_types;
 
   std::vector<std::pair<std::string, std::pair<std::string, std::string> > >
@@ -65,7 +65,6 @@ public:
     drf_file(Drf_file),
     nxy(Nxy), footprints_per_pix (1), beam_spike_n (5),
     crval(Crval), radians_per_pix(Radians_per_pix),
-    min_sample_flux (std::numeric_limits<double>::lowest ()),
     angle_tolerance (2.5),
     beam_spike_height (10),
     output_types(Output_types),
