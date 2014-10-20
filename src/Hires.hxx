@@ -61,42 +61,7 @@ public:
          const std::vector<std::pair<std::string, std::pair<std::string,
                                                             std::string> > >
          &Fits_keywords,
-         const std::vector<Sample> &Samples):
-    drf_file(Drf_file),
-    nxy(Nxy), footprints_per_pix (1), beam_spike_n (5),
-    crval(Crval), radians_per_pix(Radians_per_pix),
-    angle_tolerance (2.5),
-    beam_spike_height (10),
-    output_types(Output_types),
-    fits_keywords(Fits_keywords),
-    samples(Samples),
-    iteration(0)
-  {
-    if(running_hires())
-      detectors=read_DRF (drf_file);
-    fits_keywords.push_back({std::string ("CREATOR"),
-          {std::string ("LIBHIRES"), std::string("")}});
-              
-
-    std::map<std::string,std::function<double(double)> > boost_functions=
-      {{"TIMES_2",[](const double &x) { return x + x - 1.0; }},
-       {"TIMES_3", [](const double &x) { return x + x + x - 2.0; }},
-       {"SQUARED", [](const double &x) { return x * x; }},
-       {"EXP_2.5", [](const double &x) { return pow (x, 2.5); }},
-       {"CUBED", [](const double &x) { return x * x * x; }}};
-
-    auto f=boost_functions.find(boost_function_string);
-    if(f==boost_functions.end())
-      {
-        if(!boost_function_string.empty())
-          throw Exception("Invalid boost function string: "
-                          + boost_function_string);
-      }
-    else
-      {
-        boost_function=f->second;
-      }
-  }
+         const std::vector<Sample> &Samples);
 
   void dump_params ();
 

@@ -46,7 +46,7 @@ def build(ctx):
         'src/Footprint/set_signals_to_sim_values.cxx',
         'src/Hires/compute_minimap.cxx',
         'src/Hires/iterate.cxx',
-        'src/Hires/init.cxx',
+        'src/Hires/Hires.cxx',
         'src/Hires/write_output.cxx',
         'src/Hires/write_file.cxx',
         'src/Hires/spike_image.cxx',
