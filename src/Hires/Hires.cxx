@@ -22,8 +22,6 @@ Hires::Hires (const std::array<int,2> &Nxy,
   samples(Samples),
   iteration(0)
 {
-  if(running_hires())
-    detectors=read_DRF (drf_file);
   fits_keywords.push_back({std::string ("CREATOR"),
         {std::string ("LIBHIRES"), std::string("")}});
               
@@ -53,20 +51,14 @@ Hires::Hires (const std::array<int,2> &Nxy,
 
   if(running_hires())
     {
-      Footprint footprints (radians_per_pix, nxy,
-                            angle_tolerance, footprints_per_pix, detectors,
-                            samples);
-      wgt_image = footprints.calc_wgt_image (nxy);
+      detectors=read_DRF (drf_file);
+      footprints=Footprint (radians_per_pix, nxy, angle_tolerance,
+                            footprints_per_pix, detectors, samples);
+      weight_image = footprints.calc_wgt_image (nxy);
       // FIXME: Shouldn't I just use iteration?
       int iter_start;
 
-      flux_images = start_image (starting_image, iter_start);
-
-      if (output_types.find(Image_Type::hires_beam)!=output_types.end())
-        {
-          footprints.set_signals_to_sim_values (spike_image ());
-          beam_images = start_image (beam_starting_image, iter_start);
-        }
+      signal_image = start_image (starting_image, iter_start);
     }
 }
 }

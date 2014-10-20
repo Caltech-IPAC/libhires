@@ -15,6 +15,7 @@
 #include "Sample.hxx"
 #include "Exception.hxx"
 #include "Detector.hxx"
+#include "Footprint.hxx"
 
 namespace hires
 {
@@ -50,8 +51,9 @@ public:
   const std::vector<Sample> &samples;
 
   std::map<int, Detector> detectors;
+  Footprint footprints;
   size_t iteration;
-  arma::mat hitmap, minimap, wgt_image, flux_images, cfv_images, beam_images;
+  arma::mat hitmap, minimap, weight_image, signal_image;
 
   Hires (const std::array<int,2> &Nxy,
          const std::array<double,2> &Crval, const double &Radians_per_pix,

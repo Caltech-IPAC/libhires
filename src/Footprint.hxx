@@ -25,6 +25,7 @@ public:
              const double &footprints_per_pix,
              const std::map<int, Detector> &detectors,
              const std::vector<Sample> &samples);
+  Footprint () {}
 
   double count_good_samples (const double &radians_per_pix,
                              const std::array<int,2> &nxy,
