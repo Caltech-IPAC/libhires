@@ -49,10 +49,9 @@ public:
 
   void compute_correction (const std::array<int,2> &nxy,
                            const arma::mat &signal_image, const int &iter,
-                           const bool &do_cfv, const bool &boosting,
+                           const bool &boosting,
                            const std::function<double(double)> &boost_function,
-                           arma::mat &correction,
-                           arma::mat &correction_squared) const;
+                           arma::mat &correction) const;
 
   void set_signals_to_sim_values (const arma::mat &sim_image);
 
