@@ -47,7 +47,7 @@ public:
   std::function<double(double)> boost_function;
   
   // FIXME: Why isn't this const?
-  std::vector<Sample> &samples;
+  const std::vector<Sample> &samples;
 
   std::map<int, Detector> detectors;
   size_t iteration;
@@ -61,7 +61,7 @@ public:
          const std::vector<std::pair<std::string, std::pair<std::string,
                                                             std::string> > >
          &Fits_keywords,
-         std::vector<Sample> &Samples):
+         const std::vector<Sample> &Samples):
     drf_file(Drf_file),
     nxy(Nxy), footprints_per_pix (1), beam_spike_n (5),
     crval(Crval), radians_per_pix(Radians_per_pix),
