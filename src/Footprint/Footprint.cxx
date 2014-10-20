@@ -21,8 +21,6 @@ Footprint::Footprint (const double &radians_per_pix,
 
   std::array<double,2> offset{{nxy[0] / 2.0, nxy[1] / 2.0}};
 
-  int num_footprints (0);
-
   for (size_t s = 0; s < samples.size (); ++s)
     {
       const size_t n (good[s].size ());
@@ -52,7 +50,6 @@ Footprint::Footprint (const double &radians_per_pix,
           j1_ft.push_back (bounds[5]);
           i0_ft.push_back (bounds[6]);
           i1_ft.push_back (bounds[7]);
-          ++num_footprints;
         }
     }
 }

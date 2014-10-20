@@ -22,7 +22,7 @@ def configure(ctx):
     ctx.env.append_value('CXXFLAGS', '-Wall')
     ctx.env.append_value('CXXFLAGS', '-Wextra')
     ctx.env.append_value('CXXFLAGS', '-std=c++11')
-    ctx.env.append_value('CXXFLAGS', '-D__STDC_CONSTANT_MACROS')
+    # ctx.env.append_value('CXXFLAGS', '-D__STDC_CONSTANT_MACROS')
 
     if ctx.options.debug:
         ctx.env.append_value('CXXFLAGS', '-g')
@@ -41,13 +41,11 @@ def build(ctx):
         'src/Footprint/count_good_samples.cxx',
         'src/Footprint/get_response.cxx',
         'src/Footprint/generate_response.cxx',
-        'src/Footprint/set_signals_to_sim_values.cxx',
         'src/Hires/compute_minimap.cxx',
         'src/Hires/iterate.cxx',
         'src/Hires/Hires.cxx',
         'src/Hires/write_output.cxx',
         'src/Hires/write_file.cxx',
-        'src/Hires/spike_image.cxx',
         'src/Hires/start_image.cxx',
         'src/Hires/write_fits.cxx']
     headers=[

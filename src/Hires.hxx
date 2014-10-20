@@ -79,7 +79,6 @@ public:
   void write_output (const std::string &outfile_prefix);
   void write_file (const std::string &output_prefix, const Image_Type &type);
 
-  arma::mat spike_image ();
   arma::mat start_image (const std::string &filename, int &iter_start);
 
   void write_fits (const arma::mat &image,

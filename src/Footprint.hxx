@@ -53,8 +53,6 @@ public:
                            const std::function<double(double)> &boost_function,
                            arma::mat &correction) const;
 
-  void set_signals_to_sim_values (const arma::mat &sim_image);
-
   arma::mat calc_wgt_image (const std::array<int,2> &nxy) const
   {
     arma::mat result (nxy[1], nxy[0]);
