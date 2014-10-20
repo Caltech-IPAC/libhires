@@ -75,9 +75,9 @@ public:
   {
     if(running_hires())
       detectors=read_DRF (drf_file);
-    fits_keywords.push_back({std::string ("AUTHOR"),
-          {std::string ("LIBHIRES"),
-              std::string("")}});
+    fits_keywords.push_back({std::string ("CREATOR"),
+          {std::string ("LIBHIRES"), std::string("")}});
+              
 
     std::map<std::string,std::function<double(double)> > boost_functions=
       {{"TIMES_2",[](const double &x) { return x + x - 1.0; }},
