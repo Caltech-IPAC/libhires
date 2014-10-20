@@ -35,7 +35,7 @@ public:
       throw Exception ("In " + p.string () + " NAXIS1 must equal NAXIS2\n");
     if (nx % 2 == 0)
       throw Exception ("In " + p.string () + " NAXIS1 must be odd\n");
-    /* This seems bogus.  Floating point comparisons can be tricky. */
+    // FIXME: This seems bogus.  Floating point comparisons can be tricky.
     if (abs (cdelt1) != abs (cdelt2))
       throw Exception ("In " + p.string ()
                        + " CDELT1 and CDELT2 must be same size\n");
@@ -58,7 +58,7 @@ public:
         j ((dv + radius_radians) / radians_per_pix + 0.5);
     if (!(i < 0 || i >= nx || j < 0 || j >= ny))
       {
-        /* Column or row major? */
+        // FIXME: Column or row major?
         result = detector_response[i + nx * j];
       }
     return result;
