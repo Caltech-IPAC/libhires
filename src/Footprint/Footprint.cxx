@@ -28,48 +28,6 @@ Footprint::Footprint (const double &radians_per_pix,
   for (size_t s = 0; s < samples.size (); ++s)
     {
       const size_t n (good[s].size ());
-
-      /* Compute angles if needed */
-      if (samples[s].angle.size () == 0)
-        {
-          samples[s].angle.resize (n);
-          double max_delta = radians_per_pix * 16;
-          for (size_t j = 0; j < n; ++j)
-            {
-              if (!good[s][j])
-                continue;
-              if (j == n - 1)
-                {
-                  samples[s].angle[j] = samples[s].angle[j - 1];
-                  good[s][j] = good[s][j - 1];
-                }
-              else
-                {
-                  double x_delta (samples[s].x[j + 1] - samples[s].x[j]),
-                      y_delta (samples[s].y[j + 1] - samples[s].y[j]);
-                  if (std::abs (x_delta) + std::abs (y_delta) > max_delta)
-                    {
-                      /* non-continuous */
-                      if (j > 0)
-                        {
-                          samples[s].angle[j] = samples[s].angle[j - 1];
-                          good[s][j] = good[s][j - 1];
-                        }
-                      else
-                        {
-                          good[s][j] = false; /* Discard sample if we
-                                                 can not compute
-                                                 angle */
-                        }
-                    }
-                  else
-                    {
-                      samples[s].angle[j] = std::atan2 (y_delta, x_delta);
-                    }
-                }
-            }
-        }
-
       for (size_t j = 0; j < n; ++j)
         {
           if (!good[s][j])
