@@ -13,17 +13,16 @@ void Footprint::compute_correction (
 
   for (size_t n = 0; n < signal.size (); ++n)
     {
-      arma::mat integration (j1_im[n] - j0_im[n], i1_im[n] - i0_im[n]);
+      double sum=0;
       for (int i = 0; i < i1_im[n] - i0_im[n]; ++i)
         for (int j = 0; j < j1_im[n] - j0_im[n]; ++j)
           {
-            integration (j, i) = signal_image (j + j0_im[n], i + i0_im[n])
-                                 * (*responses[n])(j + j0_ft[n], i + i0_ft[n]);
+            sum += signal_image (j + j0_im[n], i + i0_im[n])
+              * (*responses[n])(j + j0_ft[n], i + i0_ft[n]);
           }
 
-      double signal_prime (accu (integration));
+      double scale = signal[n] / sum;
 
-      double scale (signal[n] / signal_prime);
       if (iter != 1 && boosting && boost_function)
         {
           scale = boost_function (scale);
