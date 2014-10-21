@@ -19,11 +19,18 @@ void Hires::write_file (const std::string &output_prefix,
      {Image_Type::minimap_hitmap,
       std::make_tuple("minimap_hitmap", "Minimap hitmap", false, &hitmap)}};
 
-  std::string filename=output_prefix
-    + std::get<0>(image_mapping[type]);
-  if (iteration != 0)
-    filename+= "_" + std::to_string(iteration);
-  filename+= ".fits";
+  std::string filename;
+  if(output_prefix=="-")
+    {
+      filename="-";
+    }
+  else
+    {
+      filename=output_prefix + std::get<0>(image_mapping[type]);
+      if (iteration != 0)
+        filename+= "_" + std::to_string(iteration);
+      filename+= ".fits";
+    }
 
   std::vector<std::pair<std::string, std::pair<std::string, std::string> > >
   file_specific_keywords;
