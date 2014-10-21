@@ -5,11 +5,11 @@ namespace hires
 void Hires::compute_minimap ()
 {
   double i_offset (nxy[0] / 2.0), j_offset (nxy[1] / 2.0);
-  arma::mat integration (nxy[1], nxy[0]);
-  arma::mat hit_count (nxy[1], nxy[0]);
+  Eigen::MatrixXd integration (nxy[1], nxy[0]);
+  Eigen::MatrixXd hit_count (nxy[1], nxy[0]);
 
-  integration.zeros ();
-  hit_count.zeros ();
+  integration.setZero ();
+  hit_count.setZero ();
 
   for (size_t i = 0; i < samples.size (); ++i)
     {
@@ -25,7 +25,7 @@ void Hires::compute_minimap ()
         }
     }
 
-  minimap = integration / hit_count;
+  minimap = integration.cwiseQuotient(hit_count);
   hitmap = hit_count;
 }
 }

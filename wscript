@@ -12,13 +12,13 @@ import traceback
 from waflib import Build, Logs, Utils
 
 def options(ctx):
-    ctx.load('compiler_cxx CCfits boost armadillo')
+    ctx.load('compiler_cxx CCfits boost eigen')
     ctx.add_option('--debug', help='Include debug symbols and turn ' +
                                    'compiler optimizations off',
                    action='store_true', default=False, dest='debug')
 
 def configure(ctx):
-    ctx.load('compiler_cxx CCfits boost armadillo')
+    ctx.load('compiler_cxx CCfits boost eigen')
     ctx.env.append_value('CXXFLAGS', '-Wall')
     ctx.env.append_value('CXXFLAGS', '-Wextra')
     ctx.env.append_value('CXXFLAGS', '-std=c++11')
@@ -62,7 +62,7 @@ def build(ctx):
          target='hires',
          name='hires_st',
          install_path=os.path.join(ctx.env.PREFIX, 'lib'),
-         use=['CCfits','boost','armadillo']
+         use=['CCfits','boost','eigen']
     )
 
     ctx.shlib(
@@ -70,7 +70,7 @@ def build(ctx):
         target='hires',
         name='hires_sh',
         install_path=os.path.join(ctx.env.PREFIX, 'lib'),
-        use=['CCfits','boost','armadillo']
+        use=['CCfits','boost','eigen']
     )
 
     ctx.install_files(

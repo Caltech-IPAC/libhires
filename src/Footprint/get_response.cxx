@@ -6,7 +6,7 @@
 
 namespace hires
 {
-const arma::mat *Footprint::get_response (
+const Eigen::MatrixXd *Footprint::get_response (
     const int &detector_id, const double &i_frac, const double &j_frac,
     const double &angle, const double &angle_tolerance,
     const double &footprints_per_pix, const double &radians_per_pix,

@@ -7,7 +7,7 @@
 #include <map>
 #include <set>
 
-#include <armadillo>
+#include <eigen3/Eigen/Eigen>
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/math/constants/constants.hpp>
@@ -53,7 +53,7 @@ public:
   std::map<int, Detector> detectors;
   Footprint footprints;
   size_t iteration;
-  arma::mat hitmap, minimap, weight_image, signal_image;
+  Eigen::MatrixXd hitmap, minimap, weight_image, signal_image;
 
   Hires (const std::array<int,2> &Nxy,
          const std::array<double,2> &Crval, const double &Radians_per_pix,
@@ -79,9 +79,9 @@ public:
   void write_output (const std::string &outfile_prefix);
   void write_file (const std::string &output_prefix, const Image_Type &type);
 
-  arma::mat start_image (const std::string &filename, int &iter_start);
+  Eigen::MatrixXd start_image (const std::string &filename, int &iter_start);
 
-  void write_fits (const arma::mat &image,
+  void write_fits (const Eigen::MatrixXd &image,
                    const std::vector<std::pair<std::string,
                                                std::pair<std::string,
                                                          std::string> > >

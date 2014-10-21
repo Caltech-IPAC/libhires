@@ -7,7 +7,6 @@
 #include <chrono>
 #include <limits>
 #include <CCfits/CCfits>
-#include <armadillo>
 #include <boost/filesystem.hpp>
 #include <boost/math/constants/constants.hpp>
 #include "../Hires.hxx"
@@ -15,7 +14,7 @@
 
 namespace hires
 {
-void Hires::write_fits (const arma::mat &image,
+void Hires::write_fits (const Eigen::MatrixXd &image,
                         const std::vector<std::pair<std::string,
                                                     std::pair<std::string,
                                                               std::string> > >
@@ -26,7 +25,7 @@ void Hires::write_fits (const arma::mat &image,
 
   boost::filesystem::path fits_file (outfile_name);
 
-  long axes[] = { image.n_cols, image.n_rows };
+  long axes[] = { image.cols(), image.rows() };
   boost::filesystem::remove (fits_file);
   CCfits::FITS outfile (fits_file.string (), FLOAT_IMG, 2, axes);
 
@@ -58,11 +57,11 @@ void Hires::write_fits (const arma::mat &image,
   phdu.addKey ("CREATED", "HIRES " + version,
                "software version that created this file");
 
-  std::valarray<float> temp (image.n_cols * image.n_rows);
-  for (size_t i = 0; i < image.n_cols; ++i)
-    for (size_t j = 0; j < image.n_rows; ++j)
+  std::valarray<float> temp (image.cols() * image.rows());
+  for (int i = 0; i < image.cols(); ++i)
+    for (int j = 0; j < image.rows(); ++j)
       // GLON runs backwards
-      temp[i + image.n_cols * j] = image (j, (image.n_cols - 1) - i);
+      temp[i + image.cols() * j] = image (j, (image.cols() - 1) - i);
 
   phdu.write (1, temp.size (), temp);
 }

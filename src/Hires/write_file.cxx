@@ -8,7 +8,7 @@ namespace hires
 void Hires::write_file (const std::string &output_prefix,
                         const Image_Type &type)
 {
-  std::map<Image_Type,std::tuple<std::string,std::string,bool,arma::mat *> >
+  std::map<Image_Type,std::tuple<std::string,std::string,bool,Eigen::MatrixXd *> >
     image_mapping=
     {{Image_Type::hires_image,
       std::make_tuple("hires", "HIRES image", true, &signal_image)},

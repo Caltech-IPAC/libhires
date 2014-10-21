@@ -7,7 +7,7 @@
 
 namespace hires
 {
-arma::mat Footprint::generate_response (
+Eigen::MatrixXd Footprint::generate_response (
     const int &detector_id, const double &i_offset, const double &j_offset,
     const double &recomposed_angle, const double &radians_per_pix,
     const std::map<int, Detector> &detectors) const
@@ -27,7 +27,7 @@ arma::mat Footprint::generate_response (
   int n_ij = 2 * radius_pix + 1;
   const double radius = radius_pix * radians_per_pix;
 
-  arma::mat response (n_ij, n_ij);
+  Eigen::MatrixXd response (n_ij, n_ij);
   const double cos_angle (std::cos (recomposed_angle)),
       sin_angle (std::sin (recomposed_angle));
   double sum (0), dx (-radius);

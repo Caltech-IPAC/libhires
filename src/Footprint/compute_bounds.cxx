@@ -2,12 +2,12 @@
 
 namespace hires
 {
-std::vector<int> Footprint::compute_bounds (const arma::mat &response,
+std::vector<int> Footprint::compute_bounds (const Eigen::MatrixXd &response,
                                             const int &i_center,
                                             const int &j_center,
                                             const std::array<int,2> &nxy) const
 {
-  int j_size (response.n_rows), i_size (response.n_cols);
+  int j_size (response.rows()), i_size (response.cols());
   int radius_pixels (j_size / 2);
   int j0_resp = 0;
   int j1_resp = j_size;

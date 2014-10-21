@@ -1,13 +1,12 @@
 #include <thread>
 
-#include <armadillo>
 #include "../Footprint.hxx"
 
 namespace
 {
   void thread_callback(const size_t &i, const size_t &num_threads,
-                       const arma::mat &signal_image,
-                       const std::vector<const arma::mat *> &responses,
+                       const Eigen::MatrixXd &signal_image,
+                       const std::vector<const Eigen::MatrixXd *> &responses,
                        const std::vector<double> &signal,
                        const bool &boosting, 
                        const std::function<double(double)> &boost_function,
@@ -19,10 +18,11 @@ namespace
                        const std::vector<int> &i1_im,
                        const std::vector<int> &j0_ft,
                        const std::vector<int> &i0_ft,
-                       arma::mat &local_correction)
+                       Eigen::MatrixXd &local_correction)
 
   {
-    local_correction.zeros (nxy[1], nxy[0]);
+    local_correction.resize (nxy[1], nxy[0]);
+    local_correction.setZero ();
 
     const size_t size=signal.size ();
     const size_t begin=(size*i/num_threads), end=(size*(i+1)/num_threads); 
@@ -56,10 +56,10 @@ namespace
 namespace hires
 {
 void Footprint::compute_correction (
-    const std::array<int,2> &nxy, const arma::mat &signal_image,
+    const std::array<int,2> &nxy, const Eigen::MatrixXd &signal_image,
     const int &iter, const bool &boosting, 
     const std::function<double(double)> &boost_function,
-    arma::mat &correction) const
+    Eigen::MatrixXd &correction) const
 {
   // FIXME: Currently use all available cores.  It would be better to
   // make this configurable.
@@ -67,7 +67,7 @@ void Footprint::compute_correction (
   if(num_threads==0)
     num_threads=4;
 
-  std::vector<arma::mat> local_correction(num_threads);
+  std::vector<Eigen::MatrixXd> local_correction(num_threads);
   std::vector<std::thread> threads;
 
   for (size_t i = 0; i < num_threads; ++i)
@@ -80,7 +80,8 @@ void Footprint::compute_correction (
   for (auto &t : threads)
     t.join ();
   
-  correction.zeros (nxy[1], nxy[0]);
+  correction.resize (nxy[1], nxy[0]);
+  correction.setZero ();
   for(size_t i=0; i<num_threads; ++i)
     {
       correction+=local_correction[i];

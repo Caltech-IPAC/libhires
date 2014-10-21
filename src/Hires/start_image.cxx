@@ -1,4 +1,3 @@
-#include <armadillo>
 #include <CCfits/CCfits>
 #include <valarray>
 #include "../Hires.hxx"
@@ -6,9 +5,9 @@
 
 namespace hires
 {
-arma::mat Hires::start_image (const std::string &filename, int &iter_start)
+Eigen::MatrixXd Hires::start_image (const std::string &filename, int &iter_start)
 {
-  arma::mat image (nxy[1], nxy[0]);
+  Eigen::MatrixXd image (nxy[1], nxy[0]);
   iter_start = 0;
   if (filename.empty())
     {
