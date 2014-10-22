@@ -28,8 +28,6 @@ public:
   {
     hires_image,
     hires_covariance,
-    hires_correction,
-    hires_beam,
     minimap_image,
     minimap_hitmap
   };
@@ -71,9 +69,7 @@ public:
   bool running_hires() const
   {
     return output_types.find(Image_Type::hires_image)!=output_types.end()
-      || output_types.find(Image_Type::hires_covariance)!=output_types.end()
-      || output_types.find(Image_Type::hires_correction)!=output_types.end()
-      || output_types.find(Image_Type::hires_beam)!=output_types.end();
+      || output_types.find(Image_Type::hires_covariance)!=output_types.end();
   }
 
   void write_output (const std::string &outfile_prefix);

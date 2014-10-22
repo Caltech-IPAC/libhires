@@ -12,8 +12,7 @@ void Hires::write_output (const std::string &output_prefix)
     types={Image_Type::hires_covariance, Image_Type::minimap_image,
            Image_Type::minimap_hitmap};
   else
-    types={Image_Type::hires_image, Image_Type::hires_correction,
-           Image_Type::hires_beam};
+    types={Image_Type::hires_image};
 
   for(auto &type: types)
     if (output_types.find(type)!=output_types.end())
