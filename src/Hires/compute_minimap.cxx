@@ -23,6 +23,6 @@ void Hires::compute_minimap ()
         }
     }
 
-  minimap = minimap.cwiseQuotient(hit_count);
+  minimap = minimap.cwiseQuotient(hitmap);
 }
 }
