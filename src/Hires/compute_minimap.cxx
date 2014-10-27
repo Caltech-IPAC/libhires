@@ -5,11 +5,9 @@ namespace hires
 void Hires::compute_minimap ()
 {
   double i_offset (nxy[0] / 2.0), j_offset (nxy[1] / 2.0);
-  Eigen::MatrixXd integration (nxy[1], nxy[0]);
-  Eigen::MatrixXd hit_count (nxy[1], nxy[0]);
 
-  integration.setZero ();
-  hit_count.setZero ();
+  minimap.setZero ();
+  hitmap.setZero ();
 
   for (size_t i = 0; i < samples.size (); ++i)
     {
@@ -20,12 +18,11 @@ void Hires::compute_minimap ()
           int i_int (xi), j_int (yi);
           if(i_int<0 || i_int>=nxy[1] || j_int<0 || j_int>=nxy[0])
              continue;
-          integration (j_int, i_int) += samples[i].signal[j];
-          hit_count (j_int, i_int) += 1.0;
+          minimap (j_int, i_int) += samples[i].signal[j];
+          hitmap (j_int, i_int) += 1.0;
         }
     }
 
-  minimap = integration.cwiseQuotient(hit_count);
-  hitmap = hit_count;
+  minimap = minimap.cwiseQuotient(hit_count);
 }
 }
