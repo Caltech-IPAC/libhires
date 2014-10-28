@@ -6,6 +6,8 @@ void Hires::compute_minimap ()
 {
   double i_offset (nxy[0] / 2.0), j_offset (nxy[1] / 2.0);
 
+  minimap.resize(nxy[0],nxy[1]);
+  hitmap.resize(nxy[0],nxy[1]);
   minimap.setZero ();
   hitmap.setZero ();
 

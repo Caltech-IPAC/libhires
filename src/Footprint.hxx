@@ -19,6 +19,8 @@ public:
 
   std::vector<double> signal;
   std::vector<int> j0_im, j1_im, i0_im, i1_im, j0_ft, j1_ft, i0_ft, i1_ft;
+  Eigen::MatrixXd result;
+
 
   Footprint (const double &radians_per_pix, const std::array<int,2> &nxy,
              const double &angle_tolerance,

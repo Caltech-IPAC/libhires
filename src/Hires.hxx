@@ -27,7 +27,6 @@ public:
   enum class Image_Type
   {
     hires_image,
-    hires_covariance,
     minimap_image,
     minimap_hitmap
   };
@@ -68,8 +67,7 @@ public:
   void compute_minimap ();
   bool running_hires() const
   {
-    return output_types.find(Image_Type::hires_image)!=output_types.end()
-      || output_types.find(Image_Type::hires_covariance)!=output_types.end();
+    return output_types.find(Image_Type::hires_image)!=output_types.end();
   }
 
   void write_output (const std::string &outfile_prefix);

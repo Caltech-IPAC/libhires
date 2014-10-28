@@ -54,11 +54,12 @@ Hires::Hires (const std::array<int,2> &Nxy,
       detectors=read_DRF (drf_file);
       footprints=Footprint (radians_per_pix, nxy, angle_tolerance,
                             footprints_per_pix, detectors, samples);
-      weight_image = footprints.calc_wgt_image (nxy);
-      // FIXME: Shouldn't I just use iteration?
-      int iter_start;
-
-      signal_image = start_image (starting_image, iter_start);
+      signal_image.resize(nxy[0],nxy[1]);
+      for(int j=0; j<nxy[1]; ++j)
+        for(int i=0; i<nxy[0]; ++i)
+          {
+            signal_image(i,j)=footprints.result(i+nxy[0]*j);
+          }
     }
 }
 }

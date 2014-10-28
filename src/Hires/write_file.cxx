@@ -12,8 +12,6 @@ void Hires::write_file (const std::string &output_prefix,
     image_mapping=
     {{Image_Type::hires_image,
       std::make_tuple("hires", "HIRES image", true, &signal_image)},
-     {Image_Type::hires_covariance,
-      std::make_tuple("hires_cov", "HIRES covariance", false, &weight_image)},
      {Image_Type::minimap_image, std::make_tuple("minimap", "Minimap Image",
                                                  true, &minimap)},
      {Image_Type::minimap_hitmap,
