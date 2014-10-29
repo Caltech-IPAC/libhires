@@ -43,11 +43,6 @@ Footprint::Footprint (const double &radians_per_pix,
           std::vector<int> bounds (compute_bounds (response, i_int, j_int,
                                                    nxy));
 
-          // std::cout << "signal " << xi << " "
-          //           << yi << " "
-          //           << samples[s].signal[j] << " "
-          //           << "\n";
-
           signal.push_back (samples[s].signal[j]);
           j0_im.push_back (bounds[0]);
           j1_im.push_back (bounds[1]);
@@ -78,11 +73,7 @@ Footprint::Footprint (const double &radians_per_pix,
   Eigen::VectorXd rhs(num_pixels);
   rhs.setZero();
 
-  std::cout << "num_pixels: " << nxy[0] << " "
-            << nxy[1] << " "
-            << num_pixels << " "
-            << signal.size() << " "
-            << "\n";
+  // FIXME: Parallelize this
   for (size_t n = 0; n < signal.size(); ++n)
     {
 
@@ -98,14 +89,6 @@ Footprint::Footprint (const double &radians_per_pix,
                            column_i - i0_im[n] + i0_ft[n]);
             const size_t column=column_i + nxy[0]*column_j;
             rhs(column)+=signal[n]*column_response;
-            // std::cout << "rhs "
-            //           << column_i << " "
-            //           << column_j << " "
-            //           << column << " "
-            //           << signal[n]*column_response << " "
-            //           << signal[n] << " "
-            //           << column_response << " "
-            //           << "\n";
 
             for (int row_j = j0_im[n]; row_j < j1_im[n]; ++row_j)
               for (int row_i = i0_im[n]; row_i < i1_im[n]; ++row_i)
@@ -121,18 +104,16 @@ Footprint::Footprint (const double &radians_per_pix,
   result.resize(nxy[0]*nxy[1]);
   result.setZero();
   
-  // FIXME: I totally made this up
+  // FIXME: Making this number smaller seems to break things
   const double noise_level=1e-2;
 
   // FIXME: This needs to be set by the expected noise level
   const double lambda=0.5*noise_level*noise_level*signal.size()/response.rows();
-  // const double lambda=16*noise_level*noise_level*signal.size()/response.rows();
   Eigen::MatrixXd &AA=response;
 
   Eigen::MatrixXd ddB(result.size(),result.size());
   ddB.setZero();
   Eigen::VectorXd dB(result.size());
-  // Eigen::VectorXd AA_diagonal(result.size()), dB(result.size()), ddB(result.size());
 
   const double epsilon=1e-4;
   double result_norm=0, du_norm=0;
@@ -151,21 +132,8 @@ Footprint::Footprint (const double &radians_per_pix,
           ddB(i,i)=1/(temp*temp);
         }
 
-      Eigen::VectorXd du=-(AA + lambda*ddB).fullPivHouseholderQr().solve(dA + lambda*dB);
-
-      std::cout << "result sum: "
-                << iteration << " "
-                << entropy.sum() << " "
-                << (dA + lambda*dB).sum() << " "
-                // << lambda << " "
-                << dA.sum() << " "
-                // << (2*AA*result).sum() << " "
-                // << rhs.sum() << " "
-                << lambda*dB.sum() << " "
-                << (AA + lambda*ddB).sum() << " "
-                << AA.sum() << " "
-                << lambda*ddB.sum() << " ";
-                // << du.sum() << " ";
+      Eigen::VectorXd du=-(AA + lambda*ddB).fullPivHouseholderQr()
+        .solve(dA + lambda*dB);
 
       result+=du;
 
@@ -174,41 +142,6 @@ Footprint::Footprint (const double &radians_per_pix,
 
       std::cout << result_norm << " "
                 << du_norm << "\n";
-      // std::cout << (result_sum-(result.sum())) << " "
-      //           << result_sum << " "
-      //           << "\n";
-
-      // std::cout << "AA: " << "\n"
-      //           << AA << "\n"
-      //           // << signal[0] << " "
-      //           // << signal[1] << " "
-      //           // << responses[0].rows() << "\n"
-      //           // << responses[0].cols() << "\n"
-      //           // << rhs << "\n"
-      // //           << AA_diagonal << "\n"
-      //           << lambda*ddB << "\n"
-      //           << result << "\n"
-      //           << "\n";
     }
-
-  // std::cout << "solving Svd\n";
-
-  // std::cout << "response:\n"
-  //           << response << "\n"
-  //           // << response.determinant() << "\n"
-  //           // << (response.transpose() * response).determinant() << "\n";
-  //           << rhs << "\n";
-  // // result=response.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(rhs);
-  // // std::cout << "solving QR\n";
-  // // result=response.householderQr().solve(rhs);
-  // // std::cout << "solving colQR\n";
-  // // result=response.colPivHouseholderQr().solve(rhs);
-  // // std::cout << "solving fullQR\n";
-  // // result=response.fullPivHouseholderQr().solve(rhs);
-  // std::cout << "solving Normal\n";
-  // result=(response.transpose() * response).ldlt().solve(response.transpose()*rhs);
-  std::cout << "solved\n";
-  // std::cout << "result:\n"
-  //           << result << "\n";
 }
 }
