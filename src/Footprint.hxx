@@ -16,11 +16,15 @@ public:
   std::vector<std::valarray<bool> > good;
   std::map<std::tuple<int, int, int, int>, Eigen::MatrixXd> responses_complete;
   std::vector<Eigen::MatrixXd> responses;
+  Eigen::MatrixXd response;
 
   std::vector<double> signal;
   std::vector<int> j0_im, j1_im, i0_im, i1_im, j0_ft, j1_ft, i0_ft, i1_ft;
   Eigen::VectorXd result;
+  Eigen::VectorXd rhs;
 
+  double noise_level;
+  double lambda;
 
   Footprint (const double &radians_per_pix, const std::array<int,2> &nxy,
              const double &angle_tolerance,
@@ -49,11 +53,8 @@ public:
                                    const int &i_center, const int &j_center,
                                    const std::array<int,2> &nxy) const;
 
-  void compute_correction (const std::array<int,2> &nxy,
-                           const Eigen::MatrixXd &signal_image, const int &iter,
-                           const bool &boosting,
-                           const std::function<double(double)> &boost_function,
-                           Eigen::MatrixXd &correction) const;
+  void compute_correction (const Eigen::MatrixXd &signal_image,
+                           Eigen::MatrixXd &correction);
 
   Eigen::MatrixXd calc_wgt_image (const std::array<int,2> &nxy) const
   {

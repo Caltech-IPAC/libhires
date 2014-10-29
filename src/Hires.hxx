@@ -31,39 +31,35 @@ public:
     minimap_hitmap
   };
 
-  std::string starting_image, beam_starting_image;
   boost::filesystem::path drf_file;
   std::array<int,2> nxy;
-  int footprints_per_pix, beam_spike_n;
+  int footprints_per_pix;
   std::array<double,2> crval;
-  double radians_per_pix, angle_tolerance, beam_spike_height;
+  double radians_per_pix, angle_tolerance;
   std::set<Image_Type> output_types;
 
   std::vector<std::pair<std::string, std::pair<std::string, std::string> > >
   fits_keywords;
 
-  std::function<double(double)> boost_function;
-  
   // FIXME: Why isn't this const?
   const std::vector<Sample> &samples;
 
   std::map<int, Detector> detectors;
   Footprint footprints;
   size_t iteration;
-  Eigen::MatrixXd hitmap, minimap, weight_image, signal_image;
+  Eigen::MatrixXd hitmap, minimap, signal_image;
 
   Hires (const std::array<int,2> &Nxy,
          const std::array<double,2> &Crval, const double &Radians_per_pix,
          const std::set<Image_Type> &Output_types,
          const boost::filesystem::path &Drf_file,
-         const std::string &boost_function_string,
          const std::vector<std::pair<std::string, std::pair<std::string,
                                                             std::string> > >
          &Fits_keywords,
          const std::vector<Sample> &Samples);
 
   void dump_params ();
-  void iterate (const bool &boosting);
+  void iterate ();
   void compute_minimap ();
   bool running_hires() const
   {
@@ -72,8 +68,6 @@ public:
 
   void write_output (const std::string &outfile_prefix);
   void write_file (const std::string &output_prefix, const Image_Type &type);
-
-  Eigen::MatrixXd start_image (const std::string &filename, int &iter_start);
 
   void write_fits (const Eigen::MatrixXd &image,
                    const std::vector<std::pair<std::string,

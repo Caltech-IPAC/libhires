@@ -2,88 +2,45 @@
 
 #include "../Footprint.hxx"
 
-namespace
-{
-  void thread_callback(const size_t &i, const size_t &num_threads,
-                       const Eigen::MatrixXd &signal_image,
-                       const std::vector<Eigen::MatrixXd> &responses,
-                       const std::vector<double> &signal,
-                       const bool &boosting, 
-                       const std::function<double(double)> &boost_function,
-                       const std::array<int,2> &nxy,
-                       const int &iter,
-                       const std::vector<int> &j0_im,
-                       const std::vector<int> &j1_im,
-                       const std::vector<int> &i0_im,
-                       const std::vector<int> &i1_im,
-                       const std::vector<int> &j0_ft,
-                       const std::vector<int> &i0_ft,
-                       Eigen::MatrixXd &local_correction)
-
-  {
-    local_correction.resize (nxy[1], nxy[0]);
-    local_correction.setZero ();
-
-    const size_t size=signal.size ();
-    const size_t begin=(size*i/num_threads), end=(size*(i+1)/num_threads); 
-
-    for (size_t n = begin; n < end; ++n)
-      {
-        double sum=0;
-        for (int i = 0; i < i1_im[n] - i0_im[n]; ++i)
-          for (int j = 0; j < j1_im[n] - j0_im[n]; ++j)
-            {
-              sum += signal_image (j + j0_im[n], i + i0_im[n])
-                * responses[n](j + j0_ft[n], i + i0_ft[n]);
-            }
-
-        double scale = signal[n] / sum;
-        if (iter != 1 && boosting && boost_function)
-          {
-            scale = boost_function (scale);
-          }
-        for (int i = 0; i < i1_im[n] - i0_im[n]; ++i)
-          for (int j = 0; j < j1_im[n] - j0_im[n]; ++j)
-            {
-              local_correction (j + j0_im[n], i + i0_im[n])
-                += responses[n](j + j0_ft[n], i + i0_ft[n]) * scale;
-            }
-      }
-  }
-}
-
 namespace hires
 {
-void Footprint::compute_correction (
-    const std::array<int,2> &nxy, const Eigen::MatrixXd &signal_image,
-    const int &iter, const bool &boosting, 
-    const std::function<double(double)> &boost_function,
-    Eigen::MatrixXd &correction) const
+void Footprint::compute_correction (const Eigen::MatrixXd &signal_image,
+                                    Eigen::MatrixXd &correction)
 {
-  // FIXME: Currently use all available cores.  It would be better to
-  // make this configurable.
-  size_t num_threads=std::thread::hardware_concurrency();
-  if(num_threads==0)
-    num_threads=4;
+  const Eigen::MatrixXd &AA=response;
 
-  std::vector<Eigen::MatrixXd> local_correction(num_threads);
-  std::vector<std::thread> threads;
+  Eigen::MatrixXd ddB(result.size(),result.size());
+  ddB.setZero();
+  Eigen::VectorXd dB(result.size());
 
-  for (size_t i = 0; i < num_threads; ++i)
+  double result_norm=result.norm(), du_norm=0;
+
+  Eigen::VectorXd dA(2*AA*result - rhs);
+
+  Eigen::VectorXd entropy(result.size());
+
+  for(int i=0; i<result.size(); ++i)
     {
-      threads.emplace_back (thread_callback, i, num_threads, signal_image,
-                            responses, signal, boosting, boost_function,
-                            nxy, iter, j0_im, j1_im, i0_im, i1_im, j0_ft, i0_ft,
-                            std::ref (local_correction[i]));
+      entropy(i)=log(std::cosh(result(i)/noise_level));
+      dB(i)=std::tanh(result(i)/noise_level)/noise_level;
+      double temp=std::cosh(result(i)/noise_level)*noise_level;
+      ddB(i,i)=1/(temp*temp);
     }
-  for (auto &t : threads)
-    t.join ();
-  
-  correction.resize (nxy[1], nxy[0]);
-  correction.setZero ();
-  for(size_t i=0; i<num_threads; ++i)
-    {
-      correction+=local_correction[i];
-    }
+
+  Eigen::VectorXd du=-(AA + lambda*ddB).fullPivHouseholderQr()
+    .solve(dA + lambda*dB);
+
+  // FIXME: Doing the correction in two places.
+  result+=du;
+
+  for(int i=0; i<correction.rows(); ++i)
+    for(int j=0; j<correction.cols(); ++j)
+      correction(i,j)=du(i+correction.rows()*j);
+
+  result_norm=result.norm();
+  du_norm=du.norm();
+
+  std::cout << result_norm << " "
+            << du_norm << "\n";
 }
 }

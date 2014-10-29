@@ -36,12 +36,13 @@ Footprint::Footprint (const double &radians_per_pix,
           int i_int (xi), j_int (yi);
           double i_frac (xi - i_int), j_frac (yi - j_int);
 
-          Eigen::MatrixXd response=get_response (samples[s].id, i_frac, j_frac, samples[s].angle[j],
-                                                 angle_tolerance, footprints_per_pix,
-                                                 radians_per_pix, detectors);
+          Eigen::MatrixXd detector_response=
+            get_response (samples[s].id, i_frac, j_frac, samples[s].angle[j],
+                          angle_tolerance, footprints_per_pix,
+                          radians_per_pix, detectors);
 
-          std::vector<int> bounds (compute_bounds (response, i_int, j_int,
-                                                   nxy));
+          std::vector<int> bounds (compute_bounds (detector_response, i_int,
+                                                   j_int, nxy));
 
           signal.push_back (samples[s].signal[j]);
           j0_im.push_back (bounds[0]);
@@ -59,27 +60,23 @@ Footprint::Footprint (const double &radians_per_pix,
           double sum=0;
           for(int iy=*(j0_ft.rbegin()); iy<*(j1_ft.rbegin()); ++iy)
             for(int ix=*(i0_ft.rbegin()); ix<*(i1_ft.rbegin()); ++ix)
-              sum+=response(ix,iy);
-          response/=sum;
+              sum+=detector_response(ix,iy);
+          detector_response/=sum;
 
           // FIXME: Use std::move?
-          responses.push_back (response);
+          responses.push_back (detector_response);
         }
     }
 
   const size_t num_pixels=nxy[0]*nxy[1];
-  Eigen::MatrixXd response(num_pixels,num_pixels);
+  response.resize(num_pixels,num_pixels);
   response.setZero();
-  Eigen::VectorXd rhs(num_pixels);
+  rhs.resize(num_pixels);
   rhs.setZero();
 
   // FIXME: Parallelize this
   for (size_t n = 0; n < signal.size(); ++n)
     {
-
-          if(n%10000==0)
-            std::cout << "signal: " << n << "\n";
-
       for (int column_i = i0_im[n]; column_i < i1_im[n] ; ++column_i)
            
         for (int column_j = j0_im[n]; column_j < j1_im[n]; ++column_j)
@@ -105,43 +102,10 @@ Footprint::Footprint (const double &radians_per_pix,
   result.setZero();
   
   // FIXME: Making this number smaller seems to break things
-  const double noise_level=1e-2;
+  noise_level=1e-2;
 
-  // FIXME: This needs to be set by the expected noise level
-  const double lambda=0.5*noise_level*noise_level*signal.size()/response.rows();
-  Eigen::MatrixXd &AA=response;
-
-  Eigen::MatrixXd ddB(result.size(),result.size());
-  ddB.setZero();
-  Eigen::VectorXd dB(result.size());
-
-  const double epsilon=1e-4;
-  double result_norm=0, du_norm=0;
-  for(int iteration=0; iteration < 40 && result_norm*epsilon <= du_norm ;
-      ++iteration)
-    {
-      Eigen::VectorXd dA(2*AA*result - rhs);
-
-      Eigen::VectorXd entropy(result.size());
-
-      for(int i=0; i<result.size(); ++i)
-        {
-          entropy(i)=log(std::cosh(result(i)/noise_level));
-          dB(i)=std::tanh(result(i)/noise_level)/noise_level;
-          double temp=std::cosh(result(i)/noise_level)*noise_level;
-          ddB(i,i)=1/(temp*temp);
-        }
-
-      Eigen::VectorXd du=-(AA + lambda*ddB).fullPivHouseholderQr()
-        .solve(dA + lambda*dB);
-
-      result+=du;
-
-      result_norm=result.norm();
-      du_norm=du.norm();
-
-      std::cout << result_norm << " "
-                << du_norm << "\n";
-    }
+  // FIXME: I got this from dimensional analysis and added the 0.5
+  // because I felt like it.
+  lambda=0.5*noise_level*noise_level*signal.size()/response.rows();
 }
 }

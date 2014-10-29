@@ -46,7 +46,6 @@ def build(ctx):
         'src/Hires/Hires.cxx',
         'src/Hires/write_output.cxx',
         'src/Hires/write_file.cxx',
-        'src/Hires/start_image.cxx',
         'src/Hires/write_fits.cxx']
     headers=[
         'src/version.hxx',

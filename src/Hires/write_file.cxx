@@ -39,7 +39,7 @@ void Hires::write_file (const std::string &output_prefix,
   if (iteration!=0)
     {
       file_specific_keywords.push_back
-        ({"ITERNUM", {std::to_string(iteration), "HIRES iteration number"}});
+        ({"ITERNUM", {std::to_string(iteration), "Hires iteration number"}});
               
 
       file_specific_keywords.push_back

@@ -6,12 +6,11 @@
 
 namespace hires
 {
-void Hires::iterate (const bool &boosting)
+void Hires::iterate ()
 {
-  Eigen::MatrixXd correction;
-  footprints.compute_correction (nxy, signal_image, iteration+1,
-                                 boosting, boost_function, correction);
-  signal_image=signal_image.cwiseProduct(correction.cwiseQuotient(weight_image)); // Schur product
+  Eigen::MatrixXd correction(signal_image.rows(), signal_image.cols());
+  footprints.compute_correction (signal_image, correction);
+  signal_image+=correction;
   ++iteration;
 }
 }
