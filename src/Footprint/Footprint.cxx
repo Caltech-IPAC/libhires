@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include "../Footprint.hxx"
 
 namespace hires
@@ -34,12 +36,17 @@ Footprint::Footprint (const double &radians_per_pix,
           int i_int (xi), j_int (yi);
           double i_frac (xi - i_int), j_frac (yi - j_int);
 
-          responses.push_back (
-              get_response (samples[s].id, i_frac, j_frac, samples[s].angle[j],
-                            angle_tolerance, footprints_per_pix,
-                            radians_per_pix, detectors));
-          std::vector<int> bounds (
-              compute_bounds (*(*responses.rbegin ()), i_int, j_int, nxy));
+          Eigen::MatrixXd response=get_response (samples[s].id, i_frac, j_frac, samples[s].angle[j],
+                                                 angle_tolerance, footprints_per_pix,
+                                                 radians_per_pix, detectors);
+
+          std::vector<int> bounds (compute_bounds (response, i_int, j_int,
+                                                   nxy));
+
+          // std::cout << "signal " << xi << " "
+          //           << yi << " "
+          //           << samples[s].signal[j] << " "
+          //           << "\n";
 
           signal.push_back (samples[s].signal[j]);
           j0_im.push_back (bounds[0]);
@@ -50,6 +57,18 @@ Footprint::Footprint (const double &radians_per_pix,
           j1_ft.push_back (bounds[5]);
           i0_ft.push_back (bounds[6]);
           i1_ft.push_back (bounds[7]);
+
+          /// Renormalize the response function by what intersects
+          /// with the image
+
+          double sum=0;
+          for(int iy=*(j0_ft.rbegin()); iy<*(j1_ft.rbegin()); ++iy)
+            for(int ix=*(i0_ft.rbegin()); ix<*(i1_ft.rbegin()); ++ix)
+              sum+=response(ix,iy);
+          response/=sum;
+
+          // FIXME: Use std::move?
+          responses.push_back (response);
         }
     }
 
@@ -75,38 +94,121 @@ Footprint::Footprint (const double &radians_per_pix,
         for (int column_j = j0_im[n]; column_j < j1_im[n]; ++column_j)
           {
             double column_response=
-              (*responses[n])(column_j - j0_im[n] + j0_ft[n],
-                              column_i - i0_im[n] + i0_ft[n]);
+              responses[n](column_j - j0_im[n] + j0_ft[n],
+                           column_i - i0_im[n] + i0_ft[n]);
             const size_t column=column_i + nxy[0]*column_j;
-            rhs(column)=signal[n]*column_response;
+            rhs(column)+=signal[n]*column_response;
+            // std::cout << "rhs "
+            //           << column_i << " "
+            //           << column_j << " "
+            //           << column << " "
+            //           << signal[n]*column_response << " "
+            //           << signal[n] << " "
+            //           << column_response << " "
+            //           << "\n";
+
             for (int row_j = j0_im[n]; row_j < j1_im[n]; ++row_j)
               for (int row_i = i0_im[n]; row_i < i1_im[n]; ++row_i)
                 {
                   const size_t row=row_i + nxy[0]*row_j;
                   response(row,column)+=column_response
-                    * (*responses[n])(row_j - j0_im[n] + j0_ft[n],
-                                      row_i - i0_im[n] + i0_ft[n]);
+                    * responses[n](row_j - j0_im[n] + j0_ft[n],
+                                   row_i - i0_im[n] + i0_ft[n]);
                 }
           }
     }
-  std::cout << "solving Svd\n";
 
-  std::cout << "response:\n"
-            << response.determinant() << "\n"
-            << (response.transpose() * response).determinant() << "\n";
-            // << rhs << "\n";
-  // result=response.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(rhs);
-  // std::cout << "solving QR\n";
-  // result=response.householderQr().solve(rhs);
-  // std::cout << "solving colQR\n";
-  // result=response.colPivHouseholderQr().solve(rhs);
-  // std::cout << "solving fullQR\n";
-  // result=response.fullPivHouseholderQr().solve(rhs);
-  std::cout << "solving Normal\n";
-  result=(response.transpose() * response).ldlt().solve(response.transpose()*rhs);
+  result.resize(nxy[0]*nxy[1]);
+  result.setZero();
+  
+  // FIXME: I totally made this up
+  const double noise_level=1e-2;
+
+  // FIXME: This needs to be set by the expected noise level
+  const double lambda=0.5*noise_level*noise_level*signal.size()/response.rows();
+  // const double lambda=16*noise_level*noise_level*signal.size()/response.rows();
+  Eigen::MatrixXd &AA=response;
+
+  Eigen::MatrixXd ddB(result.size(),result.size());
+  ddB.setZero();
+  Eigen::VectorXd dB(result.size());
+  // Eigen::VectorXd AA_diagonal(result.size()), dB(result.size()), ddB(result.size());
+
+  const double epsilon=1e-4;
+  double result_norm=0, du_norm=0;
+  for(int iteration=0; iteration < 40 && result_norm*epsilon <= du_norm ;
+      ++iteration)
+    {
+      Eigen::VectorXd dA(2*AA*result - rhs);
+
+      Eigen::VectorXd entropy(result.size());
+
+      for(int i=0; i<result.size(); ++i)
+        {
+          entropy(i)=log(std::cosh(result(i)/noise_level));
+          dB(i)=std::tanh(result(i)/noise_level)/noise_level;
+          double temp=std::cosh(result(i)/noise_level)*noise_level;
+          ddB(i,i)=1/(temp*temp);
+        }
+
+      Eigen::VectorXd du=-(AA + lambda*ddB).fullPivHouseholderQr().solve(dA + lambda*dB);
+
+      std::cout << "result sum: "
+                << iteration << " "
+                << entropy.sum() << " "
+                << (dA + lambda*dB).sum() << " "
+                // << lambda << " "
+                << dA.sum() << " "
+                // << (2*AA*result).sum() << " "
+                // << rhs.sum() << " "
+                << lambda*dB.sum() << " "
+                << (AA + lambda*ddB).sum() << " "
+                << AA.sum() << " "
+                << lambda*ddB.sum() << " ";
+                // << du.sum() << " ";
+
+      result+=du;
+
+      result_norm=result.norm();
+      du_norm=du.norm();
+
+      std::cout << result_norm << " "
+                << du_norm << "\n";
+      // std::cout << (result_sum-(result.sum())) << " "
+      //           << result_sum << " "
+      //           << "\n";
+
+      // std::cout << "AA: " << "\n"
+      //           << AA << "\n"
+      //           // << signal[0] << " "
+      //           // << signal[1] << " "
+      //           // << responses[0].rows() << "\n"
+      //           // << responses[0].cols() << "\n"
+      //           // << rhs << "\n"
+      // //           << AA_diagonal << "\n"
+      //           << lambda*ddB << "\n"
+      //           << result << "\n"
+      //           << "\n";
+    }
+
+  // std::cout << "solving Svd\n";
+
+  // std::cout << "response:\n"
+  //           << response << "\n"
+  //           // << response.determinant() << "\n"
+  //           // << (response.transpose() * response).determinant() << "\n";
+  //           << rhs << "\n";
+  // // result=response.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(rhs);
+  // // std::cout << "solving QR\n";
+  // // result=response.householderQr().solve(rhs);
+  // // std::cout << "solving colQR\n";
+  // // result=response.colPivHouseholderQr().solve(rhs);
+  // // std::cout << "solving fullQR\n";
+  // // result=response.fullPivHouseholderQr().solve(rhs);
+  // std::cout << "solving Normal\n";
+  // result=(response.transpose() * response).ldlt().solve(response.transpose()*rhs);
   std::cout << "solved\n";
   // std::cout << "result:\n"
   //           << result << "\n";
-
 }
 }

@@ -6,8 +6,8 @@ double Footprint::count_good_samples (const double &radians_per_pix,
                                       const std::array<int,2> &nxy,
                                       const std::vector<Sample> &samples)
 {
-  const std::array<double,2> radius{{(radians_per_pix * (nxy[0] - 1)) / 2.0,
-        (radians_per_pix * (nxy[1] - 1)) / 2.0}};
+  const std::array<double,2> radius{{(radians_per_pix * nxy[0]) / 2.0,
+        (radians_per_pix * nxy[1]) / 2.0}};
   int total_samps = 0;
   int total_good = 0;
   good.resize (samples.size ());

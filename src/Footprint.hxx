@@ -15,11 +15,11 @@ class Footprint
 public:
   std::vector<std::valarray<bool> > good;
   std::map<std::tuple<int, int, int, int>, Eigen::MatrixXd> responses_complete;
-  std::vector<const Eigen::MatrixXd *> responses;
+  std::vector<Eigen::MatrixXd> responses;
 
   std::vector<double> signal;
   std::vector<int> j0_im, j1_im, i0_im, i1_im, j0_ft, j1_ft, i0_ft, i1_ft;
-  Eigen::MatrixXd result;
+  Eigen::VectorXd result;
 
 
   Footprint (const double &radians_per_pix, const std::array<int,2> &nxy,
@@ -32,12 +32,12 @@ public:
   double count_good_samples (const double &radians_per_pix,
                              const std::array<int,2> &nxy,
                              const std::vector<Sample> &samples);
-  const Eigen::MatrixXd *get_response (const int &detector_id, const double &i_frac,
-                                 const double &j_frac, const double &angle,
-                                 const double &angle_tolerance,
-                                 const double &footprints_per_pix,
-                                 const double &radians_per_pix,
-                                 const std::map<int, Detector> &detectors);
+  Eigen::MatrixXd get_response (const int &detector_id, const double &i_frac,
+                                const double &j_frac, const double &angle,
+                                const double &angle_tolerance,
+                                const double &footprints_per_pix,
+                                const double &radians_per_pix,
+                                const std::map<int, Detector> &detectors);
 
   Eigen::MatrixXd generate_response (const int &detector_id, const double &i_offset,
                                const double &j_offset,
@@ -64,8 +64,8 @@ public:
       {
         for (int i = i0_im[r]; i < i1_im[r]; ++i)
           for (int j = j0_im[r]; j < j1_im[r]; ++j)
-            result (j, i) += (*responses[r])(j + j0_ft[r] - j0_im[r],
-                                             i + i0_ft[r] - i0_im[r]);
+            result (j, i) += responses[r](j + j0_ft[r] - j0_im[r],
+                                          i + i0_ft[r] - i0_im[r]);
       }
     return result;
   }

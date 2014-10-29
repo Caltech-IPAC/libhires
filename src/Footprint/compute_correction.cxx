@@ -6,7 +6,7 @@ namespace
 {
   void thread_callback(const size_t &i, const size_t &num_threads,
                        const Eigen::MatrixXd &signal_image,
-                       const std::vector<const Eigen::MatrixXd *> &responses,
+                       const std::vector<Eigen::MatrixXd> &responses,
                        const std::vector<double> &signal,
                        const bool &boosting, 
                        const std::function<double(double)> &boost_function,
@@ -34,11 +34,10 @@ namespace
           for (int j = 0; j < j1_im[n] - j0_im[n]; ++j)
             {
               sum += signal_image (j + j0_im[n], i + i0_im[n])
-                * (*responses[n])(j + j0_ft[n], i + i0_ft[n]);
+                * responses[n](j + j0_ft[n], i + i0_ft[n]);
             }
 
         double scale = signal[n] / sum;
-
         if (iter != 1 && boosting && boost_function)
           {
             scale = boost_function (scale);
@@ -47,7 +46,7 @@ namespace
           for (int j = 0; j < j1_im[n] - j0_im[n]; ++j)
             {
               local_correction (j + j0_im[n], i + i0_im[n])
-                += (*responses[n])(j + j0_ft[n], i + i0_ft[n]) * scale;
+                += responses[n](j + j0_ft[n], i + i0_ft[n]) * scale;
             }
       }
   }

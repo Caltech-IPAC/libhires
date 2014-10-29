@@ -7,6 +7,7 @@ std::vector<int> Footprint::compute_bounds (const Eigen::MatrixXd &response,
                                             const int &j_center,
                                             const std::array<int,2> &nxy) const
 {
+  // FIXME: This assumes that num_columns==num_rows
   int j_size (response.rows()), i_size (response.cols());
   int radius_pixels (j_size / 2);
   int j0_resp = 0;
@@ -16,6 +17,7 @@ std::vector<int> Footprint::compute_bounds (const Eigen::MatrixXd &response,
 
   /* Compute nominal bounds */
   int j0_image = j_center - radius_pixels;
+  // FIXME: Is this correct?  It only works if response.rows() is odd.
   int j1_image = j_center + radius_pixels + 1;
   int i0_image = i_center - radius_pixels;
   int i1_image = i_center + radius_pixels + 1;
