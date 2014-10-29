@@ -14,8 +14,6 @@ class Footprint
 {
 public:
   std::vector<std::valarray<bool> > good;
-  std::map<std::tuple<int, int, int, int>, Eigen::MatrixXd> responses_complete;
-  std::vector<Eigen::MatrixXd> responses;
   Eigen::MatrixXd response;
 
   std::vector<double> signal;
@@ -56,19 +54,5 @@ public:
   void compute_correction (const Eigen::MatrixXd &signal_image,
                            Eigen::MatrixXd &correction);
 
-  Eigen::MatrixXd calc_wgt_image (const std::array<int,2> &nxy) const
-  {
-    Eigen::MatrixXd result (nxy[1], nxy[0]);
-    const double minimum_weight=1e-8;
-    result.fill (minimum_weight);
-    for (size_t r = 0; r < responses.size (); ++r)
-      {
-        for (int i = i0_im[r]; i < i1_im[r]; ++i)
-          for (int j = j0_im[r]; j < j1_im[r]; ++j)
-            result (j, i) += responses[r](j + j0_ft[r] - j0_im[r],
-                                          i + i0_ft[r] - i0_im[r]);
-      }
-    return result;
-  }
 };
 }

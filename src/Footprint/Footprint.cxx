@@ -21,12 +21,19 @@ Footprint::Footprint (const double &radians_per_pix,
   i0_ft.reserve (num_good);
   i1_ft.reserve (num_good);
 
+  const size_t num_pixels=nxy[0]*nxy[1];
+  response.resize(num_pixels,num_pixels);
+  response.setZero();
+  rhs.resize(num_pixels);
+  rhs.setZero();
+
   std::array<double,2> offset{{nxy[0] / 2.0, nxy[1] / 2.0}};
 
+  // FIXME: Get rid of vector of samples and just have a Sample?
   for (size_t s = 0; s < samples.size (); ++s)
     {
-      const size_t n (good[s].size ());
-      for (size_t j = 0; j < n; ++j)
+      // FIXME: Parallelize this
+      for (size_t j = 0; j < good[s].size (); ++j)
         {
           if (!good[s][j])
             continue;
@@ -63,39 +70,29 @@ Footprint::Footprint (const double &radians_per_pix,
               sum+=detector_response(ix,iy);
           detector_response/=sum;
 
-          // FIXME: Use std::move?
-          responses.push_back (detector_response);
+          for (int column_i = *i0_im.rbegin(); column_i < *i1_im.rbegin();
+               ++column_i)
+            for (int column_j = *j0_im.rbegin(); column_j < *j1_im.rbegin();
+                 ++column_j)
+              {
+                double column_response=
+                  detector_response(column_j - *j0_im.rbegin() + *j0_ft.rbegin(),
+                               column_i - *i0_im.rbegin() + *i0_ft.rbegin());
+                const size_t column=column_i + nxy[0]*column_j;
+                rhs(column)+=*signal.rbegin()*column_response;
+
+                for (int row_j = *j0_im.rbegin(); row_j < *j1_im.rbegin();
+                     ++row_j)
+                  for (int row_i = *i0_im.rbegin(); row_i < *i1_im.rbegin();
+                       ++row_i)
+                    {
+                      const size_t row=row_i + nxy[0]*row_j;
+                      response(row,column)+=column_response
+                        * detector_response(row_j - *j0_im.rbegin() + *j0_ft.rbegin(),
+                                            row_i - *i0_im.rbegin() + *i0_ft.rbegin());
+                    }
+              }
         }
-    }
-
-  const size_t num_pixels=nxy[0]*nxy[1];
-  response.resize(num_pixels,num_pixels);
-  response.setZero();
-  rhs.resize(num_pixels);
-  rhs.setZero();
-
-  // FIXME: Parallelize this
-  for (size_t n = 0; n < signal.size(); ++n)
-    {
-      for (int column_i = i0_im[n]; column_i < i1_im[n] ; ++column_i)
-           
-        for (int column_j = j0_im[n]; column_j < j1_im[n]; ++column_j)
-          {
-            double column_response=
-              responses[n](column_j - j0_im[n] + j0_ft[n],
-                           column_i - i0_im[n] + i0_ft[n]);
-            const size_t column=column_i + nxy[0]*column_j;
-            rhs(column)+=signal[n]*column_response;
-
-            for (int row_j = j0_im[n]; row_j < j1_im[n]; ++row_j)
-              for (int row_i = i0_im[n]; row_i < i1_im[n]; ++row_i)
-                {
-                  const size_t row=row_i + nxy[0]*row_j;
-                  response(row,column)+=column_response
-                    * responses[n](row_j - j0_im[n] + j0_ft[n],
-                                   row_i - i0_im[n] + i0_ft[n]);
-                }
-          }
     }
 
   result.resize(nxy[0]*nxy[1]);
