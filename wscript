@@ -61,7 +61,7 @@ def build(ctx):
          target='hires',
          name='hires_st',
          install_path=os.path.join(ctx.env.PREFIX, 'lib'),
-         use=['CCfits','boost','eigen']
+         use=['CCfits','BOOST','eigen']
     )
 
     ctx.shlib(
@@ -69,7 +69,7 @@ def build(ctx):
         target='hires',
         name='hires_sh',
         install_path=os.path.join(ctx.env.PREFIX, 'lib'),
-        use=['CCfits','boost','eigen']
+        use=['CCfits','BOOST','eigen']
     )
 
     ctx.install_files(
