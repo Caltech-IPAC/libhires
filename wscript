@@ -19,6 +19,7 @@ def options(ctx):
 
 def configure(ctx):
     ctx.load('compiler_cxx cxx11 cfitsio CCfits boost eigen')
+    ctx.check_boost('filesystem system')
     ctx.env.append_value('CXXFLAGS', '-Wall')
     ctx.env.append_value('CXXFLAGS', '-Wextra')
     if ctx.options.debug:
