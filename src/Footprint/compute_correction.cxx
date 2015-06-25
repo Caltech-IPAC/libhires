@@ -4,8 +4,7 @@
 
 namespace hires
 {
-void Footprint::compute_correction (const Eigen::MatrixXd &signal_image,
-                                    Eigen::MatrixXd &correction)
+void Footprint::compute_correction (Eigen::MatrixXd &correction)
 {
   const Eigen::MatrixXd &AA=response;
 

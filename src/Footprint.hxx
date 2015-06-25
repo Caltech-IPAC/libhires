@@ -51,8 +51,7 @@ public:
                                    const int &i_center, const int &j_center,
                                    const std::array<int,2> &nxy) const;
 
-  void compute_correction (const Eigen::MatrixXd &signal_image,
-                           Eigen::MatrixXd &correction);
+  void compute_correction (Eigen::MatrixXd &correction);
 
 };
 }
