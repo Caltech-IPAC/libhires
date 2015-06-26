@@ -36,7 +36,7 @@ public:
     if (nx % 2 == 0)
       throw Exception ("In " + p.string () + " NAXIS1 must be odd\n");
     // FIXME: This seems bogus.  Floating point comparisons can be tricky.
-    if (abs (cdelt1) != abs (cdelt2))
+    if (std::abs (cdelt1) != std::abs (cdelt2))
       throw Exception ("In " + p.string ()
                        + " CDELT1 and CDELT2 must be same size\n");
     if (cdelt1 >= 0)
@@ -68,7 +68,7 @@ public:
 
 namespace std
 {
-template <> inline void swap (hires::Detector &a, hires::Detector &b)
+template <> inline void swap (hires::Detector &a, hires::Detector &b) noexcept
 {
   swap (a.id, b.id);
   swap (a.radius_radians, b.radius_radians);
