@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdexcept>
+
 namespace hires
 {
 class Exception : public std::runtime_error
