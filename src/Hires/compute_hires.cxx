@@ -17,27 +17,6 @@
 void hires::Hires::compute_hires (const boost::filesystem::path &)
 // void hires::Hires::compute_hires (const boost::filesystem::path &Drf_file)
 {
-  // drf_file=Drf_file;
-  // Detector d(drf_file);
-
-  // Eigen::MatrixXd AA(nxy[0]*nxy[1],nxy[0]*nxy[1]);
-  // AA.setZero ();
-
-  // Eigen::VectorXd Ag(nxy[0]*nxy[1]);
-  // Ag.setZero ();
-
-  // double i_offset (nxy[0] / 2.0), j_offset (nxy[1] / 2.0);
-  // std::size_t s=0;
-
-  /// Compute the variance by looking at the median variance with
-  /// successively finer and finer bins.  Choose the variance when any
-  /// of the bins have 0 or 1 sample in it.
-
-  /// FIXME: This is incredibly hokey, but seems to give reasonable
-  /// results.  We should really use a more sophisticated statistical
-  /// method.
-
-
   std::random_device rd;
   std::mt19937 gen(rd());
   // FIXME: hard coded for 44 GHz
@@ -50,6 +29,7 @@ void hires::Hires::compute_hires (const boost::filesystem::path &)
   const double noise_rms=(0.1/sigma_detector2), noise_scale=1.0;
   std::normal_distribution<> normal(0,noise_rms);
   
+  /// Set up binned data
   double variance;
   arma::vec binned_data;
   size_t bins, min_bins(8), max_bins(64);
@@ -105,18 +85,12 @@ void hires::Hires::compute_hires (const boost::filesystem::path &)
         binned_data(ii)=boost::accumulators::mean(accumulators[ii]);
     }
 
-  const double data_scale=std::max(arma::max(binned_data),
-                                   std::abs(arma::min(binned_data)));
-  std::cout << "variance: " << variance << " "
-            << std::sqrt(variance) << " "
-            << noise_rms << " "
-            << data_scale << "\n";
 
+  /// Compute transfer function
   const double min_x(0), min_y(0), delta_bin_x(nxy[0]*radians_per_pix/bins),
     delta_bin_y(nxy[1]*radians_per_pix/bins);
   
   arma::mat A(bins*bins,nxy[0]*nxy[1]);
-
   for(size_t iy=0; iy<nxy[1]; ++iy)
     {
       const double y=min_y + (iy+0.5)*radians_per_pix;
@@ -139,10 +113,18 @@ void hires::Hires::compute_hires (const boost::filesystem::path &)
         }
     }
 
-  arma::vec image;
+  /// LARS
+  const double data_scale=std::max(arma::max(binned_data),
+                                   std::abs(arma::min(binned_data)));
+  std::cout << "variance: " << variance << " "
+            << std::sqrt(variance) << " "
+            << noise_rms << " "
+            << data_scale << "\n";
+
+  arma::vec lars_image;
   mlpack::regression::LARS lars(true,variance/data_scale,
             variance/(data_scale*data_scale));
-  lars.Regress(A,binned_data,image,false);
+  lars.Regress(A,binned_data,lars_image,false);
 
   {
     std::ofstream outfile("binned");
@@ -159,8 +141,7 @@ void hires::Hires::compute_hires (const boost::filesystem::path &)
       for (size_t y=0; y<nxy[1]; ++y)
         outfile << x << " "
                 << y << " "
-                << A(bins/2+bins*bins/2,x+nxy[0]*y) << " "
-                << image(x+nxy[0]*y) << " "
+                << lars_image(x+nxy[0]*y) << " "
                 << "\n";
   }
 }
