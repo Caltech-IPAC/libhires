@@ -12,13 +12,15 @@ import traceback
 from waflib import Build, Logs, Utils
 
 def options(ctx):
-    ctx.load('compiler_cxx cxx11 cfitsio CCfits boost eigen')
+    ctx.load(['compiler_cxx','cxx11','cfitsio','CCfits','boost','eigen',
+              'mlpack','armadillo','libxml2'])
     ctx.add_option('--debug', help='Include debug symbols and turn ' +
                                    'compiler optimizations off',
                    action='store_true', default=False, dest='debug')
 
 def configure(ctx):
-    ctx.load('compiler_cxx cxx11 cfitsio CCfits boost eigen')
+    ctx.load(['compiler_cxx','cxx11','cfitsio','CCfits','boost','eigen',
+              'mlpack','armadillo','libxml2'])
     ctx.check_boost('filesystem system')
     ctx.env.append_value('CXXFLAGS', '-Wall')
     ctx.env.append_value('CXXFLAGS', '-Wextra')
@@ -58,7 +60,8 @@ def build(ctx):
          target='hires',
          name='hires_st',
          install_path=os.path.join(ctx.env.PREFIX, 'lib'),
-         use=['cxx11','cfitsio','CCfits','BOOST','eigen']
+         use=['cxx11','cfitsio','CCfits','BOOST','eigen','mlpack','armadillo',
+              'libxml2']
     )
 
     ctx.shlib(
@@ -66,7 +69,8 @@ def build(ctx):
         target='hires',
         name='hires_sh',
         install_path=os.path.join(ctx.env.PREFIX, 'lib'),
-        use=['cxx11','cfitsio','CCfits','BOOST','eigen']
+        use=['cxx11','cfitsio','CCfits','BOOST','eigen','mlpack','armadillo',
+             'libxml2']
     )
 
     ctx.install_files(
