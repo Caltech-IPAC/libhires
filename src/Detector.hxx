@@ -13,7 +13,7 @@ class Detector
 {
 public:
   int id;
-  double radius_radians, radians_per_pix;
+  double radius_radians, pix_per_radian;
   int nx, ny;
   std::valarray<double> detector_response;
 
@@ -44,9 +44,9 @@ public:
     if (cdelt2 <= 0)
       throw Exception ("In " + p.string () + " CDELT2 must be positive\n");
 
-    radians_per_pix = cdelt2 * boost::math::constants::pi<double>() / 180;
+    pix_per_radian = 1/(cdelt2 * boost::math::constants::pi<double>() / 180);
     int radius_pix = nx / 2;
-    radius_radians = radius_pix * radians_per_pix;
+    radius_radians = radius_pix / pix_per_radian;
 
     phdu.read (detector_response);
   }
@@ -54,8 +54,8 @@ public:
   double response (const double &du, const double &dv) const
   {
     double result (0);
-    int i ((du + radius_radians) / radians_per_pix + 0.5),
-        j ((dv + radius_radians) / radians_per_pix + 0.5);
+    int i ((du + radius_radians) * pix_per_radian + 0.5),
+        j ((dv + radius_radians) * pix_per_radian + 0.5);
     if (!(i < 0 || i >= nx || j < 0 || j >= ny))
       {
         // FIXME: Column or row major?
@@ -65,17 +65,3 @@ public:
   }
 };
 }
-
-namespace std
-{
-template <> inline void swap (hires::Detector &a, hires::Detector &b) noexcept
-{
-  swap (a.id, b.id);
-  swap (a.radius_radians, b.radius_radians);
-  swap (a.radians_per_pix, b.radians_per_pix);
-  swap (a.nx, b.nx);
-  swap (a.ny, b.ny);
-  swap (a.detector_response, b.detector_response);
-}
-}
-

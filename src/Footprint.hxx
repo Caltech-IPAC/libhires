@@ -21,9 +21,6 @@ public:
   Eigen::VectorXd result;
   Eigen::VectorXd rhs;
 
-  double noise_level;
-  double lambda;
-
   Footprint (const double &radians_per_pix, const std::array<int,2> &nxy,
              const double &angle_tolerance,
              const double &footprints_per_pix,

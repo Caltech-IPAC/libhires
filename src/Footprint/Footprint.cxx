@@ -97,12 +97,5 @@ Footprint::Footprint (const double &radians_per_pix,
 
   result.resize(nxy[0]*nxy[1]);
   result.setZero();
-  
-  // FIXME: Making this number smaller seems to break things
-  noise_level=1e-2;
-
-  // FIXME: I got this from dimensional analysis and added the 0.5
-  // because I felt like it.
-  lambda=0.5*noise_level*noise_level*signal.size()/response.rows();
 }
 }

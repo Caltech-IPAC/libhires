@@ -14,61 +14,49 @@
 
 #include "Sample.hxx"
 #include "Exception.hxx"
-#include "Detector.hxx"
-#include "Footprint.hxx"
 
 namespace hires
 {
-std::map<int, Detector> read_DRF (const boost::filesystem::path &DRF_file);
-
 class Hires
 {
 public:
-  enum class Image_Type
-  {
-    hires_image,
-    minimap_image,
-    minimap_hitmap
-  };
-
-  boost::filesystem::path drf_file;
-  std::array<int,2> nxy;
-  int footprints_per_pix;
+  std::array<size_t,2> nxy;
   std::array<double,2> crval;
   double radians_per_pix, angle_tolerance;
-  std::set<Image_Type> output_types;
 
   std::vector<std::pair<std::string, std::pair<std::string, std::string> > >
   fits_keywords;
-
-  // FIXME: Why isn't this const?
+  boost::filesystem::path drf_file;
+  
   const std::vector<Sample> &samples;
 
-  std::map<int, Detector> detectors;
-  Footprint footprints;
-  size_t iteration;
-  Eigen::MatrixXd hitmap, minimap, signal_image;
+  Eigen::MatrixXd minimap, hires;
 
-  Hires (const std::array<int,2> &Nxy,
+  Hires (const std::array<size_t,2> &Nxy,
          const std::array<double,2> &Crval, const double &Radians_per_pix,
-         const std::set<Image_Type> &Output_types,
-         const boost::filesystem::path &Drf_file,
          const std::vector<std::pair<std::string, std::pair<std::string,
                                                             std::string> > >
          &Fits_keywords,
          const std::vector<Sample> &Samples);
 
   void dump_params ();
-  void iterate ();
+  void compute_hires (const boost::filesystem::path &Drf_file);
   void compute_minimap ();
-  bool running_hires() const
+
+  void write_minimap (const std::string &outfile_prefix)
   {
-    return output_types.find(Image_Type::hires_image)!=output_types.end();
+    write_file(outfile_prefix,"minimap","Minimap Image",false,minimap);
   }
-
-  void write_output (const std::string &outfile_prefix);
-  void write_file (const std::string &output_prefix, const Image_Type &type);
-
+  void write_hires (const std::string &outfile_prefix)
+  {
+    write_file(outfile_prefix,"hires","HIRES image",true,hires);
+  }
+  void write_file (const std::string &output_prefix,
+                   const std::string &filename,
+                   const std::string &filetype,
+                   const bool add_drf_filename,
+                   const Eigen::MatrixXd &image);
+                   
   void write_fits (const Eigen::MatrixXd &image,
                    const std::vector<std::pair<std::string,
                                                std::pair<std::string,

@@ -30,17 +30,18 @@ def configure(ctx):
 
 def build(ctx):
     cxx_sources=[
-        'src/read_DRF.cxx',
-        'src/Footprint/Footprint.cxx',
-        'src/Footprint/compute_bounds.cxx',
-        'src/Footprint/compute_correction.cxx',
-        'src/Footprint/count_good_samples.cxx',
-        'src/Footprint/get_response.cxx',
-        'src/Footprint/generate_response.cxx',
+        # 'src/read_DRF.cxx',
+        # 'src/Footprint/Footprint.cxx',
+        # 'src/Footprint/compute_bounds.cxx',
+        # 'src/Footprint/compute_correction.cxx',
+        # 'src/Footprint/count_good_samples.cxx',
+        # 'src/Footprint/get_response.cxx',
+        # 'src/Footprint/generate_response.cxx',
         'src/Hires/compute_minimap.cxx',
-        'src/Hires/iterate.cxx',
+        'src/Hires/compute_hires.cxx',
+        # 'src/Hires/iterate.cxx',
         'src/Hires/Hires.cxx',
-        'src/Hires/write_output.cxx',
+        # 'src/Hires/write_output.cxx',
         'src/Hires/write_file.cxx',
         'src/Hires/write_fits.cxx']
     headers=[
