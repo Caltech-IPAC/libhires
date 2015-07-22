@@ -23,7 +23,7 @@ void hires::Hires::compute_hires (const boost::filesystem::path &)
   const double sigma_drf2(1.07189706078e-5), sigma_signal2(sigma_drf2/16),
     sigma_detector2(sigma_drf2 + sigma_signal2),
     sigma_signal_2_2(10*sigma_drf2), sigma_detector_2_2(sigma_drf2 + sigma_signal_2_2);
-  const double signal_2(0.1);
+  const double signal_2(10);
   const double pi(boost::math::constants::pi<double>());
 
   const double noise_rms=(0.1/sigma_detector2), noise_scale=1.0;
@@ -52,13 +52,13 @@ void hires::Hires::compute_hires (const boost::filesystem::path &)
           if(xi<0 || xi>=b || yi<0 || yi>=b)
             continue;
           int i_int (std::floor(xi)), j_int (std::floor(yi));
-          {
-            double signal=exp(-((xi-offset)*(xi-offset) + (yi-offset)*(yi-offset))/(2*sigma_detector2*pix_per_radian*pix_per_radian))/(2*pi*sigma_detector2)
-              + signal_2*exp(-((xi)*(xi) + (yi-offset*6/5)*(yi-offset*6/5))/(2*sigma_detector_2_2*pix_per_radian*pix_per_radian))/(2*pi*sigma_detector_2_2)
-              + normal(gen)*noise_scale;
-            accumulators[i_int + b*j_int](signal);
-          }
-          // accumulators[i_int + b*j_int](sample.signal);
+          // {
+          //   double signal=exp(-((xi-offset)*(xi-offset) + (yi-offset)*(yi-offset))/(2*sigma_detector2*pix_per_radian*pix_per_radian))/(2*pi*sigma_detector2)
+          //     + signal_2*exp(-((xi)*(xi) + (yi-offset*6/5)*(yi-offset*6/5))/(2*sigma_detector_2_2*pix_per_radian*pix_per_radian))/(2*pi*sigma_detector_2_2)
+          //     + normal(gen)*noise_scale;
+          //   accumulators[i_int + b*j_int](signal);
+          // }
+          accumulators[i_int + b*j_int](sample.signal);
         }
       boost::accumulators::accumulator_set
         < double, boost::accumulators::stats
@@ -144,5 +144,29 @@ void hires::Hires::compute_hires (const boost::filesystem::path &)
                 << lars_image(x+nxy[0]*y) << " "
                 << "\n";
   }
+
+  /// MCM with binning
+  const size_t max_iterations=32;
+  arma::vec f(nxy[0]*nxy[1]), f_new;
+  const double total_flux=arma::mean(binned_data);
+  f.fill(total_flux);
+  for (size_t iteration=0; iteration<max_iterations; ++iteration)
+    {
+      arma::vec Af=A*f;
+      arma::vec gAf=binned_data/Af;
+      f_new=f%(A.t()*gAf);
+      f=f_new*(total_flux/arma::mean(f_new));
+      {
+        std::ofstream outfile("mcm_" + std::to_string(iteration+1));
+        for (size_t x=0; x<nxy[0]; ++x)
+          for (size_t y=0; y<nxy[1]; ++y)
+            outfile << x << " "
+                    << y << " "
+                    << f(x+nxy[0]*y) << " "
+                    << "\n";
+      }
+      arma::vec resid=Af - binned_data;
+      std::cout << (norm(resid)/(bins*bins)) << "\n";
+    }
 }
 
