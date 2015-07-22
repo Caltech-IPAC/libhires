@@ -37,53 +37,52 @@ void hires::Hires::compute_hires (const boost::filesystem::path &)
   /// results.  We should really use a more sophisticated statistical
   /// method.
   
-  const double variance=[&]()
+  double variance;
+  size_t min_bins(8), max_bins(8192);
+  for (size_t bins=min_bins; bins<=max_bins; bins*=2)
     {
-      double v(0);
-      size_t min_bins(8), max_bins(8192);
-      for (size_t bins=min_bins; bins<=max_bins; bins*=2)
+      std::vector<boost::accumulators::accumulator_set
+                  < double, boost::accumulators::stats
+                    < boost::accumulators::tag::count,
+                      boost::accumulators::tag::variance > > >
+        accumulators(bins*bins);
+      const double pix_per_radian=bins/(nxy[0]*radians_per_pix),
+        offset(bins/2.0);
+      for (auto &sample: samples)
         {
-          std::vector<boost::accumulators::accumulator_set
-          < double, boost::accumulators::stats
-          < boost::accumulators::tag::count,
-          boost::accumulators::tag::variance > > >
-          accumulators(bins*bins);
-          const double pix_per_radian=bins/(nxy[0]*radians_per_pix),
-          offset(bins/2.0);
-          for (auto &sample: samples)
-            {
-              double xi ((sample.x * pix_per_radian) + offset);
-              double yi ((sample.y * pix_per_radian) + offset);
-              if(xi<0 || xi>=bins || yi<0 || yi>=bins)
-                continue;
-              int i_int (std::floor(xi)), j_int (std::floor(yi));
-              accumulators[i_int + bins*j_int](sample.signal);
-            }
-          boost::accumulators::accumulator_set
-          < double, boost::accumulators::stats
-          < boost::accumulators::tag::count,
-          boost::accumulators::tag::median> > median;
-          for(auto &accumulator: accumulators)
-            {
-              if(boost::accumulators::count(accumulator)>1)
-                median(boost::accumulators::variance(accumulator));
-            }
-          if (boost::accumulators::count(median) != bins*bins)
-            {
-              if (bins==min_bins)
-                throw hires::Exception
-                  ("Could not compute the variance of the input.  "
-                   "The samples must cover every bin in an 8x8 grid");
-              else
-                break;
-            }
-          v=boost::accumulators::median(median);
+          double xi ((sample.x * pix_per_radian) + offset);
+          double yi ((sample.y * pix_per_radian) + offset);
+          if(xi<0 || xi>=bins || yi<0 || yi>=bins)
+            continue;
+          int i_int (std::floor(xi)), j_int (std::floor(yi));
+          accumulators[i_int + bins*j_int](sample.signal);
         }
-      return v;
-    }();
+      boost::accumulators::accumulator_set
+        < double, boost::accumulators::stats
+          < boost::accumulators::tag::count,
+            boost::accumulators::tag::median> > median;
+      for(auto &accumulator: accumulators)
+        {
+          if(boost::accumulators::count(accumulator)>1)
+            median(boost::accumulators::variance(accumulator));
+        }
+      if (boost::accumulators::count(median) != bins*bins)
+        {
+          if (bins==min_bins)
+            throw hires::Exception
+              ("Could not compute the variance of the input.  "
+               "The samples must cover every bin in an 8x8 grid");
+          else
+            break;
+        }
+      variance=boost::accumulators::median(median);
+    }
 
   std::cout << "variance: " << variance << "\n";
 
+  
+
+  
   std::random_device rd;
   std::mt19937 gen(rd());
   const double min_x(-5), max_x(5);
