@@ -6,6 +6,8 @@ namespace hires
 {
 void Hires::compute_minimap ()
 {
+  /// Offsets are nxy/2, not (nxy-1)/2, since the floor function needs
+  /// an offset of 0.5.
   double i_offset (nxy[0] / 2.0), j_offset (nxy[1] / 2.0);
 
   minimap.resize(nxy[0],nxy[1]);
