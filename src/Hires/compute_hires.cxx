@@ -2,7 +2,6 @@
 #include "../Detector.hxx"
 
 
-#include <random>
 #include <fstream>
 #include <boost/math/constants/constants.hpp>
 #include <mlpack/methods/lars/lars.hpp>
@@ -17,18 +16,10 @@
 void hires::Hires::compute_hires (const boost::filesystem::path &)
 // void hires::Hires::compute_hires (const boost::filesystem::path &Drf_file)
 {
-  std::random_device rd;
-  std::mt19937 gen(rd());
   // FIXME: hard coded for 44 GHz
-  const double sigma_drf2(1.07189706078e-5), sigma_signal2(sigma_drf2/16),
-    sigma_detector2(sigma_drf2 + sigma_signal2),
-    sigma_signal_2_2(10*sigma_drf2), sigma_detector_2_2(sigma_drf2 + sigma_signal_2_2);
-  const double signal_2(10);
+  const double sigma_drf2(1.07189706078e-5);
   const double pi(boost::math::constants::pi<double>());
 
-  const double noise_rms=(0.1/sigma_detector2), noise_scale=1.0;
-  std::normal_distribution<> normal(0,noise_rms);
-  
   /// Set up binned data
   double variance;
   arma::vec binned_data;
@@ -52,12 +43,6 @@ void hires::Hires::compute_hires (const boost::filesystem::path &)
           if(xi<0 || xi>=b || yi<0 || yi>=b)
             continue;
           int i_int (std::floor(xi)), j_int (std::floor(yi));
-          // {
-          //   double signal=exp(-((xi-offset)*(xi-offset) + (yi-offset)*(yi-offset))/(2*sigma_detector2*pix_per_radian*pix_per_radian))/(2*pi*sigma_detector2)
-          //     + signal_2*exp(-((xi)*(xi) + (yi-offset*6/5)*(yi-offset*6/5))/(2*sigma_detector_2_2*pix_per_radian*pix_per_radian))/(2*pi*sigma_detector_2_2)
-          //     + normal(gen)*noise_scale;
-          //   accumulators[i_int + b*j_int](signal);
-          // }
           accumulators[i_int + b*j_int](sample.signal);
         }
       boost::accumulators::accumulator_set
@@ -112,31 +97,21 @@ void hires::Hires::compute_hires (const boost::filesystem::path &)
             }
         }
     }
-
+      
   /// LARS
   const double data_scale=std::max(arma::max(binned_data),
                                    std::abs(arma::min(binned_data)));
   std::cout << "variance: " << variance << " "
             << std::sqrt(variance) << " "
-            << noise_rms << " "
             << data_scale << "\n";
 
-  arma::vec lars_image;
   mlpack::regression::LARS lars(true,variance/data_scale,
-            variance/(data_scale*data_scale));
+                                variance/(data_scale*data_scale));
+  arma::vec lars_image;
   lars.Regress(A,binned_data,lars_image,false);
 
   {
-    std::ofstream outfile("binned");
-    for (size_t x=0; x<bins; ++x)
-      for (size_t y=0; y<bins; ++y)
-        outfile << x << " "
-                << y << " "
-                << binned_data(x+bins*y) << " "
-                << "\n";
-  }
-  {
-    std::ofstream outfile("hires");
+    std::ofstream outfile("elastic_net");
     for (size_t x=0; x<nxy[0]; ++x)
       for (size_t y=0; y<nxy[1]; ++y)
         outfile << x << " "
@@ -165,8 +140,6 @@ void hires::Hires::compute_hires (const boost::filesystem::path &)
                     << f(x+nxy[0]*y) << " "
                     << "\n";
       }
-      arma::vec resid=Af - binned_data;
-      std::cout << (norm(resid)/(bins*bins)) << "\n";
     }
 }
 
