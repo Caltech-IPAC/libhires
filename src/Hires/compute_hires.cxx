@@ -26,15 +26,12 @@ void hires::Hires::compute_hires (const double &sigma_drf, const size_t &num_ite
       arma::vec gAf=binned_data.data/Af;
       f_new=f%(A.t()*gAf);
       f=f_new*(total_flux/arma::mean(f_new));
-      {
-        std::ofstream outfile("mcm_" + std::to_string(iteration+1));
-        for (size_t x=0; x<nxy[0]; ++x)
-          for (size_t y=0; y<nxy[1]; ++y)
-            outfile << x << " "
-                    << y << " "
-                    << f(x+nxy[0]*y) << " "
-                    << "\n";
-      }
     }
+  hires.set_size(nxy[0],nxy[1]);
+  for (size_t ix=0; ix<nxy[0]; ++ix)
+    for (size_t iy=0; iy<nxy[1]; ++iy)
+      {
+        hires(iy,ix)=f(ix+nxy[0]*iy);
+      }
 }
 

@@ -27,14 +27,11 @@ void hires::Hires::compute_elastic_net (const double &sigma_drf)
   arma::vec lars_image;
   lars.Regress(A,binned_data.data,lars_image,false);
 
-  {
-    std::ofstream outfile("elastic_net");
-    for (size_t x=0; x<nxy[0]; ++x)
-      for (size_t y=0; y<nxy[1]; ++y)
-        outfile << x << " "
-                << y << " "
-                << lars_image(x+nxy[0]*y) << " "
-                << "\n";
-  }
+  elastic_net.set_size(nxy[0],nxy[1]);
+  for (size_t ix=0; ix<nxy[0]; ++ix)
+    for (size_t iy=0; iy<nxy[1]; ++iy)
+      {
+        elastic_net(iy,ix)=lars_image(ix+nxy[0]*iy);
+      }
 }
 
