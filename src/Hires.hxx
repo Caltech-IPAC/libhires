@@ -45,16 +45,15 @@ public:
 
   void write_minimap (const std::string &outfile_prefix)
   {
-    write_file(outfile_prefix,"minimap","Minimap Image",false,minimap);
+    write_file(outfile_prefix,"minimap","Minimap Image",minimap);
   }
   void write_hires (const std::string &outfile_prefix)
   {
-    write_file(outfile_prefix,"hires","HIRES image",true,hires);
+    write_file(outfile_prefix,"hires","HIRES image",hires);
   }
   void write_file (const std::string &output_prefix,
                    const std::string &filename,
                    const std::string &filetype,
-                   const bool add_drf_filename,
                    const arma::mat &image);
                    
   void write_fits (const arma::mat &image,

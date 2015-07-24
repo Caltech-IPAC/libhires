@@ -58,8 +58,8 @@ void Hires::write_fits (const arma::mat &image,
                "software version that created this file");
 
   std::valarray<float> temp (image.n_cols * image.n_rows);
-  for (int i = 0; i < image.n_cols; ++i)
-    for (int j = 0; j < image.n_rows; ++j)
+  for (size_t i = 0; i < image.n_cols; ++i)
+    for (size_t j = 0; j < image.n_rows; ++j)
       // GLON runs backwards
       temp[i + image.n_cols * j] = image (j, (image.n_cols - 1) - i);
 

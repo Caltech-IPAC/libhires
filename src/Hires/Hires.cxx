@@ -1,5 +1,4 @@
 #include "../Hires.hxx"
-#include "../Footprint.hxx"
 
 namespace hires
 {

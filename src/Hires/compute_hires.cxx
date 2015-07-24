@@ -1,7 +1,3 @@
-#include "../Hires.hxx"
-#include "../Detector.hxx"
-
-
 #include <fstream>
 #include <boost/math/constants/constants.hpp>
 #include <mlpack/methods/lars/lars.hpp>
@@ -12,6 +8,8 @@
 #include <boost/accumulators/statistics/median.hpp>
 #include <boost/accumulators/statistics/moment.hpp>
 #include <boost/accumulators/statistics/variance.hpp>
+
+#include "../Hires.hxx"
 
 void hires::Hires::compute_hires (const boost::filesystem::path &)
 // void hires::Hires::compute_hires (const boost::filesystem::path &Drf_file)
