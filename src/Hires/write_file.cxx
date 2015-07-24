@@ -16,6 +16,9 @@ void Hires::write_file (const std::string &output_prefix,
   else
     {
       file=output_prefix + filename + ".fits";
+      boost::filesystem::path output_path=boost::filesystem::path(output_prefix+filename);
+      if (!exists(output_path.parent_path()))
+        create_directories(output_path.parent_path());
     }
 
   std::vector<std::pair<std::string, std::pair<std::string, std::string> > >
