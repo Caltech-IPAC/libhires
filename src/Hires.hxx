@@ -7,7 +7,7 @@
 #include <map>
 #include <set>
 
-#include <eigen3/Eigen/Eigen>
+#include <armadillo>
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/math/constants/constants.hpp>
@@ -30,7 +30,7 @@ public:
   
   const std::vector<Sample> &samples;
 
-  Eigen::MatrixXd minimap, hires;
+  arma::mat minimap, hires, elastic_net;
 
   Hires (const std::array<size_t,2> &Nxy,
          const std::array<double,2> &Crval, const double &Radians_per_pix,
@@ -55,9 +55,9 @@ public:
                    const std::string &filename,
                    const std::string &filetype,
                    const bool add_drf_filename,
-                   const Eigen::MatrixXd &image);
+                   const arma::mat &image);
                    
-  void write_fits (const Eigen::MatrixXd &image,
+  void write_fits (const arma::mat &image,
                    const std::vector<std::pair<std::string,
                                                std::pair<std::string,
                                                          std::string> > >

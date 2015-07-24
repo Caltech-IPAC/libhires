@@ -9,7 +9,7 @@ void Hires::write_file (const std::string &output_prefix,
                         const std::string &filename,
                         const std::string &filetype,
                         const bool add_drf_filename,
-                        const Eigen::MatrixXd &image)
+                        const arma::mat &image)
 {
   std::string file;
   if(output_prefix=="-")

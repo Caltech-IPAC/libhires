@@ -10,12 +10,12 @@ void Hires::compute_minimap ()
   /// an offset of 0.5.
   double i_offset (nxy[0] / 2.0), j_offset (nxy[1] / 2.0);
 
-  minimap.resize(nxy[0],nxy[1]);
-  minimap.setZero ();
+  minimap.set_size(nxy[0],nxy[1]);
+  minimap.zeros();
 
-  Eigen::MatrixXd hitmap;
-  hitmap.resize (nxy[0],nxy[1]);
-  hitmap.setZero ();
+  arma::mat hitmap;
+  hitmap.set_size (nxy[0],nxy[1]);
+  hitmap.zeros ();
 
   for (auto &sample: samples)
     {
@@ -27,6 +27,6 @@ void Hires::compute_minimap ()
       minimap (j_int, i_int) += sample.signal;
       hitmap (j_int, i_int) += 1.0;
     }
-  minimap = minimap.cwiseQuotient(hitmap);
+  minimap = minimap/hitmap;
 }
 }
