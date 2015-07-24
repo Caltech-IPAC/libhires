@@ -4,6 +4,7 @@
 
 namespace hires
 {
+// FIXME: This is largely superceded by bin_data.
 void Hires::compute_minimap ()
 {
   /// Offsets are nxy/2, not (nxy-1)/2, since the floor function needs
