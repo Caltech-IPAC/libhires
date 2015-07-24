@@ -34,6 +34,9 @@ def build(ctx):
     cxx_sources=[
         'src/Hires/compute_minimap.cxx',
         'src/Hires/compute_hires.cxx',
+        'src/Hires/compute_elastic_net.cxx',
+        'src/Hires/bin_data.cxx',
+        'src/Hires/compute_response_function.cxx',
         'src/Hires/Hires.cxx',
         'src/Hires/write_file.cxx',
         'src/Hires/write_fits.cxx']

@@ -26,12 +26,17 @@ public:
 
   std::vector<std::pair<std::string, std::pair<std::string, std::string> > >
   fits_keywords;
-  boost::filesystem::path drf_file;
   
   const std::vector<Sample> &samples;
 
   arma::mat minimap, hires, elastic_net;
-
+  struct Binned_Data
+  {
+    arma::vec data;
+    size_t num_bins;
+    double variance;
+  };
+  
   Hires (const std::array<size_t,2> &Nxy,
          const std::array<double,2> &Crval, const double &Radians_per_pix,
          const std::vector<std::pair<std::string, std::pair<std::string,
@@ -39,17 +44,24 @@ public:
          &Fits_keywords,
          const std::vector<Sample> &Samples);
 
-  void dump_params ();
-  void compute_hires (const boost::filesystem::path &Drf_file);
   void compute_minimap ();
-
+  void compute_hires (const double &sigma_drf, const size_t &num_iterations);
+  void compute_elastic_net (const double &sigma_drf);
+  arma::mat compute_response_function (const double &sigma_drf,
+                                       const Binned_Data &binned_data);
+  Binned_Data bin_data();
+  
   void write_minimap (const std::string &outfile_prefix)
   {
     write_file(outfile_prefix,"minimap","Minimap Image",minimap);
   }
   void write_hires (const std::string &outfile_prefix)
   {
-    write_file(outfile_prefix,"hires","HIRES image",hires);
+    write_file(outfile_prefix,"hires","HIRES Image",hires);
+  }
+  void write_elastic_net (const std::string &outfile_prefix)
+  {
+    write_file(outfile_prefix,"elastic_net","Elastic Net Image",elastic_net);
   }
   void write_file (const std::string &output_prefix,
                    const std::string &filename,
