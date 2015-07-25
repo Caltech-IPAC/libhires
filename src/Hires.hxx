@@ -45,7 +45,7 @@ public:
          const std::vector<Sample> &Samples);
 
   void compute_minimap ();
-  void compute_hires (const double &sigma_drf, const size_t &num_iterations);
+  void compute_mcm (const double &sigma_drf, const size_t &num_iterations);
   void compute_elastic_net (const double &sigma_drf);
   arma::mat compute_response_function (const double &sigma_drf,
                                        const Binned_Data &binned_data);
@@ -55,9 +55,9 @@ public:
   {
     write_file(outfile_prefix,"minimap","Minimap Image",minimap);
   }
-  void write_hires (const std::string &outfile_prefix)
+  void write_mcm (const std::string &outfile_prefix)
   {
-    write_file(outfile_prefix,"hires","HIRES Image",hires);
+    write_file(outfile_prefix,"mcm","MCM Image",hires);
   }
   void write_elastic_net (const std::string &outfile_prefix)
   {

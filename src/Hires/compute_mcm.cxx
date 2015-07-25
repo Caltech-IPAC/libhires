@@ -1,7 +1,8 @@
 #include "../Hires.hxx"
 
 /// MCM with binning
-void hires::Hires::compute_hires (const double &sigma_drf, const size_t &num_iterations)
+void hires::Hires::compute_mcm (const double &sigma_drf,
+                                const size_t &num_iterations)
 {
   Binned_Data binned_data(bin_data());
   arma::mat A(compute_response_function(sigma_drf,binned_data));
