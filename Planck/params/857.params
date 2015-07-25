@@ -1,5 +1,0 @@
-KWD BANDFREQ 857 GHz
-KWD INSTRUME HFI High Frequency Instrument
-
-KWD DRF_SET 3.35x5.35x2 Which Detector Response Files used
-DRF_PREFIX /home/boo/ipac/src/hires/Planck/params/DRF_857_
