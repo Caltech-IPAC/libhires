@@ -29,6 +29,7 @@ def configure(ctx):
     else:
         ctx.env.append_value('CXXFLAGS', '-Ofast')
         ctx.env.append_value('CXXFLAGS', '-DNDEBUG')
+        ctx.env.append_value('CXXFLAGS', '-DARMA_NO_DEBUG')
 
 def build(ctx):
     cxx_sources=[
