@@ -1,14 +1,4 @@
-#include <fstream>
-#include <boost/math/constants/constants.hpp>
 #include <mlpack/methods/lars/lars.hpp>
-
-#include <boost/accumulators/accumulators.hpp>
-#include <boost/accumulators/statistics/stats.hpp>
-#include <boost/accumulators/statistics/mean.hpp>
-#include <boost/accumulators/statistics/median.hpp>
-#include <boost/accumulators/statistics/moment.hpp>
-#include <boost/accumulators/statistics/variance.hpp>
-
 #include "../Hires.hxx"
 
 void hires::Hires::compute_elastic_net (const double &sigma_drf)
@@ -18,10 +8,6 @@ void hires::Hires::compute_elastic_net (const double &sigma_drf)
   
   const double data_scale=std::max(arma::max(arma::max(binned_data.data)),
                                    std::abs(arma::min(arma::min(binned_data.data))));
-  std::cout << "variance: " << binned_data.variance << " "
-            << std::sqrt(binned_data.variance) << " "
-            << data_scale << "\n";
-
   mlpack::regression::LARS lars(true,binned_data.variance/data_scale,
                                 binned_data.variance/(data_scale*data_scale));
   arma::vec lars_image;

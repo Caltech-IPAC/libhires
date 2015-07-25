@@ -1,14 +1,3 @@
-#include <fstream>
-#include <boost/math/constants/constants.hpp>
-#include <mlpack/methods/lars/lars.hpp>
-
-#include <boost/accumulators/accumulators.hpp>
-#include <boost/accumulators/statistics/stats.hpp>
-#include <boost/accumulators/statistics/mean.hpp>
-#include <boost/accumulators/statistics/median.hpp>
-#include <boost/accumulators/statistics/moment.hpp>
-#include <boost/accumulators/statistics/variance.hpp>
-
 #include "../Hires.hxx"
 
 /// MCM with binning
