@@ -63,7 +63,7 @@ int main()
                       std::pair<std::string,std::string> > >(),samples);
   hires.compute_minimap();
   const double sigma_drf(3.5*radians_per_pix);
-  const int num_iterations(32);
+  const int num_iterations(2);
   hires.compute_mcm(sigma_drf,num_iterations);
   hires.compute_elastic_net(sigma_drf);
   
@@ -78,9 +78,9 @@ int main()
       || !check_exists(elastic_net))
     exit(-1);
 
-  bool result=(compare_fits(minimap,"test/expected/minimap.fits")
-               && compare_fits(mcm,"test/expected/mcm.fits")
-               && compare_fits(elastic_net,"test/expected/elastic_net.fits"));
+  bool result=compare_fits(minimap,"test/expected/minimap.fits");
+  result=compare_fits(mcm,"test/expected/mcm.fits") && result;
+  result=compare_fits(elastic_net,"test/expected/elastic_net.fits") && result;
 
   remove(minimap);
   remove(minimap.parent_path());
