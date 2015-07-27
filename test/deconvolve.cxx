@@ -39,8 +39,8 @@ int main()
 {
   /// Generate a bunch of pseudo-random samples and run hires.
   std::mt19937 gen(0);
-  const std::array<size_t,2> nxy{32,32};
-  const std::array<double,2> crval{0,0};
+  const std::array<size_t,2> nxy{{32,32}};
+  const std::array<double,2> crval{{0,0}};
   const double radians_per_pix(0.001);
   std::uniform_real_distribution<> uniform(-(nxy[0]*radians_per_pix/2),
                                            nxy[0]*radians_per_pix/2);
