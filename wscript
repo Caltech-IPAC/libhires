@@ -66,6 +66,12 @@ def build(ctx):
              'libxml2']
     )
 
+    ctx.program(source=['test/deconvolve.cxx'],
+                target='deconvolve',
+                installpath=None,
+                use=['cxx11','hires_st','BOOST']
+            )
+                
     ctx.install_files(
         os.path.join(ctx.env.PREFIX, 'include'),
         headers
