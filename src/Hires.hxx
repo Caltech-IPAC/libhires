@@ -51,19 +51,19 @@ public:
                                        const Binned_Data &binned_data);
   Binned_Data bin_data();
   
-  void write_minimap (const std::string &outfile_prefix)
+  void write_minimap (const boost::filesystem::path &outfile_prefix)
   {
     write_file(outfile_prefix,"minimap","Minimap Image",minimap);
   }
-  void write_mcm (const std::string &outfile_prefix)
+  void write_mcm (const boost::filesystem::path &outfile_prefix)
   {
     write_file(outfile_prefix,"mcm","MCM Image",hires);
   }
-  void write_elastic_net (const std::string &outfile_prefix)
+  void write_elastic_net (const boost::filesystem::path &outfile_prefix)
   {
     write_file(outfile_prefix,"elastic_net","Elastic Net Image",elastic_net);
   }
-  void write_file (const std::string &output_prefix,
+  void write_file (const boost::filesystem::path &output_prefix,
                    const std::string &filename,
                    const std::string &filetype,
                    const arma::mat &image);
@@ -72,7 +72,8 @@ public:
                    const std::vector<std::pair<std::string,
                                                std::pair<std::string,
                                                          std::string> > >
-                   &file_specific_keywords, const std::string &outfile_name);
+                   &file_specific_keywords,
+                   const boost::filesystem::path &outfile_name);
 };
 
 std::ostream &operator<<(std::ostream &out, const Hires &p);

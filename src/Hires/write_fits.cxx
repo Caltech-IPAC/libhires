@@ -18,11 +18,10 @@ void Hires::write_fits (const arma::mat &image,
                         const std::vector<std::pair<std::string,
                                                     std::pair<std::string,
                                                               std::string> > >
-                        &file_specific_keywords, const std::string &outfile_name)
+                        &file_specific_keywords,
+                        const boost::filesystem::path &outfile_name)
 {
-  if (outfile_name.empty ())
-    return;
-
+  throw hires::Exception("INTERNAL ERROR: empty file name passed to write_fits");
   boost::filesystem::path fits_file (outfile_name);
 
   long axes[] = { image.n_cols, image.n_rows };

@@ -3,22 +3,17 @@
 namespace hires
 {
 
-void Hires::write_file (const std::string &output_prefix,
+void Hires::write_file (const boost::filesystem::path &output_prefix,
                         const std::string &filename,
                         const std::string &filetype,
                         const arma::mat &image)
 {
-  std::string file;
-  if(output_prefix=="-")
+  boost::filesystem::path file(output_prefix);
+  if(file!="-")
     {
-      file="-";
-    }
-  else
-    {
-      file=output_prefix + filename + ".fits";
-      boost::filesystem::path output_path=boost::filesystem::path(output_prefix+filename);
-      if (!exists(output_path.parent_path()))
-        create_directories(output_path.parent_path());
+      file+=filename + ".fits";
+      if (!exists(file.parent_path()))
+        create_directories(file.parent_path());
     }
 
   std::vector<std::pair<std::string, std::pair<std::string, std::string> > >
