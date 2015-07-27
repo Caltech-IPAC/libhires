@@ -12,7 +12,7 @@ void Hires::write_file (const boost::filesystem::path &output_prefix,
   if(file!="-")
     {
       file+=filename + ".fits";
-      if (!exists(file.parent_path()))
+      if (!exists(file.parent_path()) && !file.parent_path().empty())
         create_directories(file.parent_path());
     }
 
