@@ -1,6 +1,7 @@
 #include <random>
 #include <boost/filesystem.hpp>
 #include <iostream>
+#include <CCfits/CCfits>
 
 #include "../src/Hires.hxx"
 
@@ -14,6 +15,26 @@ bool check_exists(const boost::filesystem::path &output)
   return true;
 }
   
+bool compare_fits(const boost::filesystem::path &computed_name,
+                  const boost::filesystem::path &expected_name)
+{
+  CCfits::FITS computed(computed_name.c_str());
+  CCfits::FITS expected(expected_name.c_str());
+
+  std::valarray<double> computed_image,expected_image;
+  computed.pHDU().read(computed_image);
+  expected.pHDU().read(expected_image);
+
+  std::valarray<double> diff(computed_image-expected_image);
+  bool passed=(std::abs(diff/(computed_image + expected_image
+                              + abs(expected_image).max()*1e-30)).max() < 1e-14);
+  if (passed)
+    std::cout << "PASS: " << expected_name.stem() << "\n";
+  else
+    std::cout << "FAIL: " << expected_name.stem() << "\n";
+  return passed;
+}
+
 int main()
 {
   /// Generate a bunch of pseudo-random samples and run hires.
@@ -56,11 +77,16 @@ int main()
       || !check_exists(mcm)
       || !check_exists(elastic_net))
     exit(-1);
-  // FIXME: Check that we actually computed the right thing.
+
+  bool result=(compare_fits(minimap,"test/expected/minimap.fits")
+               && compare_fits(mcm,"test/expected/mcm.fits")
+               && compare_fits(elastic_net,"test/expected/elastic_net.fits"));
+
   remove(minimap);
   remove(minimap.parent_path());
   remove(mcm);
   remove(mcm.parent_path());
   remove(elastic_net);
   remove(elastic_net.parent_path());
+  return result ? 0 : 1;
 }
