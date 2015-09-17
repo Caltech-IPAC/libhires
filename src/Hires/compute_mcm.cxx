@@ -4,7 +4,8 @@
 void hires::Hires::compute_mcm (const double &sigma_drf,
                                 const size_t &num_iterations)
 {
-  Binned_Data binned_data(bin_data());
+  const size_t max_bins(2*nxy[0]);
+  Binned_Data binned_data (samples,nxy,radians_per_pix,max_bins);
   arma::mat A(compute_response_function(sigma_drf,binned_data));
   
   arma::vec f(nxy[0]*nxy[1]), f_new;

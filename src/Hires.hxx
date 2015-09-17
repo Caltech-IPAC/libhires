@@ -14,6 +14,7 @@
 
 #include "Sample.hxx"
 #include "Exception.hxx"
+#include "Binned_Data.hxx"
 
 namespace hires
 {
@@ -29,13 +30,7 @@ public:
   
   const std::vector<Sample> &samples;
 
-  arma::mat minimap, hires, elastic_net;
-  struct Binned_Data
-  {
-    arma::vec data;
-    size_t num_bins;
-    double variance;
-  };
+  arma::mat minimap, hires, elastic_net, tikhonov;
   
   Hires (const std::array<size_t,2> &Nxy,
          const std::array<double,2> &Crval, const double &Radians_per_pix,
@@ -47,9 +42,9 @@ public:
   void compute_minimap ();
   void compute_mcm (const double &sigma_drf, const size_t &num_iterations);
   void compute_elastic_net (const double &sigma_drf);
+  void compute_tikhonov (const double &sigma_drf);
   arma::mat compute_response_function (const double &sigma_drf,
                                        const Binned_Data &binned_data);
-  Binned_Data bin_data();
   
   void write_minimap (const boost::filesystem::path &outfile_prefix)
   {
@@ -62,6 +57,10 @@ public:
   void write_elastic_net (const boost::filesystem::path &outfile_prefix)
   {
     write_file(outfile_prefix,"elastic_net","Elastic Net Image",elastic_net);
+  }
+  void write_tikhonov (const boost::filesystem::path &outfile_prefix)
+  {
+    write_file(outfile_prefix,"tikhonov","Tikhonov Image",tikhonov);
   }
   void write_file (const boost::filesystem::path &output_prefix,
                    const std::string &filename,

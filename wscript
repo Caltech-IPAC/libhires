@@ -33,10 +33,11 @@ def configure(ctx):
 
 def build(ctx):
     cxx_sources=[
+        'src/Binned_Data.cxx',
         'src/Hires/compute_minimap.cxx',
         'src/Hires/compute_mcm.cxx',
         'src/Hires/compute_elastic_net.cxx',
-        'src/Hires/bin_data.cxx',
+        'src/Hires/compute_tikhonov.cxx',
         'src/Hires/compute_response_function.cxx',
         'src/Hires/Hires.cxx',
         'src/Hires/write_file.cxx',
@@ -45,6 +46,7 @@ def build(ctx):
         'src/version.hxx',
         'src/Gnomonic.hxx',
         'src/Hires.hxx',
+        'src/Binned_Data.hxx',
         'src/Exception.hxx',
         'src/Sample.hxx']
 

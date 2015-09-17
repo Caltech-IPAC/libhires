@@ -1,13 +1,28 @@
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics.hpp>
-#include "../Hires.hxx"
 
-hires::Hires::Binned_Data hires::Hires::bin_data ()
+#include "Binned_Data.hxx"
+#include "Exception.hxx"
+
+hires::Binned_Data::Binned_Data (const std::vector<Sample> &samples,
+                                 const std::array<size_t,2> &nxy,
+                                 const double &radians_per_pix,
+                                 const size_t &max_bins)
 {
-  Binned_Data binned_data;
-  size_t min_bins(8), max_bins(64);
+  boost::accumulators::accumulator_set
+    < double, boost::accumulators::stats
+      < boost::accumulators::tag::variance > >
+    variance_accumulator;
+  for (auto &sample: samples)
+    variance_accumulator (sample.signal);
+  variance=boost::accumulators::variance (variance_accumulator);
+    
+  size_t min_bins(8);
+  /// Keep subdividing until we get empty cells or we get to the max
+  /// number of bins.
   for (size_t b=min_bins; b<=max_bins; b*=2)
     {
+      std::cout << "bin: " << max_bins << " " << b << "\n";
       std::vector<boost::accumulators::accumulator_set
                   < double, boost::accumulators::stats
                     < boost::accumulators::tag::count,
@@ -45,12 +60,11 @@ hires::Hires::Binned_Data hires::Hires::bin_data ()
           else
             break;
         }
-      binned_data.variance=boost::accumulators::median(median);
-      binned_data.num_bins=b;
-      binned_data.data.set_size(b*b);
+      // variance=boost::accumulators::median(median);
+      num_bins=b;
+      data.set_size(b*b);
       for (size_t ii=0; ii<accumulators.size(); ++ii)
-        binned_data.data(ii)=boost::accumulators::mean(accumulators[ii]);
+        data(ii)=boost::accumulators::mean(accumulators[ii]);
     }
-  return binned_data;
 }
 
