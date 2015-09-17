@@ -22,7 +22,6 @@ hires::Binned_Data::Binned_Data (const std::vector<Sample> &samples,
   /// number of bins.
   for (size_t b=min_bins; b<=max_bins; b*=2)
     {
-      std::cout << "bin: " << max_bins << " " << b << "\n";
       std::vector<boost::accumulators::accumulator_set
                   < double, boost::accumulators::stats
                     < boost::accumulators::tag::count,

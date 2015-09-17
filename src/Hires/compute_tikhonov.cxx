@@ -9,7 +9,6 @@ void hires::Hires::compute_tikhonov (const double &sigma_drf)
   
   const double data_scale=std::max(arma::max(arma::max(binned_data.data)),
                                    std::abs(arma::min(arma::min(binned_data.data))));
-  std::cout << "scale: " << data_scale << " " << binned_data.variance << "\n";
   mlpack::regression::LinearRegression
     regression(A.t(),binned_data.data,(binned_data.variance/(data_scale*data_scale))
                *binned_data.num_bins*binned_data.num_bins/(nxy[0]*nxy[0]));
