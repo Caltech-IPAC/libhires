@@ -3,7 +3,6 @@
 
 void hires::Hires::compute_tikhonov (const double &sigma_drf)
 {
-  // const size_t max_bins(2*nxy[0]*radians_per_pix/sigma_drf);
   const size_t max_bins(128);
   Binned_Data binned_data (samples,nxy,radians_per_pix,max_bins);
   arma::mat A(compute_response_function(sigma_drf,binned_data));
@@ -14,9 +13,6 @@ void hires::Hires::compute_tikhonov (const double &sigma_drf)
   mlpack::regression::LinearRegression
     regression(A.t(),binned_data.data,(binned_data.variance/(data_scale*data_scale))
                *binned_data.num_bins*binned_data.num_bins/(nxy[0]*nxy[0]));
-    // regression(A.t(),binned_data.data,binned_data.num_bins/sqrt(nxy[0]*nxy[1]));
-    // regression(A.t(),binned_data.data,1);
-    // regression(A.t(),binned_data.data,binned_data.variance/data_scale);
   arma::vec image=regression.Parameters ();
 
   tikhonov.set_size(nxy[0],nxy[1]);

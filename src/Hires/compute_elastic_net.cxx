@@ -4,7 +4,6 @@
 void hires::Hires::compute_elastic_net (const double &sigma_drf)
 {
   const size_t max_bins(64);
-  // const size_t max_bins(2*nxy[0]*radians_per_pix/sigma_drf);
   Binned_Data binned_data (samples,nxy,radians_per_pix,max_bins);
   arma::mat A(compute_response_function(sigma_drf,binned_data));
   
@@ -14,12 +13,6 @@ void hires::Hires::compute_elastic_net (const double &sigma_drf)
                                 *binned_data.num_bins*binned_data.num_bins/(nxy[0]*nxy[0]),
                                 (binned_data.variance/(data_scale*data_scale))
                                 *binned_data.num_bins*binned_data.num_bins/(nxy[0]*nxy[0]));
-  // mlpack::regression::LARS lars(true,(binned_data.variance/data_scale)
-  //                               *binned_data.num_bins*binned_data.num_bins/(nxy[0]*nxy[0]));
-
-  // mlpack::regression::LARS lars(true,0.01*data_scale*binned_data.num_bins*binned_data.num_bins/(nxy[0]*nxy[0]),1);
-  // mlpack::regression::LARS lars(true,binned_data.variance/data_scale,
-  //                               binned_data.variance/(data_scale*data_scale));
   arma::vec lars_image;
   lars.Regress(A,binned_data.data,lars_image,false);
 
