@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+
 #include <armadillo>
 #include "Sample.hxx"
 
