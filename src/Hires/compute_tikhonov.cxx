@@ -3,7 +3,7 @@
 
 void hires::Hires::compute_tikhonov (const double &sigma_drf)
 {
-  const size_t max_bins(128);
+  const size_t max_bins(64);
   Binned_Data binned_data (samples,nxy,radians_per_pix,max_bins);
   arma::mat A(compute_response_function(sigma_drf,binned_data));
   
