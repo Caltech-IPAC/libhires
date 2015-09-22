@@ -1,0 +1,177 @@
+# Libhires
+
+libhires is a C++ image reconstruction library for Time Ordered
+Information (TOI) data from the Planck satellite.
+
+# Theory
+
+The basis of all of the algorithms used in libhires is minimap.  This
+simply bins the TOI's into the output pixels and averages the results
+per pixel.  It does not attempt a true deconvolution, which would
+require taking into account the PSF of the detectors at different
+frequencies.
+
+The more sophisticated methods take into account the detector specific
+PSF.  They all start by computing a minimap image.  Then they
+deconvolve that minimap image.  At the boundaries, the PSF can depend
+on pixels outside of the data.  To reduce the effect from the edges,
+all of the methods reflect the boundaries.  So
+
+    U(-x) = U(x)
+    U(x_boundary + x) = U(x_boundary - x)
+
+The basic equation that the deconvolution methods start with is the imaging equation
+
+    b=Ax+N
+
+where 'b' is the measured data, 'x' is the true signal, 'A' maps the
+signal to the measurement using the PSF, and 'N' is the noise.
+
+All of the deconvolution methods implemented in libhires can be
+understood as trying the maximize the Bayesian a posteriori
+probability P(x|b).  This probability can be expressed in terms of the
+probability of the measurement given the signal P(b|x) and the prior
+probability of the signal P(x).
+
+    P(x|b) ~ P(b|x) P(x)
+
+The probability of the measurement P(b) is unity here.  The
+differences between the deconvolution methods arise mainly because
+they choose different P(b|x) and P(x).
+
+## MCM
+
+MCM stands for the [Maximum Correlation
+Method](http://labs.adsabs.harvard.edu/adsabs/abs/1990AJ.....99.1674A/).
+This is also known as the HIRES method for IRAS.
+
+MCM assumes that the noise follows a Poisson distribution.  The prior
+probability for the signal P(x) is the improper constant distribution
+over the positive numbers.
+
+     P(x) ~ x >0 constant
+            x<=0 0
+
+These two assumptions require that both the measured flux 'b' and the
+solution 'x' are positive.  This implies that every pixel of the
+minimap image must be positive.  For data from Planck's high frequency
+detectors, this is almost always true.  This is less true for the
+lower frequencies.
+
+MCM then iteratively smoothes an initial guess to find a solution.
+The iteration is constructed so that flux is always conserved.  One
+defect of this method is that there is no unique solution.  Repeated
+iterations can lead to divergent results.  This is a natural
+consequence of P(x) being a constant.  For many cases, the solution
+does not actually wander off to infinity because flux is conserved and
+can never be negative.  That means that the recovered signal always
+depends on the resolution of the recovered image.
+
+Also, the original MCM did not have binning.  We have added binning in
+order to eliminate a bias whereby the recovered signal in regions with
+more samples would be brighter than regions with fewer samples.
+
+With that said, MCM is relatively fast, easy to compute, and widely
+used.  It also conserves flux.  It is not clear if that is a good
+thing, since it conserves the flux of the noise.
+
+## Elastic Net
+
+[Elastic Net](https://en.wikipedia.org/wiki/Elastic_net_regularization) starts by assuming the noise follows a Gaussian distribution.  Using only this would give the traditional least-squares solution.  However, this is not sufficient, because this would lead to overfitting.  The solution would become wildly varying in trying to fit the noise.
+
+To alleviate this, Elastic Net preferentially chooses smaller signals
+by setting the prior probability of the signal to a combination of
+Laplace and Gaussian distributions.
+
+     P(x) ~ exp((x^2)/(2*g^2)) exp(-|x/l|)
+
+The Gausssian prior makes the recovered solution less prone to large
+variations.  The Laplacian prior tends to select some regions for
+signal while setting the rest of the image to zero.
+
+Using the variance of the measurements
+
+     v=Var(b)
+
+their maximum size
+
+     m=max(|b|)
+
+and the ratio of the number of pixels in the measurement 'N_b' and
+recovered signal 'N_x'
+
+     r=N_b/N_x
+
+we set the constants 'g' and 'l' as
+
+     g=r*v/(m*m)
+     l=r*v/m
+
+This results in a matrix that is, in principle, invertible.  In
+practice, we use mlpack's
+[LARS](http://www.mlpack.org/doxygen.php?doc=classmlpack_1_1regression_1_1LARS.html)
+class to compute a solution.
+
+Elastic Net has a well defined solution with relatively few artifacts.
+However, it is much, much slower than MCM, making it impractical for
+large image reconstructions.
+
+## Tikhonov
+
+[Tikhonov](https://en.wikipedia.org/wiki/Tikhonov_regularization) is
+very similar to Elastic Net.  The only difference is that it does not
+include the Laplacian prior.  We use mlpack's
+[LinearRegression](http://www.mlpack.org/doxygen.php?doc=classmlpack_1_1regression_1_1LinearRegression.html)
+class to compute a solution.
+
+Tikhonov also has a well defined solution.  In practice, it is slower
+than Elastic Net and the resulting image has more artifacts.
+
+# Implementation
+
+Libhires is written in C++ and depends on
+
+* [mlpack](http://www.mlpack.org/)
+* [armadillo](http://arma.sourceforge.net/).
+* [boost](http://www.boost.org/)
+* [cfitsio](http://heasarc.gsfc.nasa.gov/fitsio/fitsio.html)
+* [CCfits](http://heasarc.gsfc.nasa.gov/fitsio/CCfits/)
+* [libxml2](http://xmlsoft.org/)
+
+Libhires uses C++11 features, and has been tested with gcc versions
+4.7 and 4.9.
+
+# Testing
+
+There is a simple test program in
+
+  test/deconvolve.cxx
+
+that gets built into
+
+  build/deconvolve
+
+Running this compares a deconvolution of a gaussian elliptical
+measurement against expected results in
+
+  test/expected/
+
+# License
+
+Copyright © 2012-2015, California Institute of Technology
+Authors: Walter Landry, Peregrine McGehee, and Angela Zhang
+Based on Government Sponsored Research NAS7-03001 and NNN12AA01C.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
