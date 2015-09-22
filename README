@@ -116,17 +116,6 @@ Elastic Net has a well defined solution with relatively few artifacts.
 However, it is much, much slower than MCM, making it impractical for
 large image reconstructions.
 
-## Tikhonov
-
-[Tikhonov](https://en.wikipedia.org/wiki/Tikhonov_regularization) is
-very similar to Elastic Net.  The only difference is that it does not
-include the Laplacian prior.  We use mlpack's
-[LinearRegression](http://www.mlpack.org/doxygen.php?doc=classmlpack_1_1regression_1_1LinearRegression.html)
-class to compute a solution.
-
-Tikhonov also has a well defined solution.  In practice, it is slower
-than Elastic Net and the resulting image has more artifacts.
-
 # Implementation
 
 Libhires is written in C++ and depends on
