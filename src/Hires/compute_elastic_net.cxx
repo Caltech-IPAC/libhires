@@ -14,7 +14,8 @@ void hires::Hires::compute_elastic_net (const double &sigma_drf)
                                 (binned_data.variance/(data_scale*data_scale))
                                 *binned_data.num_bins*binned_data.num_bins/(nxy[0]*nxy[0]));
   arma::vec lars_image;
-  lars.Regress(A,binned_data.data,lars_image,false);
+
+    lars.Train(A, binned_data.data, lars_image, false);
 
   elastic_net.set_size(nxy[0],nxy[1]);
   for (size_t ix=0; ix<nxy[0]; ++ix)
